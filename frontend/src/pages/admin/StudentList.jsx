@@ -1,6 +1,6 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 import axios from 'axios';
-import React, { use, useEffect, useState } from 'react';
+import React, { use, useEffect, useMemo, useState } from 'react';
 import { FiPhone, FiMail, FiMoreVertical, FiSearch, FiEdit2 } from 'react-icons/fi';
 import useUserApi from '../../hooks/useUserApi';  
 import ClipLoader from 'react-spinners/ClipLoader';
@@ -101,7 +101,13 @@ const StudentList = () => {
         fetchClasses();
       }, []);
 
-
+      const userMap = useMemo(() => {
+        const map = {};
+        users.forEach(user => {
+          map[user.id] = user;
+        });
+        return map;
+      }, [users]);
     
 
 
@@ -111,7 +117,7 @@ const StudentList = () => {
   return (
     <>
    
-    <div className="p-4" onClick={()=>openDropdown(null)}>
+    <div className="p-4" >
       {/* Top Bar */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2 border rounded px-3 py-2 w-1/3">
@@ -178,11 +184,12 @@ const StudentList = () => {
           </td>
           <td className="p-3">{classes.find(classItem => classItem.id === student.classId).name}</td>
 
-          <td className="p-3">{student.parent || 'N/A'}</td>
+          <td className="p-3">{users.find(user => user.id === student.parentId)?.name || 'N/A'}</td>
 
           <td className="p-3 text-gray-700 truncate max-w-xs">
             {student.email}
           </td>
+          <td>{userMap[student.parentId]?.name || 'N/A'}</td>
 
           <td className="p-3">
             {student.dateOfBirth

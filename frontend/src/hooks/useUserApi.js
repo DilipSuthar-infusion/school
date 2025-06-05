@@ -69,12 +69,22 @@ const useUserApi = () => {
           });
       
         } catch (error) {
-          Swal.fire({
-            title: 'Error',
-            text: error.response?.data?.message || error.message,
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
+            console.log(error);
+            if (error.response && error.response.data) {
+              Swal.fire({
+                title: 'Error',
+                text: error.response?.data?.message ,
+                icon: 'error',
+                confirmButtonText: 'OK',
+              });
+            } else {
+              Swal.fire({
+                title: 'Error',
+                text: 'Something went wrong!',
+                icon: 'error',
+                confirmButtonText: 'OK',
+              });
+            }
         }
       };
 

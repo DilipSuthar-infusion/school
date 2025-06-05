@@ -19,9 +19,9 @@ import attendanceRoutes from './routes/attendance.js';
 import eventRoutes from './routes/eventRoute.js';
 import examRoutes from './routes/examRoutes.js';
 import examResultRoutes from './routes/examResultRoutes.js';
-import upload from './middleware/upload.js';
 
-import errorHandler from './middleware/errorHandler.js';
+
+import {errorHandler} from './middleware/errorHandler.js';
 import { associateModels } from './models/index.js';
 // import User from './models/user.model.js';
 // import { hash } from 'bcryptjs';

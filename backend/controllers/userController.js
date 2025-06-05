@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import CustomError from '../utils/customError.js';
+import StudentParent from '../models/StudentParent.model.js';
 
 
 dotenv.config();
@@ -43,6 +44,7 @@ export const createUserWithRole = async (req, res) => {
         classId,
         
       });
+      
      
     } else if (role === 'teacher') {
       const { qualification, subjectsTaught, joiningDate, salary } = req.body;
@@ -54,14 +56,20 @@ export const createUserWithRole = async (req, res) => {
       });
     
     } else if (role === 'parent') {
-      const { occupation, studentId, relationType } = req.body;
+      const { occupation, studentId, relationType} = req.body;
       Object.assign(userData, {
         occupation,
         studentId,
         relationType,
       });
+      const user = await User.create(userData);
+      await StudentParent.create({
+        studentId,
+        parentId: user.id,   
+      });
+      return user
     }
-
+    
     const user = await User.create(userData);
     
 

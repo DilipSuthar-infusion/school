@@ -9,11 +9,11 @@ const StudentParent = sequelize.define('StudentParent', {
   },
   studentId: {
     type: DataTypes.UUID,
-    allowNull: false,
+  
   },
   parentId: {
     type: DataTypes.UUID,
-    allowNull: false,
+   
   }
 
 
@@ -21,7 +21,7 @@ const StudentParent = sequelize.define('StudentParent', {
 {
   timestamps: true,
   tableName: 'student_parents',
-
+}
 );
 
 export default StudentParent;

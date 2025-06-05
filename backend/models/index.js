@@ -13,6 +13,7 @@ import Payment from './payment.model.js';
 import StudyMaterial from './studymeterial.model.js';
 import Subject from './subject.model.js';
 import User from './user.model.js';
+import StudentParent from './StudentParent.model.js';
 
 const models = {
   sequelize,
@@ -77,6 +78,19 @@ const associateModels = () => {
   ClassRoutine.belongsTo(User, { foreignKey: 'teacherId', as: 'teacher' });
   ClassRoutine.belongsTo(Subject, { foreignKey: 'subjectId', as: 'subject' });
   ClassRoutine.belongsTo(Class, { foreignKey: 'classId', as: 'class' });
+  User.belongsToMany(User, {
+    through: StudentParent,
+    as: 'Parents',       // when you want to get parents of a student
+    foreignKey: 'studentId',
+    otherKey: 'parentId',
+  });
+  
+  User.belongsToMany(User, {
+    through: StudentParent,
+    as: 'Children',      // when you want to get children of a parent
+    foreignKey: 'parentId',
+    otherKey: 'studentId',
+  });
   
 
   Event.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });

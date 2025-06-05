@@ -128,7 +128,7 @@ const ManageParents = () => {
                       </td>
                       <td className="p-3 font-medium">{parent.name}</td>
                       <td className="p-3 text-purple-700 font-semibold">
-                      {users.find(parentData => parentData.id === parent.studentId).name}
+                      
                       </td>
                       <td className="p-3">{parent.email || 'N/A'}</td>
                       <td className="p-3 text-gray-700 truncate max-w-xs">

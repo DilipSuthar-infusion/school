@@ -9,24 +9,30 @@ const useUserApi = () => {
     
 
 
-    const fetchUsers = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-          const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user`
-            ,{
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            }
-          );
-          setUsers(response.data);
-        } catch (err) {
-          setError(err.response?.data?.message || err.message);
-        } finally {
-          setLoading(false);
-        }
-      };
+    const fetchUsers = async (studentId) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        
+        const usersData = response.data;
+        console.log(usersData);
+        setUsers(usersData); // save all users
+    
+        
+        
+        
+      } catch (err) {
+        setError(err.response?.data?.message || err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
 
       const handleDelete = async (id) => {
         try {

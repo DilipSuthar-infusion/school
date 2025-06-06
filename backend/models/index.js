@@ -79,19 +79,19 @@ const associateModels = () => {
   ClassRoutine.belongsTo(Subject, { foreignKey: 'subjectId', as: 'subject' });
   ClassRoutine.belongsTo(Class, { foreignKey: 'classId', as: 'class' });
   User.belongsToMany(User, {
+    as: 'Parents',
     through: StudentParent,
-    as: 'Parents',       // when you want to get parents of a student
     foreignKey: 'studentId',
     otherKey: 'parentId',
+    onDelete: 'CASCADE',
   });
   
   User.belongsToMany(User, {
+    as: 'Students',
     through: StudentParent,
-    as: 'Children',      // when you want to get children of a parent
     foreignKey: 'parentId',
     otherKey: 'studentId',
   });
-  
 
   Event.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
   

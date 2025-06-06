@@ -1,20 +1,21 @@
-import { where } from 'sequelize';
+
 import Class  from '../models/class.model.js';
 import User from '../models/user.model.js';
 import CustomError from '../utils/customError.js';
 
 
 export const createClass = async (req, res) => {
-    const { name, section, roomNumber } = req.body;
-    if (!name || !section ) {
+  console.log(req.body);
+    const { classname, section, roomNumber } = req.body;
+    if (!classname || !section ) {
       throw new CustomError('Missing required fields', 400);
     }
-    const existingClass = await Class.findOne({ where: { name, section } });
+    const existingClass = await Class.findOne({ where: { classname, section } });
     if (existingClass) {
       throw new CustomError('Class with this name and section already exists', 400);
     }
     const newClass = await Class.create({
-      name,
+      classname,
       section,
       roomNumber,
     });

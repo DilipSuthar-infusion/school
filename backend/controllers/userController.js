@@ -10,22 +10,24 @@ dotenv.config();
 
 
 export const createUserWithRole = async (req, res) => {
+  try {
     const { name, email, role, phone, address } = req.body;
-    const filPath = req.file ? req.file.path : null;
-    console.log(filPath);
+    const filePath = req.file ? req.file.path : null;
 
     if (!['student', 'teacher', 'parent'].includes(role)) {
       throw new CustomError('Invalid role specified', 400);
     }
+
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       throw new CustomError('User already exists', 400);
     }
+
     const randomPassword = crypto.randomBytes(6).toString('hex');
     const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
     const userData = {
-      profilePicture: filPath || 'https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg',
+      profilePicture: filePath || 'https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg',
       name,
       email,
       password: hashedPassword,
@@ -42,10 +44,7 @@ export const createUserWithRole = async (req, res) => {
         gender,
         bloodGroup,
         classId,
-        
       });
-      
-     
     } else if (role === 'teacher') {
       const { qualification, subjectsTaught, joiningDate, salary } = req.body;
       Object.assign(userData, {
@@ -54,33 +53,40 @@ export const createUserWithRole = async (req, res) => {
         joiningDate,
         salary,
       });
-    
-    } else if (role === 'parent') {
-      const { occupation, studentId, relationType} = req.body;
-      Object.assign(userData, {
-        occupation,
-        studentId,
-        relationType,
-      });
-      const user = await User.create(userData);
-      await StudentParent.create({
-        studentId,
-        parentId: user.id,   
-      });
-      return user
     }
-    
+
     const user = await User.create(userData);
-    
+
+    if (role === 'parent') {
+      const { occupation, studentId, relationType } = req.body;
+
+      if (!studentId) {
+        throw new CustomError('Student ID is required to link parent', 400);
+      }
+
+      const student = await User.findOne({ where: { id: studentId, role: 'student' } });
+      if (!student) {
+        throw new CustomError('Student not found with the given ID', 404);
+      }
+
+      await user.update({ occupation, relationType });
+      await StudentParent.create({
+        parentId: user.id,
+        studentId,
+      });
+    }
 
     res.status(201).json({
       message: `${role.charAt(0).toUpperCase() + role.slice(1)} created successfully`,
       credentials: { email, password: randomPassword },
       user,
     });
-
- 
+  } catch (error) {
+    res.status(error.statusCode || 500).json({ message: error.message || 'Server Error' });
+  }
 };
+
+
 
 export const updatePassword = async (req, res) => {
     const { email, oldPassword, newPassword } = req.body;
@@ -108,18 +114,32 @@ export const updatePassword = async (req, res) => {
 
 
 
-
-
-
-
 export const getAllUsers = async (req, res) => {
-  const users = await User.findAll();
-  if(!users){
-    throw new CustomError('No users found', 404);
-  }
+  try {
+    const users = await User.findAll({
+      include: [
+        {
+          model: User,
+          as: 'Parents',
+          attributes: ['id', 'name', 'email'],
+          through: { attributes: [] },
+        },
+        {
+          model: User,
+          as: 'Students',
+          attributes: ['id', 'name', 'email'],
+          through: { attributes: [] },
+        },
+      ],
+    });
     res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-  
+};
+
+
+
 
 
 
@@ -202,12 +222,35 @@ export const updateUser = async (req, res) => {
 
 
 export const deleteUser = async (req, res) => {
-    const { id } = req.params;
-    const user = await User.findByPk(id);
-    if(!user){
-      throw new CustomError('User not found', 404);
-    }
-    await user.destroy();
-    res.status(200).json({message: 'User deleted successfully'});
-};
+  const { id } = req.params;
+  const user = await User.findByPk(id);
 
+  if (!user) {
+    throw new CustomError('User not found', 404);
+  }
+
+  if (user.role === 'student') {
+    const parentLinks = await StudentParent.findAll({ where: { studentId: id } });
+    const parentIds = parentLinks.map(link => link.parentId);
+
+    await user.destroy(); // Delete student
+
+    for (const parentId of parentIds) {
+      const hasOtherChildren = await StudentParent.findOne({
+        where: {
+          parentId,
+          studentId: { [Op.ne]: id },
+        },
+      });
+
+      if (!hasOtherChildren) {
+        await User.destroy({ where: { id: parentId } });
+      }
+    }
+  } else {
+    // If parent or teacher, simply delete
+    await user.destroy();
+  }
+
+  res.status(200).json({ message: 'User deleted successfully' });
+};

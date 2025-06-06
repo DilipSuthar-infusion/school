@@ -9,6 +9,7 @@ import Home from './components/Home'
 import StudentList from './pages/admin/StudentList'
 import TeacherDashboard from './pages/Teacher/TeacherDashboard'
 import ManageParents from './pages/admin/ManageParents'
+import ManageClasses from './pages/admin/ManageClasses'
 
 const Routing = () => {
   return (
@@ -22,6 +23,7 @@ const Routing = () => {
         <Route index element={<Dashboard />} />
         <Route path='student/list' element={<StudentList />} />
         <Route path='parent/list' element={<ManageParents />} />
+        <Route path='classes' element={<ManageClasses />} />
         
       </Route>
 

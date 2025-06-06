@@ -2,26 +2,17 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 
 const StudentParent = sequelize.define('StudentParent', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true,
-  },
   studentId: {
     type: DataTypes.UUID,
-  
+    allowNull: false,
   },
   parentId: {
     type: DataTypes.UUID,
-   
-  }
-
-
-},
-{
-  timestamps: true,
+    allowNull: false,
+  },
+}, {
   tableName: 'student_parents',
-}
-);
+  timestamps: false,
+});
 
 export default StudentParent;

@@ -1,6 +1,6 @@
-// models/User.model.js
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
+import StudentParent from './StudentParent.model.js';
 
 const User = sequelize.define('User', {
   id: {
@@ -14,51 +14,75 @@ const User = sequelize.define('User', {
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
     unique: true,
-   
+    validate: {
+      isEmail: true,
+    },
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   role: {
-    type: DataTypes.ENUM('admin', 'teacher', 'student', 'parent'),
-    allowNull: true,
-    defaultValue: 'student',
+    type: DataTypes.ENUM('student', 'teacher', 'parent'),
+    allowNull: false,
   },
   phone: {
     type: DataTypes.STRING,
   },
   address: {
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING,
   },
- 
-  
-  // Student-specific
-  admissionNumber: { type: DataTypes.STRING },
-  classId: { type: DataTypes.UUID },
-  dateOfBirth: { type: DataTypes.DATE },
-  gender: { type: DataTypes.STRING },
-  bloodGroup: { type: DataTypes.STRING },
-  // Teacher-specific
-  qualification: { type: DataTypes.STRING },
-  subjectsTaught: { type: DataTypes.STRING },
-  joiningDate: { type: DataTypes.DATE },
-  salary: { type: DataTypes.FLOAT },
 
-  // Parent-specific
-  occupation: { type: DataTypes.STRING },
-  studentId: { type: DataTypes.UUID },     
-  relationType: { type: DataTypes.STRING }, 
+  // Student-specific fields
+  admissionNumber: {
+    type: DataTypes.STRING,
+    unique: true,
+  },
+  dateOfBirth: {
+    type: DataTypes.DATEONLY,
+  },
+  gender: {
+    type: DataTypes.ENUM('Male', 'Female', 'Other'),
+  },
+  bloodGroup: {
+    type: DataTypes.STRING,
+  },
+  classId: {
+    type: DataTypes.UUID,
+    allowNull: true,
+  },
 
+  // Teacher-specific fields
+  qualification: {
+    type: DataTypes.STRING,
+  },
+  subjectsTaught: {
+    type: DataTypes.STRING,
+  },
+  joiningDate: {
+    type: DataTypes.DATEONLY,
+  },
+  salary: {
+    type: DataTypes.FLOAT,
+  },
+
+  // Parent-specific fields
+  occupation: {
+    type: DataTypes.STRING,
+  },
+  relationType: {
+    type: DataTypes.STRING, // e.g., 'Father', 'Mother', 'Guardian'
+  },
 }, {
+  tableName: 'Users',
   timestamps: true,
-  tableName: 'users',
 });
+
 
 export default User;

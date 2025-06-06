@@ -8,7 +8,7 @@ import sequelize from '../config/database.js';
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      name: {
+      classname: {
         type: DataTypes.STRING,
         allowNull: false,
       },

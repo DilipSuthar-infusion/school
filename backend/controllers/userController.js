@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import CustomError from '../utils/customError.js';
 import StudentParent from '../models/StudentParent.model.js';
+import { Op } from 'sequelize';
 
 
 dotenv.config();

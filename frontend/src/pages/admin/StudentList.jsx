@@ -315,14 +315,14 @@ const StudentList = () => {
 
       {studentInfo && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full text-center">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+          <div className="bg-white rounded-lg shadow-lg p-8  w-[500px] text-center">
+            <h2 className="text-md font-semibold text-gray-800 mb-4">
               Student Created Successfully
             </h2>
-            <p className="text-sm mb-2">
+            <p className="text-xl mb-2">
               <strong>Email:</strong> {credentials.email}
             </p>
-            <p className="text-sm mb-4">
+            <p className="text-xl mb-4">
               <strong>Password:</strong> {credentials.password}
             </p>
             <button

@@ -133,7 +133,7 @@ const Sidebar = () => {
                 </div>
 
                 {/* Tooltip for collapsed sidebar */}
-                {!isOpen && <Tooltip id={`tooltip-${item.key}`} place="right" />}
+                {!isOpen && <Tooltip className='!bg-orange-500' id={`tooltip-${item.key}`} place="right" />}
 
                 {/* Direct link without children */}
                 {isOpen && !item.children && item.path && (

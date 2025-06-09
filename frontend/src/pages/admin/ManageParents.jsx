@@ -49,7 +49,12 @@ const ManageParents = () => {
                     <ClipLoader color="#36d7b7" loading={loading} size={30} />
                   </td>
                 </tr>
-              ) : (
+              ) : users.length === 0 ? (
+                <tr>
+                  <td colSpan="10" className="text-center py-12 text-gray-500">
+                    No parents found.
+                  </td>
+                </tr> ) : (
                 users
                   ?.filter(user => user.role === 'parent')
                   .map((parent, idx) => (

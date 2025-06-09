@@ -29,7 +29,7 @@ const User = sequelize.define('User', {
     allowNull: false,
   },
   role: {
-    type: DataTypes.ENUM('student', 'teacher', 'parent'),
+    type: DataTypes.ENUM('student', 'teacher', 'parent','admin'),
     allowNull: false,
   },
   phone: {
@@ -77,10 +77,10 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
   },
   relationType: {
-    type: DataTypes.STRING, // e.g., 'Father', 'Mother', 'Guardian'
+    type: DataTypes.STRING,
   },
 }, {
-  tableName: 'Users',
+  tableName: 'users',
   timestamps: true,
 });
 

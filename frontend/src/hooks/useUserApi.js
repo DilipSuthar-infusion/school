@@ -20,9 +20,7 @@ const useUserApi = () => {
         });
         
         const usersData = response.data;
-        console.log(usersData);
-        setUsers(usersData); // save all users
-    
+        setUsers(usersData);
         
         
         
@@ -97,7 +95,7 @@ const useUserApi = () => {
       const AddParent = async (parentData) => {
         try {
           const token = localStorage.getItem('token');
-          const response = await axios.post(
+           await axios.post(
             `${import.meta.env.VITE_API_BASE_URL}/user`,
             parentData,
             {

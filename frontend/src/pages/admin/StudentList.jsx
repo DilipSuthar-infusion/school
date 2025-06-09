@@ -1,21 +1,27 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { FiPhone, FiMail, FiMoreVertical, FiSearch } from "react-icons/fi";
 import {
-  FiPhone,
-  FiMail,
-  FiMoreVertical,
-  FiSearch,
-  FiEdit2,
-} from "react-icons/fi";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import useUserApi from "../../hooks/useUserApi";
+  X,
+  Camera,
+  User,
+  Mail,
+  Phone,
+  Calendar,
+  MapPin,
+  Users,
+  Briefcase,
+} from "lucide-react";
 import ClipLoader from "react-spinners/ClipLoader";
+import Swal from "sweetalert2";
+import StudentTable from "../../components/StudentTable";
+import StudentFormModal from "../../components/StudentFromModal";
+import ParentFormModal from "../../components/ParentFormModal";
+import useUserApi from "../../hooks/useUserApi";
 import useClassApi from "../../hooks/useClassApi";
-import { FaTimes } from "react-icons/fa";
 
 const StudentList = () => {
   const { Classes } = useClassApi();
-  const { users, loading, error, handleDelete, handleAddUser, credentials } =
+  const { users, loading,  handleDelete, handleAddUser, credentials } =
     useUserApi();
   const [avatar, setAvatar] = useState(null);
   const [parentAvatar, setParentAvatar] = useState(null);
@@ -25,6 +31,9 @@ const StudentList = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [studentInfo, setStudentInfo] = useState(false);
   const [parentModel, setParentModel] = useState(false);
+
+  const [edit, setEdit] = useState(false);
+  const [error, setError] = useState({});
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -34,58 +43,171 @@ const StudentList = () => {
     bloodGroup: "",
     classId: "",
     address: "",
+    profilePicture: null,
   });
   const [parentFromData, setParentFromData] = useState({
     name: "",
+    email: "",
     studentId: "",
     phone: "",
     address: "",
     occupation: "",
     relationType: "",
+    profilePicture: null,
   });
 
-  const handleParentChange = (e) => {
-    setParentFromData({ ...parentFromData, [e.target.name]: e.target.value });
+  
+
+
+  const validateStudentForm = () => {
+    const newErrors = {};
+    if (formData.name.trim().length < 3) {
+      newErrors.nameErr = "Name must be at least 3 characters.";
+    }
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(formData.email)) {
+      newErrors.emailErr = "Please enter a valid email.";
+    }
+    const phonePattern = /^[0-9]{10}$/;
+    if (!phonePattern.test(formData.phone)) {
+      newErrors.phoneErr = "Please enter a valid phone number.";
+    }
+    if (!formData.gender) {
+      newErrors.genderErr = "Please select gender.";
+    }
+    if (!formData.dateOfBirth) {
+      newErrors.dobErr = "Please select date of birth.";
+    }
+    if (!formData.bloodGroup) {
+      newErrors.bloodGroupErr = "Please select blood group.";
+    }
+    if (!formData.classId) {
+      newErrors.classErr = "Please select class.";
+    }
+    if (!formData.address.trim()) {
+      newErrors.addressErr = "Please enter address.";
+    }
+    if (!profile) {
+      newErrors.fileErr = "Please upload a profile picture.";
+    }
+    setError(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const validateParentForm = () => {
+    const newErrors = {};
+    if (parentFromData.name.trim().length < 3) {
+      newErrors.parentNameErr = "Parent name must be at least 3 characters.";
+    }
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(parentFromData.email)) {
+      newErrors.parentEmailErr = "Please enter a valid email.";
+    }
+    const phonePattern = /^[0-9]{10}$/;
+    if (!phonePattern.test(parentFromData.phone)) {
+      newErrors.parentPhoneErr = "Please enter a valid phone number.";
+    }
+    if (!parentFromData.address.trim()) {
+      newErrors.parentAddressErr = "Please enter address.";
+    }
+    if (!parentFromData.occupation.trim()) {
+      newErrors.parentOccupationErr = "Please enter occupation.";
+    }
+    if (!parentFromData.relationType) {
+      newErrors.parentRelationTypeErr = "Please select relation type.";
+    }
+    if (!parentFromData.studentId) {
+      newErrors.parentStudentIdErr = "Please select student.";
+    }
+    if (!parentProfile) {
+      newErrors.parentFileErr = "Please upload a profile picture.";
+    }
+    setError(newErrors);
+    return Object.keys(newErrors).length === 0; 
+  };
+
+  const closeStudentModal = () => {
+    setOpen(false);
+    setEdit(false);
+    setAvatar(null);
+    setProfile(null);
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      gender: "",
+      dateOfBirth: "",
+      bloodGroup: "",
+      classId: "",
+      address: "",
+      profilePicture: null,
+    });
+    setError({});
+  };
+
+  const closeParentModal = () => {
+    setParentModel(false);
+    setParentAvatar(null);
+    setParentProfile(null);
+    setParentFromData({
+      name: "",
+      email: "",
+      studentId: "",
+      phone: "",
+      address: "",
+      occupation: "",
+      relationType: "",
+      profilePicture: null,
+    });
+    setError({});
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setAvatar(URL.createObjectURL(file));
-    setProfile(file);
+    if (file) {
+      setAvatar(URL.createObjectURL(file));
+      setProfile(file);
+      setFormData((prev) => ({ ...prev, profilePicture: file }));
+    }
   };
 
   const handleParentFileChange = (e) => {
     const file = e.target.files[0];
-    setParentAvatar(URL.createObjectURL(file));
-    setParentProfile(file);
+    if (file) {
+      setParentAvatar(URL.createObjectURL(file));
+      setParentProfile(file);
+      setParentFromData((prev) => ({ ...prev, profilePicture: file }));
+    }
   };
 
-  const handleSubmit = async (e) => {
+  const handleFormDataChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleParentFormDataChange = (e) => {
+    const { name, value } = e.target;
+    setParentFromData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmitStudent = async (e) => {
     e.preventDefault();
+    if (validateStudentForm()) {
+      const submitData = new FormData();
+      submitData.append("profilePicture", profile);
+      submitData.append("name", formData.name);
+      submitData.append("email", formData.email);
+      submitData.append("phone", formData.phone);
+      submitData.append("gender", formData.gender);
+      submitData.append("dateOfBirth", formData.dateOfBirth);
+      submitData.append("bloodGroup", formData.bloodGroup);
+      submitData.append("classId", formData.classId);
+      submitData.append("address", formData.address);
+      submitData.append("role", "student");
 
-    const submitData = new FormData();
-    submitData.append("profilePicture", profile);
-    submitData.append("name", formData.name);
-    submitData.append("email", formData.email);
-    submitData.append("phone", formData.phone);
-    submitData.append("gender", formData.gender);
-    submitData.append("dateOfBirth", formData.dateOfBirth);
-    submitData.append("bloodGroup", formData.bloodGroup);
-    submitData.append("classId", formData.classId);
-    submitData.append("address", formData.address);
-    submitData.append("role", "student");
-
-    try {
-      await handleAddUser(submitData);
+      await handleAddUser (submitData);
       setAvatar(null);
+      setProfile(null);
       setFormData({
         name: "",
         email: "",
@@ -95,47 +217,44 @@ const StudentList = () => {
         bloodGroup: "",
         classId: "",
         address: "",
+        profilePicture: null,
       });
       setOpen(false);
-      setProfile(null);
       setStudentInfo(true);
-    } catch (error) {
-      console.error(
-        "Error creating student:",
-        error.response?.data || error.message
-      );
+    } else {
+      Swal.fire({
+        icon: "error",
+        text: "Please fill in all required fields.",
+        confirmButtonText: "OK",
+      });
     }
   };
-  const handleParentSubmit = async (e) => {
-    e.preventDefault();
-    const ParentData = new FormData();
-    ParentData.append("profilePicture", parentProfile);
-    ParentData.append("name", parentFromData.name);
-    ParentData.append("email", parentFromData.email);
-    ParentData.append("phone", parentFromData.phone);
-    ParentData.append("address", parentFromData.address);
-    ParentData.append("occupation", parentFromData.occupation);
-    ParentData.append("relationType", parentFromData.relationType);
-    ParentData.append("studentId", parentFromData.studentId);
-    ParentData.append("role", "parent");
 
-    try {
-      const res = await handleAddUser(ParentData);
-      setParentAvatar(null);
-      setParentFromData({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-        relationType: "",
-        studentId: "",
-        occupation: "",
-      });
-      setParentModel(false);
+  const handleSubmitParent = async (e) => {
+    e.preventDefault();
+    if (validateParentForm()) {
+      const ParentData = new FormData();
+      ParentData.append("profilePicture", parentProfile);
+      ParentData.append("name", parentFromData.name);
+      ParentData.append("email", parentFromData.email);
+      ParentData.append("phone", parentFromData.phone);
+      ParentData.append("address", parentFromData.address);
+      ParentData.append("occupation", parentFromData.occupation);
+      ParentData.append("relationType", parentFromData.relationType);
+      ParentData.append("studentId", parentFromData.studentId);
+      ParentData.append("role", "parent");
+
+      await handleAddUser (ParentData);
+      closeParentModal();
       setStudentInfo(true);
-      setProfile(null);
-    } catch {
-      console.log("Error adding parent");
+    } else {
+      Swal.fire({
+        icon: "error",
+        text: "Please fill in all required fields.",
+        confirmButtonText : "OK",
+        
+
+      });
     }
   };
 
@@ -154,7 +273,7 @@ const StudentList = () => {
 
           <div className="flex gap-4 items-center">
             <button
-              className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors duration-200"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors duration-200"
               onClick={() => setOpen(true)}
             >
               + New Student
@@ -162,531 +281,73 @@ const StudentList = () => {
           </div>
         </div>
 
-        <div className="overflow-auto">
-          <table className="w-full table-auto text-sm border-collapse">
-            <thead className="bg-blue-100 text-left text-blue-600">
-              <tr>
-                <th className="p-3">Student's Photo</th>
-                <th className="p-3">Name</th>
-                <th className="p-3">Student's ID</th>
-                <th className="p-3">Class Name</th>
-                <th className="p-3">Parent Name</th>
-                <th className="p-3">Email</th>
-                <th className="p-3">Date of Birth</th>
-                <th className="p-3">Gender</th>
-                <th className="p-3">Address</th>
-                <th className="p-3">Mobile No.</th>
-                <th className="p-3">Contact</th>
-                <th className="p-3">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={12} className="text-center py-12">
-                    <ClipLoader color="#36d7b7" loading={loading} size={50} />
-                  </td>
-                </tr>
-              ) : (
-                users
-                  ?.filter((student) => student.role === "student")
-                  .map((student, idx) => (
-                    <tr
-                      key={student.id || idx}
-                      className="border-b hover:bg-gray-50 odd:bg-white even:bg-gray-100"
-                    >
-                      <td className="p-2 w-20">
-                        <img
-                          src={`http://localhost:2000/${student.profilePicture}`}
-                          alt="avatar"
-                          className="w-20 rounded-md"
-                        />
-                      </td>
-
-                      <td className="p-3 font-medium">{student.name}</td>
-
-                      <td className="p-3 text-orange-500 font-semibold">
-                        {student.admissionNumber}
-                      </td>
-
-                      <td className="p-3">
-                        {Classes.find((c) => c.id === student.classId)
-                          ?.classname || "N/A"}
-                      </td>
-
-                      <td className="p-3">
-                        {student.Parents && student.Parents.length > 0
-                          ? student.Parents[0].name
-                          : "N/A"}
-                      </td>
-
-                      <td className="p-3 text-gray-700 truncate max-w-xs">
-                        {student.email}
-                      </td>
-
-                      <td className="p-3">
-                        {student.dateOfBirth
-                          ? new Date(student.dateOfBirth).toLocaleDateString(
-                              "en-US"
-                            )
-                          : "N/A"}
-                      </td>
-
-                      <td className="p-3">{student.gender || "N/A"}</td>
-
-                      <td className="p-3">{student.address || "N/A"}</td>
-
-                      <td className="p-3">{student.phone || "N/A"}</td>
-
-                      <td className="p-3">
-                        <div className="flex gap-3">
-                          <a href={`tel:${student.phone}`}>
-                            <FiPhone className="hover:text-orange-500 cursor-pointer transition-colors duration-200" />
-                          </a>
-                          <a href={`mailto:${student.email}`}>
-                            <FiMail className="hover:text-orange-500 cursor-pointer transition-colors duration-200" />
-                          </a>
-                        </div>
-                      </td>
-
-                      <td className="p-3 relative">
-                        <FiMoreVertical
-                          className="cursor-pointer"
-                          onClick={() =>
-                            setOpenDropdown(
-                              openDropdown === student.id ? null : student.id
-                            )
-                          }
-                        />
-
-                        {openDropdown === student.id && (
-                          <div className="absolute right-12 mt-2 w-42 bg-white border rounded shadow z-10">
-                            <button
-                              className="w-full px-4 py-2 text-left hover:bg-gray-100"
-                              onClick={() => {
-                                setParentModel(true);
-                                setParentFromData({
-                                  ...parentFromData,
-                                  studentId: student.id,
-                                });
-                                setOpenDropdown(null);
-                              }}
-                            >
-                              Add Parent Details
-                            </button>
-                            <button
-                              className="w-full px-4 py-2 text-left hover:bg-gray-100"
-                              onClick={() => {
-                                setOpen(true);
-                                setFormData({
-                                  name: student.name,
-                                  email: student.email,
-                                  phone: student.phone,
-                                  gender: student.gender,
-                                  dateOfBirth: student.dateOfBirth,
-                                  bloodGroup: student.bloodGroup,
-                                  classId: student.classId,
-                                  address: student.address,
-                                });
-                                setOpenDropdown(null);
-                              }}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              className="w-full px-4 py-2 text-left hover:bg-gray-100 text-red-600"
-                              onClick={() => {
-                                handleDelete(student.id);
-                                setOpenDropdown(null);
-                              }}
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <StudentTable
+          students={users}
+          Classes={Classes}
+          loading={loading}
+          openDropdown={openDropdown}
+          setOpenDropdown={setOpenDropdown}
+          setParentModel={setParentModel}
+          setParentFromData={setParentFromData}
+          setOpen={setOpen}
+          avatar={avatar}
+          edit={edit}
+          setFormData={setFormData}
+          setEdit={setEdit}
+          profile={profile}
+          setAvatar={setAvatar}
+          handleDelete={handleDelete}
+        />
       </div>
 
       {studentInfo && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg p-8  w-[500px] text-center">
-            <h2 className="text-md font-semibold text-gray-800 mb-4">
-              Student Created Successfully
-            </h2>
-            <p className="text-xl mb-2">
-              <strong>Email:</strong> {credentials.email}
-            </p>
-            <p className="text-xl mb-4">
-              <strong>Password:</strong> {credentials.password}
-            </p>
-            <button
-              onClick={() => setStudentInfo(false)}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-            >
-              OK
-            </button>
-          </div>
-        </div>
-      )}
+  <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8 w-[90%] sm:w-[500px] text-center">
+      <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
+        Student Created Successfully
+      </h2>
+      <p className="text-md sm:text-lg mb-2">
+        <strong>Email:</strong> <span className="text-gray-600">{credentials.email}</span>
+      </p>
+      <p className="text-md sm:text-lg mb-4">
+        <strong>Password:</strong> <span className="text-gray-600">{credentials.password}</span>
+      </p>
+      <button
+        onClick={() => setStudentInfo(false)}
+        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition duration-200"
+      >
+        OK
+      </button>
+    </div>
+  </div>
+)}
 
-      {open && (
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-black bg-opacity-50">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div className="flex justify-between items-center mb-4 relative">
-                  <h3 className="text-lg font-semibold !text-orange-600 text-center w-full">
-                    Add New Student
-                  </h3>
-                  <span
-                    onClick={() => setOpen(false)}
-                    className="absolute right-0 text-black-100 cursor-pointer"
-                  >
-                    <FaTimes className="text-xl" />
-                  </span>
-                </div>
-                <form
-                  className="space-y-3"
-                  onSubmit={handleSubmit}
-                  encType="multipart/form-data"
-                >
-                  <div className="relative w-28 h-28 mx-auto border-2 border-blue-500  rounded-full">
-                    <img
-                      src={
-                        avatar ||
-                        "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                      }
-                      alt="Avatar"
-                      className="w-full h-full rounded-full object-cover border-2 border-gray-300"
-                    />
-                    <label
-                      htmlFor="avatarInput"
-                      className="absolute bottom-1 right-1 bg-white p-1 rounded-full shadow cursor-pointer"
-                    >
-                      <FiEdit2 className="text-gray-700" />
-                    </label>
-                    <input
-                      type="file"
-                      id="avatarInput"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="hidden"
-                    />
-                  </div>
-                  <div className="mt-5">
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Student Name"
-                      onChange={handleChange}
-                      value={formData.name}
-                      required
-                      className="w-full py-2 ps-2 focus:ring-1 focus:ring-blue-500 outline-none rounded-lg border-1 border-gray-300 transition-colors duration-200"
-                    />
-                  </div>
 
-                  <div className="mt-3">
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email"
-                      onChange={handleChange}
-                      value={formData.email}
-                      className="w-full py-2 ps-2 focus:ring-1 focus:ring-blue-500 outline-none rounded-lg border-1 border-gray-300 transition-colors duration-200"
-                      required
-                    />
-                  </div>
+      <StudentFormModal
+        open={open}
+        closeStudentModal={closeStudentModal}
+        formData={formData}
+        handleChange={handleFormDataChange}
+        handleFileChange={handleFileChange}
+        avatar={avatar}
+       
+        error={error}
+        handleSubmit={handleSubmitStudent}
+        edit={edit}
+        Classes={Classes}
+      />
 
-                  <div className="flex gap-3 mt-3">
-                    {/* Phone Input */}
-                    <input
-                      type="text"
-                      name="phone"
-                      placeholder="Phone"
-                      onChange={handleChange}
-                      value={formData.phone}
-                      className="w-1/2 py-2 px-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 shadow-sm"
-                      required
-                    />
-
-                    {/* Gender Select */}
-                    <div className="relative w-1/2">
-                      <select
-                        name="gender"
-                        onChange={handleChange}
-                        value={formData.gender}
-                        className="block w-full appearance-none bg-blue-50 py-2 px-2 pr-10 border border-gray-300 rounded-lg bg-white text-gray-500 focus:bg-white focus:ring-1 focus:ring-blue-500 outline-none transition duration-200"
-                        required
-                      >
-                        <option value="" className="text-gray-400">
-                          Select Gender
-                        </option>
-                        <option>Male</option>
-                        <option>Female</option>
-                        <option>Other</option>
-                      </select>
-
-                      {/* Dropdown Icon */}
-                      <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2 mt-3">
-                    <DatePicker
-                      selected={formData.dateOfBirth}
-                      onChange={(date) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          dateOfBirth: date,
-                        }))
-                      }
-                      className="w-full p-2 rounded border border-gray-300 bg-blue-50 focus:bg-white focus:ring-1 focus:ring-blue-500 outline-none transition duration-200"
-                      dateFormat="yyyy-MM-dd"
-                      placeholderText="Select a date"
-                    />
-
-                    <input
-                      type="text"
-                      name="bloodGroup"
-                      placeholder="Blood Group"
-                      onChange={handleChange}
-                      value={formData.bloodGroup}
-                      className="w-full py-2 ps-2 focus:ring-1 focus:ring-blue-500 outline-none rounded-lg border-1 border-gray-300 transition-colors duration-200"
-                    />
-                  </div>
-                  <div className="mt-3 relative">
-                    <select
-                      name="classId"
-                      onChange={handleChange}
-                      value={formData.classId}
-                      className="block w-full appearance-none py-2 ps-2 pr-10 rounded-lg bg-white border border-gray-300 text-gray-500 focus:ring-1 focus:ring-blue-500 outline-none focus:border-blue-500 transition duration-200"
-                      required
-                    >
-                      <option value="" className="text-gray-400">
-                        Select Class
-                      </option>
-                      {Classes.map((classItem) => (
-                        <option key={classItem.id} value={classItem.id}>
-                          {classItem.classname}
-                        </option>
-                      ))}
-                    </select>
-
-                    {/* Custom dropdown icon */}
-                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-
-                  <div className="mt-3 mb-3">
-                    <textarea
-                      name="address"
-                      placeholder="Address"
-                      value={formData.address}
-                      onChange={handleChange}
-                      className="w-full py-2 ps-2 focus:ring-1 focus:ring-blue-500 outline-none rounded-lg border-1 border-gray-300 transition-colors duration-200"
-                      required
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full bg-blue-600 text-white rounded p-2 hover:bg-blue-700"
-                  >
-                    Create Student
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {parentModel && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white w-full max-w-3xl rounded-lg shadow-lg p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-purple-700">
-                  Add Parent Details
-                </h2>
-                <button
-                  onClick={() => setParentModel(false)}
-                  className="text-gray-500 hover:text-red-600 text-2xl font-bold"
-                >
-                  ×
-                </button>
-              </div>
-              <form
-                className="grid grid-cols-2 gap-4"
-                onSubmit={handleParentSubmit}
-              >
-                <div className="text-center w-20 relative">
-                  <img
-                    src={
-                      parentAvatar ||
-                      "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                    }
-                    alt="Avatar"
-                    className="w-full h-full rounded-full object-cover border-2 border-gray-300"
-                  />
-                  <label
-                    htmlFor="avatarInput"
-                    className="absolute bottom-1 right-1 bg-white p-1 rounded-full shadow cursor-pointer"
-                  >
-                    <FiEdit2 className="text-gray-700" />
-                  </label>
-                  <input
-                    type="file"
-                    id="avatarInput"
-                    accept="image/*"
-                    onChange={handleParentFileChange}
-                    className="hidden"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Parent Name
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full border rounded px-3 py-2"
-                    name="name"
-                    onChange={handleParentChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Student Name
-                  </label>
-                  <select
-                    className="w-full border rounded px-3 py-2"
-                    onChange={handleParentChange}
-                    name="studentId"
-                    value={parentFromData.studentId}
-                    required
-                  >
-                    {loading && <option value="">Loading...</option>}
-                    <option value="">Select Student</option>
-                    {users
-                      ?.filter((user) => user.role === "student")
-                      .map((student) => (
-                        <option key={student.id} value={student.id}>
-                          {student.name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    className="w-full border rounded px-3 py-2"
-                    name="email"
-                    onChange={handleParentChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Mobile No.
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full border rounded px-3 py-2"
-                    name="phone"
-                    onChange={handleParentChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full border rounded px-3 py-2"
-                    name="address"
-                    onChange={handleParentChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Occupation
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full border rounded px-3 py-2"
-                    name="occupation"
-                    onChange={handleParentChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Relation Type
-                  </label>
-                  <select
-                    className="w-full border rounded px-3 py-2"
-                    name="relationType"
-                    onChange={handleParentChange}
-                    required
-                  >
-                    <option value="">Select Relation</option>
-                    <option value="Father">Father</option>
-                    <option value="Mother">Mother</option>
-                    <option value="Guardian">Guardian</option>
-                  </select>
-                </div>
-                <div className="col-span-2 flex justify-end">
-                  <button
-                    type="submit"
-                    className="bg-blue-700 text-white px-4 py-2 rounded hover:bg-purple-800 transition"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
+      <ParentFormModal
+        open={parentModel}
+        closeParentModal={closeParentModal}
+        parentFromData={parentFromData}
+        handleParentChange={handleParentFormDataChange}
+        handleParentFileChange={handleParentFileChange}
+        parentAvatar={parentAvatar}
+        error={error}
+        handleParentSubmit={handleSubmitParent}
+        students={users}
+      />
     </>
   );
 };

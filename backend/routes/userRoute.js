@@ -9,7 +9,7 @@ router.post('/', authenticate, authorizeRoles("admin"),upload.single('profilePic
 router.post('/updatePassword', authenticate, authorizeRoles("student", "teacher", "admin"), wrapAsync(updatePassword));
 router.get('/', authenticate, authorizeRoles("admin"), wrapAsync(getAllUsers));
 router.get('/:id', authenticate, authorizeRoles("admin"), wrapAsync(getUserById));
-router.patch('/:id', authenticate, authorizeRoles("admin"), wrapAsync(updateUser));
+router.patch('/:id', authenticate,upload.single('profilePicture'), authorizeRoles("admin"), wrapAsync(updateUser));
 router.delete('/:id', authenticate, authorizeRoles("admin"), wrapAsync(deleteUser));
 
 export default router;

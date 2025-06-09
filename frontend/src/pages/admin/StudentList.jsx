@@ -21,7 +21,7 @@ import useClassApi from "../../hooks/useClassApi";
 
 const StudentList = () => {
   const { Classes } = useClassApi();
-  const { users, loading,  handleDelete, handleAddUser, credentials } =
+  const { users, loading,handleEditUser,  handleDelete, handleAddUser, credentials } =
     useUserApi();
   const [avatar, setAvatar] = useState(null);
   const [parentAvatar, setParentAvatar] = useState(null);
@@ -31,7 +31,7 @@ const StudentList = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [studentInfo, setStudentInfo] = useState(false);
   const [parentModel, setParentModel] = useState(false);
-
+  const [id, setId] = useState(null)
   const [edit, setEdit] = useState(false);
   const [error, setError] = useState({});
   const [formData, setFormData] = useState({
@@ -164,7 +164,7 @@ const StudentList = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
+    if (file) {console.log(id)
       setAvatar(URL.createObjectURL(file));
       setProfile(file);
       setFormData((prev) => ({ ...prev, profilePicture: file }));
@@ -191,7 +191,45 @@ const StudentList = () => {
   };
 
   const handleSubmitStudent = async (e) => {
-    e.preventDefault();
+    if(id){
+      e.preventDefault();
+      if (validateStudentForm()) {
+        const submitData = new FormData();
+        submitData.append("profilePicture", profile);
+        submitData.append("name", formData.name);
+        submitData.append("email", formData.email);
+        submitData.append("phone", formData.phone);
+        submitData.append("gender", formData.gender);
+        submitData.append("dateOfBirth", formData.dateOfBirth);
+        submitData.append("bloodGroup", formData.bloodGroup);
+        submitData.append("classId", formData.classId);
+        submitData.append("address", formData.address);
+        submitData.append("role", "student");
+  
+        await handleEditUser(id, submitData);
+        setAvatar(null);
+        setProfile(null);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          gender: "",
+          dateOfBirth: "",
+          bloodGroup: "",
+          classId: "",
+          address: "",
+          profilePicture: null,
+        });
+        setOpen(false);
+      } else {
+        Swal.fire({
+          icon: "error",
+          text: "Please fill in all required fields.",
+          confirmButtonText: "OK",
+        });
+      }
+    }else{
+      e.preventDefault();
     if (validateStudentForm()) {
       const submitData = new FormData();
       submitData.append("profilePicture", profile);
@@ -206,6 +244,7 @@ const StudentList = () => {
       submitData.append("role", "student");
 
       await handleAddUser (submitData);
+      console.log(submitData)
       setAvatar(null);
       setProfile(null);
       setFormData({
@@ -228,6 +267,8 @@ const StudentList = () => {
         confirmButtonText: "OK",
       });
     }
+    }
+    
   };
 
   const handleSubmitParent = async (e) => {
@@ -257,6 +298,8 @@ const StudentList = () => {
       });
     }
   };
+
+  
 
   return (
     <>
@@ -295,6 +338,7 @@ const StudentList = () => {
           setFormData={setFormData}
           setEdit={setEdit}
           profile={profile}
+          setId={setId}
           setAvatar={setAvatar}
           handleDelete={handleDelete}
         />

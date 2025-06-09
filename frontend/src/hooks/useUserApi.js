@@ -73,7 +73,7 @@ const useUserApi = () => {
           });
       
         } catch (error) {
-            console.log(error);
+           
             if (error.response && error.response.data) {
               Swal.fire({
                 title: 'Error',
@@ -121,7 +121,43 @@ const useUserApi = () => {
         }
       };
 
-
+      const handleEditUser = async (id, formData) => {
+        console.log(id, formData)
+        if (!formData) return;
+      
+        try {
+          const token = localStorage.getItem('token');
+      
+          const response = await axios.patch(
+            `${import.meta.env.VITE_API_BASE_URL}/user/${id}`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+              },
+              
+            }
+          );
+      
+          await fetchUsers();
+          Swal.fire({
+            title: `${response.data.user.role} Updated`,
+            text: response.data.message,
+            icon: 'success',
+            confirmButtonText: 'OK',
+          });
+      
+        } catch (error) {
+          Swal.fire({
+            title: 'Error',
+            text: error.response?.data?.message || error.message,
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
+        }
+      };
+      
       
 
       useEffect( () => {
@@ -129,7 +165,7 @@ const useUserApi = () => {
       }, []);
 
      
-    return { users, loading, error, handleDelete ,handleAddUser,AddParent, credentials};
+    return { users, loading, error, handleDelete ,handleAddUser,AddParent, handleEditUser,credentials};
 }
 
 export default useUserApi

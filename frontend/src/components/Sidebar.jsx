@@ -127,6 +127,20 @@ const Sidebar = () => {
       ],
     },
     {
+      key: 'Events',
+      icon: <Grid3X3 className="w-5 h-5" />,
+      label: 'Events',
+      badge: '8',
+      children: [
+        { 
+          key: 'manage-events',
+          name: 'Manage Events',
+          path: '/admin/events',
+          icon: <Grid3X3 className="w-4 h-4" />
+        }
+      ],
+    },
+    {
       key: 'classes',
       icon: <Grid3X3 className="w-5 h-5" />,
       label: 'Classes',

@@ -155,15 +155,14 @@ export const getUserById = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
+
   try {
     const { id } = req.params;
     const user = await User.findByPk(id);
     if (!user) {
       throw new CustomError("User not found", 404);
     }
-
     const { name, email, role, phone, address } = req.body;
-
     // Common updates
     const updatedData = { name, email, role, phone, address };
 

@@ -14,14 +14,17 @@ const StudentTable = ({
   setEdit,
   profile,
   setAvatar,
+  setId,
   handleDelete,
 }) => {
-  console.log(students)
+  
+ 
   return (
     <div className="overflow-auto rounded-lg shadow">
       <table className="w-full table-auto text-sm border-collapse bg-white">
         <thead className="bg-blue-50 text-left text-blue-600 font-semibold">
           <tr>
+            <th className="p-3">SR. No.</th>
             <th className="p-3 rounded-tl-lg">Photo</th>
             <th className="p-3">Name</th>
             <th className="p-3">Student ID</th>
@@ -55,6 +58,7 @@ const StudentTable = ({
                 key={student.id || idx}
                 className="border-b hover:bg-gray-50 even:bg-gray-100 odd:bg-white"
               >
+                <td className="p-3 font-medium">{idx + 1}</td>
                 <td className="p-2 w-20">
                   <img
                     src={`http://localhost:2000/${student.profilePicture}`}
@@ -138,6 +142,7 @@ const StudentTable = ({
                       <button
                         className="w-full px-4 py-2 text-left hover:bg-gray-100"
                         onClick={() => {
+                          setId(student.id)
                           setOpen(true);
                           setFormData({
                             name: student.name,

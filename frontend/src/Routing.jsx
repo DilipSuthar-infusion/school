@@ -10,6 +10,7 @@ import StudentList from './pages/admin/StudentList'
 import TeacherDashboard from './pages/Teacher/TeacherDashboard'
 import ManageParents from './pages/admin/ManageParents'
 import ManageClasses from './pages/admin/ManageClasses'
+import ManageEvents from './pages/admin/ManageEvents'
 
 const Routing = () => {
   return (
@@ -24,6 +25,7 @@ const Routing = () => {
         <Route path='student/list' element={<StudentList />} />
         <Route path='parent/list' element={<ManageParents />} />
         <Route path='classes' element={<ManageClasses />} />
+        <Route path='events' element={<ManageEvents />} />
         
       </Route>
 

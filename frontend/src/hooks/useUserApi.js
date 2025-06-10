@@ -6,10 +6,10 @@ const useUserApi = () => {
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState(null);
     const [credentials, setCredentials] = React.useState(null);
-    
+    const [studentDetails, setStudentDetails] = React.useState(null);
+   
 
-
-    const fetchUsers = async (studentId) => {
+    const fetchUsers = async () => {
       setLoading(true);
       setError(null);
       try {
@@ -63,7 +63,6 @@ const useUserApi = () => {
           );
          
         await fetchUsers(); 
-          console.log(response.data)
           setCredentials(response.data.credentials);
           Swal.fire({
             title: `${response.data.user.role} Added`,
@@ -122,7 +121,6 @@ const useUserApi = () => {
       };
 
       const handleEditUser = async (id, formData) => {
-        console.log(id, formData)
         if (!formData) return;
       
         try {
@@ -136,13 +134,12 @@ const useUserApi = () => {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data'
               },
-              
             }
           );
       
           await fetchUsers();
           Swal.fire({
-            title: `${response.data.user.role} Updated`,
+            title: 'Student Updated',
             text: response.data.message,
             icon: 'success',
             confirmButtonText: 'OK',
@@ -157,6 +154,31 @@ const useUserApi = () => {
           });
         }
       };
+
+
+      const fetchStudentDetails = async (id) => {
+        
+        try {
+          const token = localStorage.getItem('token');
+          const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+               
+              },
+            }
+          )
+          
+          setStudentDetails(response.data);
+        } catch (error) {
+          Swal.fire({
+            title: 'Error',
+            text: error.response?.data?.message || error.message,
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
+        } 
+      };
       
       
 
@@ -165,7 +187,7 @@ const useUserApi = () => {
       }, []);
 
      
-    return { users, loading, error, handleDelete ,handleAddUser,AddParent, handleEditUser,credentials};
+    return { users, loading, error, handleDelete ,handleAddUser,AddParent,fetchStudentDetails,studentDetails, handleEditUser,credentials};
 }
 
 export default useUserApi

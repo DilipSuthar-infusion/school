@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import CustomError from '../utils/customError.js';
 import StudentParent from '../models/StudentParent.model.js';
 import { Op } from 'sequelize';
+import Class from '../models/class.model.js';
 
 
 dotenv.config();
@@ -12,7 +13,7 @@ dotenv.config();
 
 export const createUserWithRole = async (req, res) => {
   try {
-    const { name, email, role, phone, address } = req.body;
+    const { username, email, role, phone, address } = req.body;
     const filePath = req.file ? req.file.path : null;
 
     if (!['student', 'teacher', 'parent'].includes(role)) {
@@ -29,7 +30,7 @@ export const createUserWithRole = async (req, res) => {
 
     const userData = {
       profilePicture: filePath || 'https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg',
-      name,
+      username,
       email,
       password: hashedPassword,
       role,
@@ -59,7 +60,7 @@ export const createUserWithRole = async (req, res) => {
     const user = await User.create(userData);
 
     if (role === 'parent') {
-      const { occupation, studentId, relationType } = req.body;
+      const { occupation, studentId, relationType, motherName } = req.body;
 
       if (!studentId) {
         throw new CustomError('Student ID is required to link parent', 400);
@@ -70,7 +71,7 @@ export const createUserWithRole = async (req, res) => {
         throw new CustomError('Student not found with the given ID', 404);
       }
 
-      await user.update({ occupation, relationType });
+      await user.update({ occupation, relationType, motherName });
       await StudentParent.create({
         parentId: user.id,
         studentId,
@@ -122,13 +123,13 @@ export const getAllUsers = async (req, res) => {
         {
           model: User,
           as: 'Parents',
-          attributes: ['id', 'name', 'email'],
+          attributes: ['id', 'username', 'email', 'motherName'],
           through: { attributes: [] },
         },
         {
           model: User,
           as: 'Students',
-          attributes: ['id', 'name', 'email'],
+          attributes: ['id', 'username', 'email'],
           through: { attributes: [] },
         },
       ],
@@ -147,10 +148,28 @@ export const getAllUsers = async (req, res) => {
 
 export const getUserById = async (req, res) => {
   const { id } = req.params;
-  const user = await User.findByPk(id);
+  const user = await User.findByPk(id, {
+    include: [
+      {
+        model: User,
+        as: 'Parents',
+        through: { attributes: [] },
+      },
+      {
+        model: User,
+        as: 'Students',
+        attributes: ['id', 'username', 'email'],
+        through: { attributes: [] },
+      },
+    ],
+  });
+  
+  
   if (!user) {
     throw new CustomError('User not found', 404);
   }
+  
+
   res.status(200).json(user);
 };
 
@@ -162,9 +181,9 @@ export const updateUser = async (req, res) => {
     if (!user) {
       throw new CustomError("User not found", 404);
     }
-    const { name, email, role, phone, address } = req.body;
+    const { username, email, role, phone, address } = req.body;
     // Common updates
-    const updatedData = { name, email, role, phone, address };
+    const updatedData = { username, email, role, phone, address };
 
     // Role-based fields
     if (role === "student") {
@@ -199,12 +218,13 @@ export const updateUser = async (req, res) => {
     }
 
     if (role === "parent") {
-      const { occupation, studentId, relationType } = req.body;
+      const { occupation, studentId, relationType , motherName} = req.body;
 
       Object.assign(updatedData, {
         occupation,
         studentId,
         relationType,
+        motherName,
       });
     }
 
@@ -248,7 +268,7 @@ export const deleteUser = async (req, res) => {
       }
     }
   } else {
-    // If parent or teacher, simply delete
+    
     await user.destroy();
   }
 

@@ -83,18 +83,35 @@ const ParentFormModal = ({
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
                 <User className="w-4 h-4 text-blue-600 float-left me-1" />
-                Parent Name
+                Father Name
               </label>
               <input
                 type="text"
-                name="name"
-                value={parentFromData.name}
+                name="username"
+                value={parentFromData.username}
                 onChange={handleParentChange}
-                placeholder="Enter parent name"
+                placeholder="Enter Father name"
                 className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
               />
               {error?.parentNameErr && (
                 <p className="text-red-500 text-xs mt-1" id="parentName-error">{error.parentNameErr}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+                <User className="w-4 h-4 text-blue-600 float-left me-1" />
+                Mother Name
+              </label>
+              <input
+                type="text"
+                name="motherName"
+                value={parentFromData.motherName}
+                onChange={handleParentChange}
+                placeholder="Enter Mother name"
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+              />
+              {error?.parentNameErr && (
+                <p className="text-red-500 text-xs mt-1" id="parentName-error">{error.motherNameErr}</p>
               )}
             </div>
 
@@ -112,7 +129,7 @@ const ParentFormModal = ({
                 <option value="">Select Student</option>
                 {students.filter((student) => student.role === "student").map((student) => (
                   <option key={student.id} value={student.id}>
-                    {student.name}
+                    {student.username}
                   </option>
                 ))}
               </select>
@@ -208,8 +225,7 @@ const ParentFormModal = ({
                 
               >
                 <option value="">Select Relation</option>
-                <option value="Father">Father</option>
-                <option value="Mother">Mother</option>
+                <option value="Parent">Parent</option>
                 <option value="Guardian">Guardian</option>
               </select>
               {error?.parentRelationTypeErr && (

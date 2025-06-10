@@ -52,7 +52,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-white font-sans text-gray-700">
      
 
-      <section className="bg-gray-50 pt-20 pb-28 sm:pt-32 sm:pb-36">
+      <section className="bg-gray-50 pt-20 pb-28 sm:pt-26 sm:pb-26">
         <div className="max-w-[1200px] mx-auto px-6 text-center">
           <h1 className="max-w-4xl mx-auto text-5xl sm:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight">
             Welcome to Apollo International Dashboard

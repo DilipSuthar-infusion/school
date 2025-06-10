@@ -67,7 +67,7 @@ export const getStudyMaterials = async (req, res) => {
           {
             model: User,
             as: 'classTeacher', // alias for Class -> User
-            attributes: ['name'],
+            attributes: ['username'],
           },
         ],
       },
@@ -79,7 +79,7 @@ export const getStudyMaterials = async (req, res) => {
       {
         model: User,
         as: 'teacher', // alias for StudyMaterial -> User (uploader)
-        attributes: ['name'],
+        attributes: ['username'],
       },
     ],
   });

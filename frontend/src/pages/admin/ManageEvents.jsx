@@ -1,37 +1,98 @@
-import { BookCopy, Calendar, Camera, Mail, MapPin, Pen, Phone, User, Users, X } from 'lucide-react';
-import React from 'react'
-import { FiEdit2, FiMail, FiMoreVertical, FiPhoneCall, FiSearch } from 'react-icons/fi';
+import { BookCopy, Calendar, MapPin, Pen, X } from "lucide-react";
+import React, { useState } from "react";
+import { FiMoreVertical, FiPhoneCall, FiSearch } from "react-icons/fi";
+import useEventApi from "../../hooks/useEventApi";
+import ClipLoader from "react-spinners/ClipLoader";
+import Swal from "sweetalert2";
+
 const ManageEvents = () => {
-    const [loading, setLoading] = React.useState(false);
-    const [open, setOpen] = React.useState(false);
-    const [edit, setEdit] = React.useState(false);
-    const [error, setError] = React.useState({});
-    const [formData, setFormData] = React.useState({
-        name: "",
-        email: "",
-        phone: "",
-        gender: "",
-        dateOfBirth: "",
-        bloodGroup: "",
-        classId: "",
-        address: "",
-        profilePicture: null,
+  const { handleAddEvent, Events, loading, handleDelete, handleEditEvent } =
+    useEventApi();
+  const [open, setOpen] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [error, setError] = useState({});
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    startDate: "",
+    endDate: "",
+    location: "",
+  });
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [eventId, setEventId] = useState(null);
+
+  const closeStudentModal = () => {
+    setOpen(false);
+    setEdit(false);
+    setFormData({
+      title: "",
+      description: "",
+      startDate: "",
+      endDate: "",
+      location: "",
     });
-    const [avatar, setAvatar] = React.useState(null);
+    setError({});
+    setEventId(null);
+  };
 
-    const closeStudentModal = () => {
-        setOpen(false);
-    };
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.title) {
+      newErrors.title = "Title is required";
     }
+    if (!formData.description) {
+      newErrors.description = "Description is required";
+    }
+    if (!formData.startDate) {
+      newErrors.startDate = "Start Date is required";
+    }
+    if (!formData.endDate) {
+      newErrors.endDate = "End Date is required";
+    }
+    if (!formData.location) {
+      newErrors.location = "Location is required";
+    }
+    setError(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      if (edit && eventId) {
+        await handleEditEvent(eventId, formData);
+        Swal.fire({
+          icon: "success",
+          text: "Event updated successfully",
+          confirmButtonText: "OK",
+        });
+      } else {
+        await handleAddEvent(formData);
+        Swal.fire({
+          icon: "success",
+          text: "Event added successfully",
+          confirmButtonText: "OK",
+        });
+      }
+
+      closeStudentModal();
+    } catch (error) {
+      console.error("Error adding/editing event:", error);
+    }
+  };
+
   return (
-   <>
-    <div className="p-2">
+    <>
+      <div className="p-2">
         {/* Top Bar */}
         <div className="flex justify-between items-center mb-4 px-4 py-4 bg-white rounded-lg shadow-md">
           <div className="flex items-center gap-2 border rounded px-3 py-2 w-1/3">
@@ -57,245 +118,254 @@ const ManageEvents = () => {
           <table className="w-full table-auto text-sm border-collapse">
             <thead className="bg-blue-100 text-left text-blue-600">
               <tr>
-                <th className='p-3'>Sr. No.</th>
+                <th className="p-3">Sr. No.</th>
                 <th className="p-3">Event Title</th>
                 <th className="p-3">Event Description</th>
                 <th className="p-3">Start Date</th>
                 <th className="p-3">End Date</th>
                 <th className="p-3">Location</th>
+                <th className="p-3">Created By</th>
                 <th className="p-3">Action</th>
               </tr>
             </thead>
-            {/* <tbody>
+            <tbody>
               {loading ? (
                 <tr>
                   <td colSpan="10" className="text-center py-4">
                     <ClipLoader color="#36d7b7" loading={loading} size={30} />
                   </td>
                 </tr>
-              ) : users.length === 0 ? (
+              ) : Events.length === 0 ? (
                 <tr>
                   <td colSpan="10" className="text-center py-12 text-gray-500">
-                    No parents found.
+                    No events found.
                   </td>
-                </tr> ) : (
-                users
-                  ?.filter(user => user.role === 'parent')
-                  .map((parent, idx) => (
-                    <tr key={idx} className="border-b hover:bg-gray-50">
-                      <td className="p-2 w-20">
-                        <img
-                          src={`http://localhost:2000/${parent.profilePicture}`}
-                          alt="avatar"
-                          className="w-20 rounded-md"
-                        />
-                      </td>
-                      <td className="p-3 font-medium">{parent.name}</td>
-                      <td className="p-3 text-orange-500 font-semibold">
-                      {parent.Students && parent.Students.length > 0 ? parent.Students[0].name : 'N/A'}
-                      </td>
-                      <td className="p-3">{parent.email || 'N/A'}</td>
-                      <td className="p-3 text-gray-700 truncate max-w-xs">
-                        {parent.phone}
-                      </td>
-                     <td className='p-3'>
-                        {parent.address}
-                      </td>
-                      <td className="p-3">{parent.occupation || 'N/A'}</td>
-                      <td className="p-3">{parent.relationType || 'N/A'}</td>
-                      <td className="p-3 relative">
-            <FiMoreVertical
-              className="cursor-pointer"
-              onClick={() =>
-                setOpenDropdown(openDropdown === parent.id ? null : parent.id)
-              }
-            />
+                </tr>
+              ) : (
+              Events.map((event, idx) => {
+                return (
+                  <tr key={idx} className="border-b hover:bg-gray-50">
+                    <td className="p-2 w-20">{idx + 1}</td>
+                    <td className="p-2 w-20">{event.title}</td>
+                    <td className="p-3 font-medium">{event.description}</td>
+                    <td className="p-3 text-orange-500 font-semibold">
+                      {new Date(event.startDate).toLocaleDateString()}
+                    </td>
+                    <td className="p-3">{new Date(event.endDate).toLocaleDateString()}</td>
+                    <td className="p-3 text-gray-700 truncate max-w-xs">
+                      {event.location}
+                    </td>
+                    <td>{event.creator.username}</td>
+                    <td className="p-3 relative">
+                      <FiMoreVertical
+                        className="cursor-pointer"
+                        onClick={() =>
+                          setOpenDropdown(
+                            openDropdown === event.id ? null : event.id
+                          )
+                        }
+                      />
 
-            {openDropdown === parent.id && (
-              <div className="absolute right-12 mt-2 w-42 bg-white border rounded shadow z-10">
-                <button
-                  className="w-full px-4 py-2 text-left hover:bg-gray-100"
-                  onClick={() => {
-                    setOpen(true);
-                    setFormData({
-                      name: parent.name,
-                      email: parent.email,
-                      phone: parent.phone,
-                      gender: parent.gender,
-                      dateOfBirth: parent.dateOfBirth,
-                      bloodGroup: parent.bloodGroup,
-                      classId: parent.classId,
-                      address: parent.address,
-                    });
-                    setOpenDropdown(null);
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  className="w-full px-4 py-2 text-left hover:bg-gray-100 text-red-600"
-                  onClick={() => {
-                    handleDelete(parent.id);
-                    setOpenDropdown(null);
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            )}
-          </td>
-                    </tr>
-                  ))
-              )}
-            </tbody> */}
-
+                      {openDropdown === event.id && (
+                        <div className="absolute right-12 mt-2 w-42 bg-white border rounded shadow z-10">
+                          <button
+                            className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                            onClick={() => {
+                              setOpen(true);
+                              setEdit(true);
+                              setEventId(event.id);
+                              setFormData({
+                                title: event.title,
+                                description: event.description,
+                                startDate: event.startDate,
+                                endDate: event.endDate,
+                                location: event.location,
+                              });
+                              setOpenDropdown(null);
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="w-full px-4 py-2 text-left hover:bg-gray-100 text-red-600"
+                            onClick={() => {
+                              handleDelete(event.id);
+                              setOpenDropdown(null);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                );
+              }))}
+            
+            </tbody>
           </table>
         </div>
       </div>
 
-
-
-
       {open && (
-        <div className="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <div className="flex min-h-full items-center justify-center p-4 sm:p-6 lg:p-8">
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
-            aria-hidden="true"
-            onClick={closeStudentModal}
-          ></div>
-  
-          <div className="relative w-full max-w-md sm:max-w-7xl transform rounded-3xl bg-white shadow-2xl transition-all z-10">
-            <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-6 rounded-t-3xl">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2" id="modal-title">
-                <Calendar className="w-6 h-6"/>
-                  {edit ? "Edit Student" : "Add New Event"}
-                </h3>
-                <button
-                  onClick={closeStudentModal}
-                  className="text-white hover:text-red-200 transition-colors p-1"
-                  aria-label="Close modal"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-            </div>
-  
-           
-            <form onSubmit={handleSubmit} className="px-6 py-6 max-h-[70vh] overflow-y-auto">
-              <div className="space-y-6">
-                <div className="space-y-5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <Pen className="w-4 h-4 text-blue-600 float-left me-1" />
-                        Event Title
-                      </label>
-                      <input
-                        type="text"
-                        name="title"
-                        onChange={handleChange}
-                        value={formData.title}
-                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
-                        placeholder="Sports Day"
-                      />
-                      {error?.nameErr && (
-                        <p className="text-red-500 text-xs mt-1" id="name-error">
-                          {error.nameErr}
-                        </p>
-                      )}
-                    </div>
-  
-              
-                    <div className="space-y-2">
-                      <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <BookCopy className="w-4 h-4 text-blue-600 float-left me-1" />
-                        Description
-                      </label>
-                      <input
-                        type="email"
-                        name="description"
-                        onChange={handleChange}
-                        value={formData.description}
-                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
-                        placeholder="Sports Day in the park"
-                      />
-                      {error?.emailErr && (
-                        <p className="text-red-500 text-xs mt-1" id="email-error">
-                          {error.emailErr}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-  
-          
-  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <Calendar className="w-4 h-4 text-blue-600 float-left me-1" />
-                        Start Date
-                      </label>
-                      <input
-                        type="date"
-                        name="startDate"
-                        placeholder='2022-05-01'
-                        onChange={handleChange}
-                        value={formData.startDate}
-                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
-                      />
-                      {error?.dobErr && (
-                        <p className="text-red-500 text-xs mt-1" id="dob-error">
-                          {error.dobErr}
-                        </p>
-                      )}
-                    </div>
-  
-                    <div className="space-y-2">
-                      <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                      <Calendar className="w-4 h-4 text-blue-600 float-left me-1" />
-                        Ending Date
-                      </label>
-                      <input
-                        type="date"
-                        name="endingDate"
-                        onChange={handleChange}
-                        value={formData.endingDate}
-                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
-                      />
-                      {error?.bloodGroupErr && (
-                        <p className="text-red-500 text-xs mt-1" id="bloodGroup-error">
-                          {error.bloodGroupErr}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-  
-            
-  
-  
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                      <MapPin className="w-4 h-4 text-blue-600 float-left me-1" />
-                      Location
-                    </label>
-                    <textarea
-                      name="address"
-                      rows={2}
-                      onChange={handleChange}
-                      value={formData.address}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white resize-none"
-                      placeholder="123 Main St, City, Country"
-                    />
-                    {error?.addressErr && (
-                      <p className="text-red-500 text-xs mt-1" id="address-error">
-                        {error.addressErr}
-                      </p>
-                    )}
-                  </div>
+        <div
+          className="fixed inset-0 z-50 overflow-y-auto"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+        >
+          <div className="flex min-h-full items-center justify-center p-4 sm:p-6 lg:p-8">
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+              aria-hidden="true"
+              onClick={closeStudentModal}
+            ></div>
+
+            <div className="relative w-full max-w-md sm:max-w-7xl transform rounded-3xl bg-white shadow-2xl transition-all z-10">
+              <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-6 rounded-t-3xl">
+                <div className="flex items-center justify-between">
+                  <h3
+                    className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2"
+                    id="modal-title"
+                  >
+                    <Calendar className="w-6 h-6" />
+                    {edit ? "Edit Event" : "Add New Event"}
+                  </h3>
+                  <button
+                    onClick={closeStudentModal}
+                    className="text-white hover:text-red-200 transition-colors p-1"
+                    aria-label="Close modal"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
                 </div>
-  
+              </div>
+
+              <form
+                onSubmit={handleSubmit}
+                className="px-6 py-6 max-h-[70vh] overflow-y-auto"
+              >
+                <div className="space-y-6">
+                  <div className="space-y-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                          <Pen className="w-4 h-4 text-blue-600 float-left me-1" />
+                          Event Title
+                        </label>
+                        <input
+                          type="text"
+                          name="title"
+                          onChange={handleChange}
+                          value={formData.title}
+                          className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                          placeholder="Sports Day"
+                        />
+                        {error?.title && (
+                          <p
+                            className="text-red-500 text-xs mt-1"
+                            id="name-error"
+                          >
+                            {error.title}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                          <BookCopy className="w-4 h-4 text-blue-600 float-left me-1" />
+                          Description
+                        </label>
+                        <input
+                          type="text"
+                          name="description"
+                          onChange={handleChange}
+                          value={formData.description}
+                          className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                          placeholder="Sports Day in the park"
+                        />
+                        {error?.description && (
+                          <p
+                            className="text-red-500 text-xs mt-1"
+                            id="email-error"
+                          >
+                            {error.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                          <Calendar className="w-4 h-4 text-blue-600 float-left me-1" />
+                          Start Date
+                        </label>
+                        <input
+                          type="date"
+                          name="startDate"
+                          placeholder="2022-05-01"
+                          onChange={handleChange}
+                          value={formData.startDate}
+                          className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                        />
+                        {error?.startDate && (
+                          <p
+                            className="text-red-500 text-xs mt-1"
+                            id="dob-error"
+                          >
+                            {error.startDate}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                          <Calendar className="w-4 h-4 text-blue-600 float-left me-1" />
+                          Ending Date
+                        </label>
+                        <input
+                          type="date"
+                          name="endDate" // Corrected name to endDate
+                          onChange={handleChange}
+                          value={formData.endDate} // Corrected value to formData.endDate
+                          className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                        />
+                        {error?.endDate && (
+                          <p
+                            className="text-red-500 text-xs mt-1"
+                            id="bloodGroup-error"
+                          >
+                            {error.endDate}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                        <MapPin className="w-4 h-4 text-blue-600 float-left me-1" />
+                        Location
+                      </label>
+                      <textarea
+                        name="location" // Corrected name to location
+                        rows={2}
+                        onChange={handleChange}
+                        value={formData.location} // Corrected value to formData.location
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white resize-none"
+                        placeholder="123 Main St, City, Country"
+                      />
+                      {error?.location && (
+                        <p
+                          className="text-red-500 text-xs mt-1"
+                          id="address-error"
+                        >
+                          {error.location}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
                   <div className="flex flex-col sm:flex-row gap-3 justify-end mt-8 pt-4 border-t border-gray-200">
                     <button
                       type="button"
@@ -308,17 +378,17 @@ const ManageEvents = () => {
                       type="submit"
                       className="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium shadow-lg"
                     >
-                      {edit ? "Update Student" : "Create Event"}
+                      {edit ? "Update Event" : "Create Event"}
                     </button>
+                  </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
-        </div>
       )}
-      </>
-  )
-}
+    </>
+  );
+};
 
-export default ManageEvents
+export default ManageEvents;

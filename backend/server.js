@@ -73,7 +73,7 @@ app.use('/api/exam-results', examResultRoutes);
 
 //     const hashedPassword = await hash("admin123", 10);
 //     await User.create({
-//       name: 'Admin',
+//       username: 'Admin',
 //       email: "admin@school.com",
 //       password: hashedPassword,
 //       role: 'admin',

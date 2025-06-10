@@ -3,15 +3,14 @@ import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 
-const useClassApi = () => {
-    const [Classes, setClasses] = useState([]);
+const useEventApi = () => {
+    const [Events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
-  
-    const handleAddClass = async (formData) => {
+    const handleAddEvent = async (formData) => {
         try {
           const token = localStorage.getItem('token');
           await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL}/classes`,
+            `${import.meta.env.VITE_API_BASE_URL}/events`,
             formData,
             {
               headers: {
@@ -19,7 +18,7 @@ const useClassApi = () => {
               },
             }
           );
-          handlefetchClasses();
+          handlefetchEvents();
           setLoading(false);
         } catch (error) {
           Swal.fire({
@@ -35,12 +34,12 @@ const useClassApi = () => {
         console.log(id)
         try {
           const token = localStorage.getItem('token');
-          await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/classes/${id}`, {
+          await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/events/${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
-          setClasses(Classes.filter(classObj => classObj.id !== id));
+          setEvents(Events.filter(eventObj => eventObj.id !== id));
           
         } catch (error) {
           Swal.fire({
@@ -53,16 +52,17 @@ const useClassApi = () => {
       };
 
 
-      const handlefetchClasses = async () => {
+      const handlefetchEvents = async () => {
         try {
           setLoading(true);
           const token = localStorage.getItem('token');
-          const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/classes`, {
+          const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/events`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
-          setClasses(response.data);
+          setLoading(false);
+          setEvents(response.data);
         } catch (error) {
           Swal.fire({
             title: 'Error',
@@ -75,11 +75,11 @@ const useClassApi = () => {
 
 
 
-      const handleEditClass = async (id, formData) => {
-        try {
+      const handleEditEvent = async (id,formData) => {
+        try {          
           const token = localStorage.getItem('token');
           await axios.patch(
-            `${import.meta.env.VITE_API_BASE_URL}/classes/${id}`,
+            `${import.meta.env.VITE_API_BASE_URL}/events/${id}`,
             formData,
             {
               headers: {
@@ -87,7 +87,7 @@ const useClassApi = () => {
               },
             }
           );
-          await handlefetchClasses();
+          await handlefetchEvents();
           setLoading(false);
         } catch (error) {
           Swal.fire({
@@ -100,10 +100,10 @@ const useClassApi = () => {
       };
 
       useEffect(() => {
-        handlefetchClasses();
+        handlefetchEvents();
       }, []);
 
-  return  { handleAddClass, handleDelete ,handlefetchClasses,handleEditClass , Classes};
+  return  { handleAddEvent, handleDelete ,handlefetchEvents,handleEditEvent ,loading, Events};  
 }
 
-export default useClassApi
+export default useEventApi

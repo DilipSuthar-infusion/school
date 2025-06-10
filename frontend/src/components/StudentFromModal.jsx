@@ -83,9 +83,9 @@ const StudentFormModal = ({
                     </label>
                     <input
                       type="text"
-                      name="name"
+                      name="username"
                       onChange={handleChange}
-                      value={formData.name}
+                      value={formData.username}
                       className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                       placeholder="Student Name"
                     />
@@ -109,9 +109,7 @@ const StudentFormModal = ({
                       value={formData.email}
                       className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                       placeholder="student@example.com"
-                      aria-invalid={error?.emailErr ? "true" : "false"}
-                      aria-describedby={error?.emailErr ? "email-error" : undefined}
-                      required
+                      
                     />
                     {error?.emailErr && (
                       <p className="text-red-500 text-xs mt-1" id="email-error">
@@ -135,9 +133,7 @@ const StudentFormModal = ({
                       value={formData.phone}
                       className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                       placeholder="8596412365"
-                      aria-invalid={error?.phoneErr ? "true" : "false"}
-                      aria-describedby={error?.phoneErr ? "phone-error" : undefined}
-                      required
+                     
                     />
                     {error?.phoneErr && (
                       <p className="text-red-500 text-xs mt-1" id="phone-error">
@@ -156,9 +152,7 @@ const StudentFormModal = ({
                       onChange={handleChange}
                       value={formData.gender}
                       className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none bg-gray-50 focus:bg-white outline-none"
-                      aria-invalid={error?.genderErr ? "true" : "false"}
-                      aria-describedby={error?.genderErr ? "gender-error" : undefined}
-                      required
+                      
                     >
                       <option value="">Select Gender</option>
                       <option value="Male">Male</option>

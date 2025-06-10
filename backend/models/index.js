@@ -95,6 +95,7 @@ const associateModels = () => {
 
   Event.belongsTo(User, { foreignKey: 'createdBy', as: 'creator' });
   
+  
 };
 
 export { models, associateModels };

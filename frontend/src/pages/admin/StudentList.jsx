@@ -35,7 +35,7 @@ const StudentList = () => {
   const [edit, setEdit] = useState(false);
   const [error, setError] = useState({});
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     phone: "",
     gender: "",
@@ -46,8 +46,9 @@ const StudentList = () => {
     profilePicture: null,
   });
   const [parentFromData, setParentFromData] = useState({
-    name: "",
+    username: "",
     email: "",
+    motherName: "",
     studentId: "",
     phone: "",
     address: "",
@@ -61,7 +62,7 @@ const StudentList = () => {
 
   const validateStudentForm = () => {
     const newErrors = {};
-    if (formData.name.trim().length < 3) {
+    if (formData.username.trim().length < 3) {
       newErrors.nameErr = "Name must be at least 3 characters.";
     }
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -87,8 +88,12 @@ const StudentList = () => {
     if (!formData.address.trim()) {
       newErrors.addressErr = "Please enter address.";
     }
-    if (!profile) {
-      newErrors.fileErr = "Please upload a profile picture.";
+    
+    if (!id && !profile) {
+      
+        newErrors.fileErr = "Please upload a profile picture.";
+
+      
     }
     setError(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -96,9 +101,12 @@ const StudentList = () => {
 
   const validateParentForm = () => {
     const newErrors = {};
-    if (parentFromData.name.trim().length < 3) {
+    if (parentFromData.username.trim().length < 3) {
       newErrors.parentNameErr = "Parent name must be at least 3 characters.";
     }
+    if (parentFromData.motherName.trim().length < 3) {
+      newErrors.motherNameErr = "Mother name must be at least 3 characters.";
+    } 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(parentFromData.email)) {
       newErrors.parentEmailErr = "Please enter a valid email.";
@@ -132,7 +140,7 @@ const StudentList = () => {
     setAvatar(null);
     setProfile(null);
     setFormData({
-      name: "",
+      username: "",
       email: "",
       phone: "",
       gender: "",
@@ -150,7 +158,8 @@ const StudentList = () => {
     setParentAvatar(null);
     setParentProfile(null);
     setParentFromData({
-      name: "",
+      username: "",
+      motherName: "",
       email: "",
       studentId: "",
       phone: "",
@@ -191,60 +200,37 @@ const StudentList = () => {
   };
 
   const handleSubmitStudent = async (e) => {
-    if(id){
-      e.preventDefault();
-      if (validateStudentForm()) {
-        const submitData = new FormData();
-        submitData.append("profilePicture", profile);
-        submitData.append("name", formData.name);
-        submitData.append("email", formData.email);
-        submitData.append("phone", formData.phone);
-        submitData.append("gender", formData.gender);
-        submitData.append("dateOfBirth", formData.dateOfBirth);
-        submitData.append("bloodGroup", formData.bloodGroup);
-        submitData.append("classId", formData.classId);
-        submitData.append("address", formData.address);
-        submitData.append("role", "student");
+    e.preventDefault();
   
+    if (!validateStudentForm()) {
+      Swal.fire({
+        icon: "error",
+        text: "Please fill in all required fields.",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+  
+    const submitData = new FormData();
+    submitData.append("profilePicture", profile);
+    submitData.append("username", formData.username);
+    submitData.append("email", formData.email);
+    submitData.append("phone", formData.phone);
+    submitData.append("gender", formData.gender);
+    submitData.append("dateOfBirth", formData.dateOfBirth);
+    submitData.append("bloodGroup", formData.bloodGroup);
+    submitData.append("classId", formData.classId);
+    submitData.append("address", formData.address);
+    submitData.append("role", "student");
+  
+    try {
+      if (id) {
         await handleEditUser(id, submitData);
-        setAvatar(null);
-        setProfile(null);
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          gender: "",
-          dateOfBirth: "",
-          bloodGroup: "",
-          classId: "",
-          address: "",
-          profilePicture: null,
-        });
-        setOpen(false);
       } else {
-        Swal.fire({
-          icon: "error",
-          text: "Please fill in all required fields.",
-          confirmButtonText: "OK",
-        });
+        await handleAddUser(submitData);
+        setStudentInfo(true);
       }
-    }else{
-      e.preventDefault();
-    if (validateStudentForm()) {
-      const submitData = new FormData();
-      submitData.append("profilePicture", profile);
-      submitData.append("name", formData.name);
-      submitData.append("email", formData.email);
-      submitData.append("phone", formData.phone);
-      submitData.append("gender", formData.gender);
-      submitData.append("dateOfBirth", formData.dateOfBirth);
-      submitData.append("bloodGroup", formData.bloodGroup);
-      submitData.append("classId", formData.classId);
-      submitData.append("address", formData.address);
-      submitData.append("role", "student");
-
-      await handleAddUser (submitData);
-      console.log(submitData)
+  
       setAvatar(null);
       setProfile(null);
       setFormData({
@@ -259,24 +245,24 @@ const StudentList = () => {
         profilePicture: null,
       });
       setOpen(false);
-      setStudentInfo(true);
-    } else {
+    } catch (err) {
+      console.error("Submission failed:", err);
       Swal.fire({
         icon: "error",
-        text: "Please fill in all required fields.",
+        text: "Something went wrong. Please try again.",
         confirmButtonText: "OK",
       });
     }
-    }
-    
   };
+  
 
   const handleSubmitParent = async (e) => {
     e.preventDefault();
     if (validateParentForm()) {
       const ParentData = new FormData();
       ParentData.append("profilePicture", parentProfile);
-      ParentData.append("name", parentFromData.name);
+      ParentData.append("username", parentFromData.username);
+      ParentData.append("motherName", parentFromData.motherName);
       ParentData.append("email", parentFromData.email);
       ParentData.append("phone", parentFromData.phone);
       ParentData.append("address", parentFromData.address);

@@ -12,9 +12,13 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     defaultValue: 'https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg',
   },
-  name: {
+  username: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  motherName: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   email: {
     type: DataTypes.STRING,

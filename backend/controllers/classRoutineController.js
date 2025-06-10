@@ -130,7 +130,7 @@ export const getClassRoutinesByDate  = async (req, res) => {
     }
     const records = await ClassRoutine.findAll({
       where: { classId, date },
-      include: [{ model: User, as: 'student', attributes: ['id', 'name'] }]
+      include: [{ model: User, as: 'student', attributes: ['id', 'username'] }]
     });
 
     res.status(200).json({ data: records });
@@ -148,7 +148,7 @@ export const getAllClassRoutines = async (req, res) => {
         {
           model: User,
           as: 'teacher',
-          attributes: ['id', 'name'],
+          attributes: ['id', 'username'],
         },
         {
           model: Class,

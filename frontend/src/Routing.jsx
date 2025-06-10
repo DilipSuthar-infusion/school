@@ -11,6 +11,7 @@ import TeacherDashboard from './pages/Teacher/TeacherDashboard'
 import ManageParents from './pages/admin/ManageParents'
 import ManageClasses from './pages/admin/ManageClasses'
 import ManageEvents from './pages/admin/ManageEvents'
+import StudentDetail from './pages/admin/StudentDetail'
 
 const Routing = () => {
   return (
@@ -23,19 +24,20 @@ const Routing = () => {
       <Route path='/admin' element={<Home />}>
         <Route index element={<Dashboard />} />
         <Route path='student/list' element={<StudentList />} />
+        <Route path='student/list/:studentId' element={<StudentDetail />} />
         <Route path='parent/list' element={<ManageParents />} />
         <Route path='classes' element={<ManageClasses />} />
         <Route path='events' element={<ManageEvents />} />
-        
+     
       </Route>
 
-      {/* Teacher Routes */}
+    
       <Route path='/teacher' element={<Home />}>
         <Route index element={<TeacherDashboard />} />
         
       </Route>
 
-      {/* Catch-all */}
+   
       <Route path='*' element={<h1>404 Page Not Found</h1>} />
     </Routes>
     </>

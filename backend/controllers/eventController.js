@@ -5,7 +5,6 @@ import CustomError from '../utils/customError.js';
 export const createEvent = async (req, res) => {
     const { title, description, startDate, endDate, location } = req.body;
     const createdBy = req.user.id;
-    console.log(createdBy)
     const event = await Event.create({
       title,
       description,
@@ -20,14 +19,22 @@ export const createEvent = async (req, res) => {
 };
 
 export const getAllEvents = async (req, res) => {
+  try {
     const events = await Event.findAll({
-      include: [{ model: User, as: 'creator', attributes: ['id', 'name', 'email'] }],
-      order: [['startDate', 'ASC']],
+      include: [{
+        model: User,
+        as: 'creator',
+        attributes: ['username']
+      }],
     });
 
     res.status(200).json(events);
-
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    res.status(500).json({ message: "Failed to fetch events" });
+  }
 };
+
 
 
 

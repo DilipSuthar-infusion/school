@@ -1,6 +1,6 @@
 import React from "react";
 import { FiPhone, FiMail, FiMoreVertical } from "react-icons/fi";
-
+import { Link } from "react-router";
 const StudentTable = ({
   students,
   Classes,
@@ -29,7 +29,8 @@ const StudentTable = ({
             <th className="p-3">Name</th>
             <th className="p-3">Student ID</th>
             <th className="p-3">Class</th>
-            <th className="p-3">Parent</th>
+            <th className="p-3">Father Name</th>
+            <th className="p-3">Mother Name</th>
             <th className="p-3">Email</th>
             <th className="p-3">DOB</th>
             <th className="p-3">Gender</th>
@@ -67,7 +68,7 @@ const StudentTable = ({
                   />
                 </td>
 
-                <td className="p-3 font-medium">{student.name}</td>
+                <td className="p-3 font-medium">{student.username}</td>
 
                 <td className="p-3 text-orange-500 font-semibold">
                   {student.admissionNumber || "N/A"}
@@ -80,7 +81,12 @@ const StudentTable = ({
 
                 <td className="p-3">
                   {student.Parents && student.Parents.length > 0
-                    ? student.Parents[0].name
+                    ? student.Parents[0].username
+                    : "N/A"}
+                </td>
+                <td className="p-3">
+                  {student.Parents && student.Parents.length > 0
+                    ? student.Parents[0].motherName
                     : "N/A"}
                 </td>
 
@@ -139,13 +145,16 @@ const StudentTable = ({
                       >
                         Add Parent Details
                       </button>
+                      <button className="w-full px-4 py-2 text-left hover:bg-gray-100">
+                      <Link to={`/admin/student/list/${student.id}`}>View</Link>
+                      </button>
                       <button
                         className="w-full px-4 py-2 text-left hover:bg-gray-100"
                         onClick={() => {
                           setId(student.id)
                           setOpen(true);
                           setFormData({
-                            name: student.name,
+                            username: student.username,
                             email: student.email,
                             phone: student.phone,
                             gender: student.gender,

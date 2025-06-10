@@ -42,8 +42,8 @@ export const getClassById = async (req, res) => {
 
 export const updateClass = async (req, res) => {
     const { id } = req.params;
-    const {  name, section, roomNumber } = req.body;
-    if (!name || !section ) {
+    const {  classname, section, roomNumber } = req.body;
+    if (!classname || !section ) {
       throw new CustomError('Missing required fields', 400);
     }
     const classObj = await Class.findByPk(id);
@@ -51,7 +51,7 @@ export const updateClass = async (req, res) => {
       throw new CustomError('Class not found', 404);
     }
     await classObj.update({
-      name,
+      classname,
       section,
       roomNumber,
     });
@@ -96,4 +96,16 @@ export const deleteAssignedClassTeacher = async (req, res) => {
     classObj.teacherId = null;
     await classObj.save();
     res.status(200).json({ message: "Class teacher deleted successfully" });
+};
+
+
+export const deleteClass = async (req, res) => {
+    const { id } = req.params;
+    console.log(id)
+    const classObj = await Class.findByPk(id);
+    if (!classObj) {
+      throw new CustomError('Class not found', 404);
+    }
+    await classObj.destroy();
+    res.status(200).json({ message: 'Class deleted successfully' });
 };

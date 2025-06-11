@@ -163,7 +163,7 @@ const Sidebar = () => {
         { 
           key: 'manage-subjects',
           name: 'Manage Subjects', 
-          path: '/admin/subjects',
+          path: '/admin/subject/list',
           icon: <BookOpen className="w-4 h-4" />
         },
       ],

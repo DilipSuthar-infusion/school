@@ -93,7 +93,7 @@ const StudentDetail = () => {
                 </div>
               </div>
             </div>
-
+          {studentDetails?.Parents[0] ? (
             <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
               <div>
                 <p className="text-xl text-gray-800 mb-4">Parent Details</p>
@@ -166,7 +166,15 @@ const StudentDetail = () => {
                 </div>
               </div>
             </div>
+            ) : (
+              <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <div className="flex items-center justify-center">
+                  <div className="text-gray-600 text-lg">No parent data added.</div>
+                </div>
+              </div>
+            )}
           </div>
+                 
         )
       )}
     </div>

@@ -149,9 +149,9 @@ const ManageEvents = () => {
                     <td className="p-2 w-20">{event.title}</td>
                     <td className="p-3 font-medium">{event.description}</td>
                     <td className="p-3 text-orange-500 font-semibold">
-                      {new Date(event.startDate).toLocaleDateString()}
+                      {event.startDate}
                     </td>
-                    <td className="p-3">{new Date(event.endDate).toLocaleDateString()}</td>
+                    <td className="p-3">{event.endDate}</td>
                     <td className="p-3 text-gray-700 truncate max-w-xs">
                       {event.location}
                     </td>

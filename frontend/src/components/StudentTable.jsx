@@ -131,7 +131,7 @@ const StudentTable = ({
 
                   
                   {openDropdown === student.id && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-10">
+                    <div className="absolute right-15 mt-2 w-40 bg-white border rounded shadow z-10">
                       <button
                         className="w-full px-4 py-2 text-left hover:bg-gray-100"
                         onClick={() => {
@@ -143,10 +143,10 @@ const StudentTable = ({
                           setOpenDropdown(null);
                         }}
                       >
-                        Add Parent Details
+                        Add Parent
                       </button>
-                      <button className="w-full px-4 py-2 text-left hover:bg-gray-100">
-                      <Link to={`/admin/student/list/${student.id}`}>View</Link>
+                      <button className="w-full px-4 py-2 text-left hover:bg-gray-100 text-gray-500">
+                      <Link to={`/admin/student/list/${student.id}`} className="text-decoration-none ">View</Link>
                       </button>
                       <button
                         className="w-full px-4 py-2 text-left hover:bg-gray-100"

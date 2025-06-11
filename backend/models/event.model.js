@@ -16,11 +16,11 @@ import sequelize from "../config/database.js"
         type: DataTypes.TEXT,
       },
       startDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       endDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       location: {

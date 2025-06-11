@@ -3,42 +3,44 @@ import { useNavigate } from "react-router";
 import { Form, Button, Container, Row, Col, Card } from 'react-bootstrap';
 import axios from 'axios';
 import logo from '../assets/logo.jpg';
+import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { register,trigger,formState: { errors }, handleSubmit } = useForm();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async (data) => {
     setLoading(true);
     setError(null);
-
     try {
-      const res = await axios.post("http://localhost:2000/api/auth/login", {
-        email,
-        password,
-      });
-
+      const res = await axios.post("http://localhost:2000/api/auth/login", data);
+  
       const { token, role } = res.data;
+  
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
-
+  
       if (role === "admin") navigate("/admin");
       else if (role === "student") navigate("/student/dashboard");
       else if (role === "teacher") navigate("/teacher/dashboard");
       else if (role === "parent") navigate("/parent/dashboard");
-
-      alert("Login successful");
+  
+     Swal.fire({
+        title: 'Login Successful',
+        text: 'You have successfully logged in',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <Container fluid className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
       <Card className="shadow-lg d-flex flex-row overflow-hidden" style={{ width: '900px', border: 'none' }}>
@@ -57,17 +59,23 @@ export default function Login() {
 
             {error && <div className="alert alert-danger">{error}</div>}
 
-            <Form onSubmit={handleLogin}>
+            <Form onSubmit={handleSubmit(handleLogin)}>
               <Form.Group className="mb-3" controlId="formEmail">
                 <Form.Label>Email</Form.Label>
                 <Form.Control 
                   type="email"
                   placeholder="demo@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+                  {...register("email", { 
+                    required: { value: true, message: "Email is required" }, 
+                    pattern: { 
+                      value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, 
+                      message: "Invalid email address" 
+                    }
+                  })}
+                  onBlur={() => trigger('email')} 
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                 />
+                {errors.email && <p className="text-red-500 text-xs mt-2">{errors.email.message}</p>}
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formPassword">
@@ -75,11 +83,14 @@ export default function Login() {
                 <Form.Control 
                   type="password"
                   placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
+                  {...register("password", { 
+                    required: { value: true, message: "Password is required" }, 
+                    minLength: { value: 5, message: "Password must be at least 5 characters" }
+                  })}
+                  onBlur={() => trigger('password')} 
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                 />
+                {errors.password && <p className="text-red-500 text-xs mt-2">{errors.password.message}</p>}
               </Form.Group>
 
               <Form.Group className="mb-3 d-flex justify-content-between align-items-center">

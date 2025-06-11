@@ -34,6 +34,13 @@ const StudentList = () => {
   const [id, setId] = useState(null)
   const [edit, setEdit] = useState(false);
   const [error, setError] = useState({});
+
+
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [selectedClass, setSelectedClass] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -234,7 +241,7 @@ const StudentList = () => {
       setAvatar(null);
       setProfile(null);
       setFormData({
-        name: "",
+        username: "",
         email: "",
         phone: "",
         gender: "",
@@ -284,7 +291,21 @@ const StudentList = () => {
       });
     }
   };
+useEffect(() => {
+    let filtered = users;
 
+    if (selectedClass) {
+      filtered = filtered.filter(student => student.classId === selectedClass);
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter(student =>
+        student.username.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredStudents(filtered);
+  }, [selectedClass, searchTerm, users]);
   
 
   return (
@@ -295,12 +316,30 @@ const StudentList = () => {
             <FiSearch />
             <input
               type="text"
-              placeholder="Search here..."
+              placeholder="Search Student..."
               className="outline-none bg-transparent w-full"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-
+          
           <div className="flex gap-4 items-center">
+          <select
+            className="text-black px-2 py-2 rounded appearance-none bg-gray-200 border border-gray-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            value={selectedClass}  
+            onChange={(e) => {
+              setSelectedClass(e.target.value);
+              setSearchTerm("");
+            }}
+            >
+
+              <option value="">Select Class</option>
+              {Classes.map((classItem) => (
+                <option key={classItem.id} value={classItem.id}>
+                  {classItem.classname}
+                </option>
+              ))}
+            </select>
             <button
               className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors duration-200"
               onClick={() => setOpen(true)}
@@ -311,7 +350,7 @@ const StudentList = () => {
         </div>
 
         <StudentTable
-          students={users}
+          students={filteredStudents}
           Classes={Classes}
           loading={loading}
           openDropdown={openDropdown}

@@ -78,7 +78,7 @@ const useEventApi = () => {
       const handleEditEvent = async (id,formData) => {
         try {          
           const token = localStorage.getItem('token');
-          await axios.patch(
+          await axios.put(
             `${import.meta.env.VITE_API_BASE_URL}/events/${id}`,
             formData,
             {

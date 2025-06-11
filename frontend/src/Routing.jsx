@@ -12,6 +12,8 @@ import ManageParents from './pages/admin/ManageParents'
 import ManageClasses from './pages/admin/ManageClasses'
 import ManageEvents from './pages/admin/ManageEvents'
 import StudentDetail from './pages/admin/StudentDetail'
+import ManageTeacher from './pages/admin/ManageTeacher'
+import ManageSubjects from './pages/admin/ManageSubjects'
 
 const Routing = () => {
   return (
@@ -28,6 +30,8 @@ const Routing = () => {
         <Route path='parent/list' element={<ManageParents />} />
         <Route path='classes' element={<ManageClasses />} />
         <Route path='events' element={<ManageEvents />} />
+        <Route path='teacher/list' element={<ManageTeacher />} />
+        <Route path='subject/list' element={<ManageSubjects />} />
      
       </Route>
 

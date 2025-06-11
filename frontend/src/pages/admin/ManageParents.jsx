@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FiEdit2, FiMail, FiMoreVertical, FiPhoneCall, FiSearch } from 'react-icons/fi';
 import useUserApi from '../../hooks/useUserApi.js';
 import { ClipLoader } from 'react-spinners';
@@ -20,6 +20,10 @@ const ManageParents = () => {
     relationType: "",
     profilePicture: null,
   });
+
+
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [parentAvatar, setParentAvatar] = useState(null);
   const [parentProfile, setParentProfile] = useState(null); 
@@ -165,6 +169,16 @@ const ManageParents = () => {
     
     setOpenDropdown(null);
   };
+  const filteredParents = useMemo(() => {
+    let filtered = users.filter(user => user.role === 'parent');
+    if (searchTerm) {
+      filtered = filtered.filter(parent =>
+        parent.username.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    return filtered;
+  }, [searchTerm, users]);
+  
 
   return (
     <>
@@ -175,8 +189,10 @@ const ManageParents = () => {
             <FiSearch />
             <input
               type="text"
-              placeholder="Search here..."
+              placeholder="Search Parent Name..."
               className="outline-none bg-transparent w-full"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchTerm}
             />
           </div>
           <button
@@ -214,14 +230,14 @@ const ManageParents = () => {
                     <ClipLoader color="#36d7b7" loading={loading} size={30} />
                   </td>
                 </tr>
-              ) : users.length === 0 ? (
+              ) : filteredParents.length === 0 ? (
                 <tr>
                   <td colSpan="9" className="text-center py-12 text-gray-500">
                     No parents found.
                   </td>
                 </tr>
               ) : (
-                users
+                filteredParents
                   ?.filter(user => user.role === 'parent')
                   .map((parent, idx) => (
                     <tr key={parent.id || idx} className="border-b hover:bg-gray-50">

@@ -156,6 +156,51 @@ const useUserApi = () => {
       };
 
 
+        const handleAddTeacher = async (teacherData) => {
+          console.log(teacherData)
+          try {
+            const token = localStorage.getItem('token');
+            const res = await axios.post(
+              `${import.meta.env.VITE_API_BASE_URL}/user`,
+              teacherData,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            Swal.fire({
+              title: 'Teacher Added',
+              text: 'Teacher added successfully',
+              icon: 'success',
+              confirmButtonText: 'OK',
+            });
+            await fetchUsers();
+            setCredentials(res.data.credentials);
+            
+          } catch (error) {
+            
+            if (error.response && error.response.data) {
+              Swal.fire({
+                title: 'Error',
+                text: error.response?.data?.message ,
+                icon: 'error',
+                confirmButtonText: 'OK',
+              });
+            } else {
+              Swal.fire({
+                title: 'Error',
+                text: 'Something went wrong!',
+                icon: 'error',
+                confirmButtonText: 'OK',
+              });
+            }
+          }
+        }
+
+        
+
+
       const fetchStudentDetails = async (id) => {
         
         try {
@@ -187,7 +232,7 @@ const useUserApi = () => {
       }, []);
 
      
-    return { users, loading, error, handleDelete ,handleAddUser,AddParent,fetchStudentDetails,studentDetails, handleEditUser,credentials};
+    return { users, loading, error, handleDelete ,handleAddUser,AddParent,fetchStudentDetails,studentDetails, handleEditUser,credentials,handleAddTeacher};
 }
 
 export default useUserApi

@@ -3,12 +3,13 @@
 import Subject from "../models/subject.model.js"; // adjust path as needed
 
 export const createSubject = async (req, res) => {
-    const { name, subjectCode, description } = req.body;
+  console.log(req.body)
+    const { subjectName, subjectCode, description } = req.body;
     const existing = await Subject.findOne({ where: { subjectCode } });
     if (existing) {
       throw new Error("Subject already exists", 400);
     }
-    const subject = await Subject.create({ name, subjectCode, description });
+    const subject = await Subject.create({ subjectName, subjectCode, description });
     await subject.save();
     res.status(201).json({ message: "Subject created successfully", subject });
 

@@ -32,7 +32,7 @@ const useClassApi = () => {
       };
 
       const handleDelete = async (id) => {
-        console.log(id)
+
         try {
           const token = localStorage.getItem('token');
           await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/classes/${id}`, {
@@ -62,6 +62,7 @@ const useClassApi = () => {
               Authorization: `Bearer ${token}`,
             },
           });
+          
           setClasses(response.data);
         } catch (error) {
           Swal.fire({
@@ -99,11 +100,36 @@ const useClassApi = () => {
         }
       };
 
+
+      const handleAssignClassTeacher = async (classTeacherData) => {
+        try{
+          const token = localStorage.getItem('token');
+          const res = await axios.post(
+            `${import.meta.env.VITE_API_BASE_URL}/classes/assign-teacher`,
+            classTeacherData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              },
+            }
+          );
+         await handlefetchClasses()
+        }catch (error) {
+          Swal.fire({
+            title: 'Error',
+            text: error.response?.data?.message || error.message,
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
+        }
+      }
+
       useEffect(() => {
         handlefetchClasses();
       }, []);
 
-  return  { handleAddClass, handleDelete ,handlefetchClasses,handleEditClass , Classes};
+  return  { handleAddClass, handleDelete ,handlefetchClasses,handleEditClass , handleAssignClassTeacher, Classes};
 }
 
 export default useClassApi

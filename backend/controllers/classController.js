@@ -61,12 +61,13 @@ export const updateClass = async (req, res) => {
 
 
 export const assignClassTeacher = async (req, res) => {
+  console.log(req.body)
 
     const { classId, teacherId } = req.body;
     if(!classId || !teacherId){
       throw new CustomError('Missing required fields', 400);
     }
-    const existingClass = await Class.findAll({where :{ teacherId: teacherId}});
+    const existingClass = await Class.findOne({where :{ teacherId: teacherId}});
     if(existingClass){
       throw new CustomError('Teacher already assigned to a class', 400);
     }

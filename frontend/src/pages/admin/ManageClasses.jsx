@@ -85,9 +85,6 @@ const ManageClasses = () => {
     const classTeacherData = new FormData();
     classTeacherData.append("classId", assignTaecherData.classId);
     classTeacherData.append("teacherId", assignTaecherData.teacherId);
-  
-   
-  
     await handleAssignClassTeacher(classTeacherData);
     setAssignTeacherData({
       classId: "",
@@ -336,7 +333,7 @@ const ManageClasses = () => {
                   >
                     <option>Select Class</option>
                     {Classes.map((cls, index) => (
-                      <option key={cls.id} value={cls.id}>
+                      <option key={index} value={cls.id}>
                         {cls.classname}
                       </option>
                     ))}
@@ -361,7 +358,7 @@ const ManageClasses = () => {
                     {users
                       .filter((teacher) => teacher.role === "teacher")
                       .map((teacher, index) => (
-                        <option key={teacher.id} value={teacher.id}>
+                        <option key={index} value={teacher.id}>
                           {teacher.username}
                         </option>
                       ))}

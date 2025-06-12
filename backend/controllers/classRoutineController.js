@@ -7,9 +7,9 @@ import Subject from '../models/subject.model.js';
 import Class from '../models/class.model.js';
 export const createClassRoutine = async (req, res) => {
   try {
-    const { classId, subjectId, teacherId, date, dayOfWeek, startTime, endTime } = req.body;
+    const { classId, subjectId, teacherId, dayOfWeek, startTime, endTime } = req.body;
 
-    if (!classId || !subjectId || !teacherId || !date || !dayOfWeek || !startTime || !endTime) {
+    if (!classId || !subjectId || !teacherId || !dayOfWeek || !startTime || !endTime) {
       throw new CustomError('Missing required fields', 400);
     }
 
@@ -22,13 +22,24 @@ export const createClassRoutine = async (req, res) => {
       throw new CustomError('Class not found', 404);
     }
 
-    await checkRoutineConflicts({ classId, teacherId, date, dayOfWeek, startTime, endTime });
+    // Conflict checking only by classId, dayOfWeek, startTime and endTime
+    const existingRoutine = await ClassRoutine.findOne({
+      where: {
+        classId,
+        dayOfWeek,
+        startTime,
+        endTime
+      }
+    });
+
+    if (existingRoutine) {
+      throw new CustomError('Class routine already exists for this class, day and time', 400);
+    }
 
     const newRoutine = await ClassRoutine.create({
       classId,
       subjectId,
       teacherId,
-      date,
       dayOfWeek,
       startTime,
       endTime,
@@ -38,11 +49,11 @@ export const createClassRoutine = async (req, res) => {
     res.status(201).json({ message: 'Class routine created successfully', data: newRoutine });
 
   } catch (error) {
-    
-      throw new CustomError('Class routine already exists for this day and date', 400);
-   
+    console.error(error);
+    res.status(400).json({ message: error.message || 'Failed to create class routine' });
   }
 };
+
 
 
 
@@ -153,12 +164,12 @@ export const getAllClassRoutines = async (req, res) => {
         {
           model: Class,
           as: 'class',
-          attributes: ['id', 'name'],
+          attributes: ['id', 'classname'],
         },
         {
           model: Subject,
           as: 'subject',
-          attributes: ['id', 'name'],
+          attributes: ['id', 'subjectName'],
         },
       ],
     });

@@ -25,7 +25,8 @@ import {
   Award,
   BookmarkCheck,
   MapPin,
-  LogOut
+  LogOut,
+  Calendar1
 } from 'lucide-react';
 import logo from '../assets/Images/logo.png'
 
@@ -151,6 +152,12 @@ const Sidebar = () => {
           name: 'Manage Classes', 
           path: '/admin/classes',
           icon: <Grid3X3 className="w-4 h-4" />
+        },
+        {
+          key: 'manage-classRoutine',
+          name: 'Manage Class Routine',
+          path: '/admin/classRoutine',
+          icon: <Calendar1 className="w-4 h-4" />
         }
       ],
     },

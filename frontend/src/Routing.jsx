@@ -14,6 +14,8 @@ import ManageEvents from './pages/admin/ManageEvents'
 import StudentDetail from './pages/admin/StudentDetail'
 import ManageTeacher from './pages/admin/ManageTeacher'
 import ManageSubjects from './pages/admin/ManageSubjects'
+import ManageClassRoutine from './pages/admin/ManageClassRoutine'
+import PageNotFound from './PageNotFound'
 
 const Routing = () => {
   return (
@@ -32,6 +34,7 @@ const Routing = () => {
         <Route path='events' element={<ManageEvents />} />
         <Route path='teacher/list' element={<ManageTeacher />} />
         <Route path='subject/list' element={<ManageSubjects />} />
+        <Route path='classRoutine' element={<ManageClassRoutine />} />
      
       </Route>
 
@@ -42,7 +45,7 @@ const Routing = () => {
       </Route>
 
    
-      <Route path='*' element={<h1>404 Page Not Found</h1>} />
+      <Route path='*' element={<PageNotFound />} />
     </Routes>
     </>
   )

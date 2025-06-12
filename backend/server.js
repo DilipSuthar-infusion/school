@@ -54,7 +54,7 @@ app.use('/api/fees', feeRoutes);
 app.use('/api/fee-structures', feeStructureRoutes);
 app.use('/api/classes', classRoutes);
 app.use('/api/subjects', subjectRoutes);
-app.use('/api/class-routines', classRoutineRoutes);
+app.use('/api/classroutines', classRoutineRoutes);
 app.use('/api/payment', paymentRoute);
 app.use('/api/invoice', invoiceRoute);
 app.use('/api/study-materials', studyMaterialRoute);

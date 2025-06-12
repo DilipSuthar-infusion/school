@@ -20,11 +20,7 @@ import sequelize from "../config/database.js";
         type: DataTypes.UUID,
         allowNull: false,
       },
-      date: {
-        type: DataTypes.DATEONLY,
-        allowNull: false,
-
-      },
+     
       dayOfWeek: {
         type: DataTypes.ENUM("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
         allowNull: true,

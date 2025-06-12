@@ -61,8 +61,6 @@ export const updateClass = async (req, res) => {
 
 
 export const assignClassTeacher = async (req, res) => {
-  console.log(req.body)
-
     const { classId, teacherId } = req.body;
     if(!classId || !teacherId){
       throw new CustomError('Missing required fields', 400);

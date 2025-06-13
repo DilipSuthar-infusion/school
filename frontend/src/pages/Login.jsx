@@ -5,6 +5,7 @@ import axios from 'axios';
 import logo from '../assets/logo.jpg';
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import { Mail } from "lucide-react";
 
 export default function Login() {
   const { register,trigger,formState: { errors }, handleSubmit } = useForm();
@@ -61,7 +62,7 @@ export default function Login() {
 
             <Form onSubmit={handleSubmit(handleLogin)}>
               <Form.Group className="mb-3" controlId="formEmail">
-                <Form.Label>Email</Form.Label>
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700"><Mail className="w-4 h-4 text-blue-600 float-left me-1" />Email</label>
                 <Form.Control 
                   type="email"
                   placeholder="demo@example.com"
@@ -79,7 +80,7 @@ export default function Login() {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formPassword">
-                <Form.Label>Password</Form.Label>
+                <Form.Label className="flex items-center gap-2 text-sm font-semibold text-gray-700">Password</Form.Label>
                 <Form.Control 
                   type="password"
                   placeholder="••••••••"

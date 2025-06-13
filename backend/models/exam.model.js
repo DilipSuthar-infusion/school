@@ -6,28 +6,18 @@ import sequelize from '../config/database.js';
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    name: {
+    examName: {
       type: DataTypes.STRING(100),
       allowNull: false,
-    },
-    description: DataTypes.TEXT,
-    startDate: DataTypes.DATEONLY,   
-    endDate: DataTypes.DATEONLY,    
+    },  
     examDate: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
-    startTime: {
+    examTime: {
       type: DataTypes.TIME,
       allowNull: false,
     },
-    endTime: {
-      type: DataTypes.TIME,
-      allowNull: false,
-    },
-    roomNumber: DataTypes.STRING(10),
-
-    
     classId: {
       type: DataTypes.UUID,
       allowNull: false,
@@ -36,10 +26,7 @@ import sequelize from '../config/database.js';
       type: DataTypes.UUID,
       allowNull: false,
     },
-    createdBy: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
+    
   }, {
     timestamps: true,
     tableName: 'Exams',

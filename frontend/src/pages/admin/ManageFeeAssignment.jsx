@@ -1,25 +1,9 @@
-import React from "react";
-import { FiPhone, FiMail, FiMoreVertical } from "react-icons/fi";
-import { Link } from "react-router";
-
-const StudentTable = ({
-  students,
-  Classes,
-  loading,
-  openDropdown,
-  setOpenDropdown,
-  setParentModel,
-  setParentFromData,
-  setOpen,
-  setFormData,
-  setEdit,
-  profile,
-  setAvatar,
-  setId,
-  handleDelete,
-  handleAssignFee
-}) => {
+import React from 'react'
+import useUserApi from useUserApi();
+const ManageFeeAssignment = () => {
+    const {users} = useUserApi()
   return (
+    <>
     <div className="w-full overflow-x-auto rounded-lg shadow">
       <table className="min-w-max w-full table-auto text-sm border-collapse bg-white">
         <thead className="bg-blue-50 text-left text-blue-600 font-semibold">
@@ -50,7 +34,7 @@ const StudentTable = ({
               <td colSpan={14} className="text-center p-12 text-gray-500">No students found.</td>
             </tr>
           ) : (
-            students.filter(student => student.role === "student").map((student, idx) => (
+            users.filter(student => student.role === "student").map((student, idx) => (
               <tr key={student.id || idx} className="border-b hover:bg-gray-50 even:bg-gray-100 odd:bg-white">
                 <td className="p-3 font-medium">{idx + 1}</td>
                 <td className="p-2 w-20">
@@ -137,15 +121,6 @@ const StudentTable = ({
                       >
                         Delete
                       </button>
-                      <button
-                        className="w-full px-4 py-2 text-left text-black-600 hover:bg-gray-100"
-                        onClick={() => {
-                          handleAssignFee(student.id);
-                          setOpenDropdown(null);
-                        }}
-                      >
-                        Fee Assign
-                      </button>
                     </div>
                   )}
                 </td>
@@ -155,7 +130,8 @@ const StudentTable = ({
         </tbody>
       </table>
     </div>
-  );
-};
+    </>
+  )
+}
 
-export default StudentTable;
+export default ManageFeeAssignment

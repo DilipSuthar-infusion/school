@@ -5,7 +5,6 @@ import CustomError from '../utils/customError.js';
 
 
 export const createClass = async (req, res) => {
-  console.log(req.body);
     const { classname, section, roomNumber } = req.body;
     if (!classname || !section ) {
       throw new CustomError('Missing required fields', 400);

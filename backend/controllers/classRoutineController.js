@@ -22,7 +22,7 @@ export const createClassRoutine = async (req, res) => {
       throw new CustomError('Class not found', 404);
     }
 
-    // Conflict checking only by classId, dayOfWeek, startTime and endTime
+    
     const existingRoutine = await ClassRoutine.findOne({
       where: {
         classId,

@@ -45,7 +45,7 @@ const associateModels = () => {
   models.Class.hasMany(models.ClassRoutine, { foreignKey: 'classId', as: 'routines' });
   models.Class.hasMany(models.Exam, { foreignKey: 'classId', as: 'exams' });
 
-  models.Exam.belongsTo(models.User, { foreignKey: 'createdBy', as: 'creator' });
+ 
   models.Exam.belongsTo(models.Class, { foreignKey: 'classId', as: 'class' });
   models.Exam.belongsTo(models.Subject, { foreignKey: 'subjectId', as: 'subject' });
   models.Exam.hasMany(models.ExamResult, { foreignKey: 'examId', onDelete: 'CASCADE', hooks: true });

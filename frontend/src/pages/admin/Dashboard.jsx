@@ -7,10 +7,12 @@ import {
 } from "lucide-react";
 import useUserApi from "../../hooks/useUserApi";
 import useClassApi from "../../hooks/useClassApi";
+import useEventApi from "../../hooks/useEventApi";
 
 export default function Dashboard() {
   const {users} = useUserApi();
   const {Classes} = useClassApi();
+  const {Events} = useEventApi();
   const metrics = [
     {
       id: 1,
@@ -39,7 +41,7 @@ export default function Dashboard() {
     {
       id: 4,
       name: "Upcoming Events",
-      value: "7",
+      value: Events?.length,
       icon: Calendar,
       iconColor: "text-pink-600",
       bgColor: "bg-pink-100",

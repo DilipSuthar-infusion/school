@@ -6,49 +6,29 @@ import CustomError from "../utils/customError.js";
 export const createExam = async (req, res) => {
   try {
     const {
-      name,
-      description,
-      startDate,
-      endDate,
+      examName,
       examDate,
-      startTime,
-      endTime,
-      roomNumber,
+      examTime,
       classId,
       subjectId,
-      createdBy,
     } = req.body;
 
   
     if (
-      !name ||
-      !startDate ||
-      !endDate ||
+      !examName ||
       !examDate ||
-      !startTime ||
-      !endTime ||
+      !examTime ||
       !classId ||
-      !subjectId ||
-      !createdBy
+      !subjectId
     ) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
-    const existingExam = await Exam.findOne({ where: { name, classId, subjectId } });
+    const existingExam = await Exam.findOne({ where: { examName, classId, subjectId } });
     if (existingExam) {
       throw new CustomError('Exam with this name already exists', 400);
     }
-    if (new Date(startDate) > new Date(endDate)) {
-      return res.status(400).json({ error: 'Start date cannot be after end date' });
-    }
+    
 
-    if (new Date(examDate) < new Date(startDate) || new Date(examDate) > new Date(endDate)) {
-      return res.status(400).json({ error: 'Exam date must be within start and end dates' });
-    }
-
-
-    if (startTime >= endTime) {
-      return res.status(400).json({ error: 'Start time must be before end time' });
-    }
 
     const classExists = await Class.findByPk(classId);
     if (!classExists) {
@@ -62,23 +42,14 @@ export const createExam = async (req, res) => {
     }
 
 
-    const userExists = await User.findByPk(createdBy);
-    if (!userExists) {
-      return res.status(404).json({ error: 'User (creator) not found' });
-    }
+   
 
     const newExam = await Exam.create({
-      name,
-      description,
-      startDate,
-      endDate,
+      examName,
       examDate,
-      startTime,
-      endTime,
-      roomNumber,
+      examTime,
       classId,
-      subjectId,
-      createdBy,
+      subjectId
     });
 
     res.status(201).json(newExam);
@@ -92,7 +63,7 @@ export const createExam = async (req, res) => {
 export const getAllExams = async (req, res) => {
  
     const exams = await Exam.findAll({
-      include: ['creator', 'class', 'subject'],
+      include: [ 'class', 'subject'],
       order: [['examDate', 'ASC']],
     });
     res.json(exams);

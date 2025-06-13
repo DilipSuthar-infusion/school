@@ -194,7 +194,21 @@ const Sidebar = () => {
       icon: <Award className="w-5 h-5" />,
       label: 'Exams & Grades',
       path: '/admin/exams',
-      badge: null
+      badge: '5',
+      children: [
+        { 
+          key: 'manage-exams',
+          name: 'Manage Exams', 
+          path: '/admin/exam/list',
+          icon: <BookOpen className="w-4 h-4" />
+        },
+        { 
+          key: 'manage-exams-result',
+          name: 'Manage Exams Results', 
+          path: '/admin/exam/results',
+          icon: <BookOpen className="w-4 h-4" />
+        }
+      ]
     },
     {
       key: 'library',
@@ -215,7 +229,21 @@ const Sidebar = () => {
       icon: <CreditCard className="w-5 h-5" />,
       label: 'Fee Management',
       path: '/admin/fees',
-      badge: '3'
+      badge: '3',
+      children: [
+        { 
+          key: 'fee-structure',
+          name: 'Manage Fee-Structure', 
+          path: '/admin/fees/struct',
+          icon: <BookOpen className="w-4 h-4" />
+        },
+        { 
+          key: 'manage-exams-result',
+          name: 'Manage Exams Results', 
+          path: '/admin/exam/results',
+          icon: <BookOpen className="w-4 h-4" />
+        }
+      ]
     },
     {
       key: 'reports',
@@ -301,7 +329,7 @@ const Sidebar = () => {
       {isMobile && (
         <button
           onClick={toggleSidebar}
-          className="fixed top-4 left-4 z-50 p-3 bg-slate-800 text-white rounded-xl shadow-lg hover:bg-slate-700 transition-colors lg:hidden"
+          className="fixed top-1 left-4 z-50 p-3 bg-slate-800 text-white rounded-xl shadow-lg hover:bg-slate-700 transition-colors lg:hidden"
           aria-label="Toggle sidebar"
         >
           {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

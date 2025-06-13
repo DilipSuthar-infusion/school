@@ -16,6 +16,9 @@ import ManageTeacher from './pages/admin/ManageTeacher'
 import ManageSubjects from './pages/admin/ManageSubjects'
 import ManageClassRoutine from './pages/admin/ManageClassRoutine'
 import PageNotFound from './PageNotFound'
+import ManageExam from './pages/admin/ManageExam'
+import ManageExamResult from './pages/admin/ManageExamResult'
+import ManageFeeStructure from './pages/admin/ManageFeeStructure'
 
 const Routing = () => {
   return (
@@ -35,7 +38,9 @@ const Routing = () => {
         <Route path='teacher/list' element={<ManageTeacher />} />
         <Route path='subject/list' element={<ManageSubjects />} />
         <Route path='classRoutine' element={<ManageClassRoutine />} />
-     
+        <Route path='exam/list'  element={<ManageExam/>}/>
+        <Route path='exam/results' element={<ManageExamResult />} />
+        <Route path='fees/struct' element={<ManageFeeStructure />}/>
       </Route>
 
     

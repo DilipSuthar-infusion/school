@@ -1,18 +1,16 @@
-import React from 'react'
-import Sidebar from './Sidebar'
-import { Outlet } from 'react-router'
-import Navbar from './Navbar'
-
+import React from 'react';
+import Sidebar from './Sidebar';
+import { Outlet } from 'react-router';
+import Navbar from './Navbar';
 
 const Home = () => {
   return (
-    <>
-   <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main content area */}
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 overflow-hidden">
         {/* Top Navbar */}
         <Navbar />
 
@@ -22,8 +20,7 @@ const Home = () => {
         </main>
       </div>
     </div>
-    </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

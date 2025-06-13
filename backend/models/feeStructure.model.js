@@ -17,10 +17,6 @@ import sequelize from "../config/database.js";
         allowNull: false, 
         defaultValue: 'Tuition Fee' 
       },
-      feeFrequency: {
-        type: DataTypes.ENUM("monthly", "quarterly", "yearly", "one-time"),
-        defaultValue: "one-time",
-      },
       amount: {
         type: DataTypes.FLOAT,
         allowNull: false,

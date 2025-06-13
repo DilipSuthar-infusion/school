@@ -18,11 +18,14 @@ import StudentFormModal from "../../components/StudentFromModal";
 import ParentFormModal from "../../components/ParentFormModal";
 import useUserApi from "../../hooks/useUserApi";
 import useClassApi from "../../hooks/useClassApi";
+import useFeeAssignApi from "../../hooks/useFeeAssignApi";
 
 const StudentList = () => {
   const { Classes } = useClassApi();
   const { users, loading,handleEditUser,  handleDelete, handleAddUser, credentials } =
     useUserApi();
+    const {handleAssignFee, feeAssign} = useFeeAssignApi()
+console.log(feeAssign)
   const [avatar, setAvatar] = useState(null);
   const [parentAvatar, setParentAvatar] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -311,7 +314,8 @@ useEffect(() => {
   return (
     <>
       <div className="p-2">
-        <div className="flex justify-between items-center mb-4 px-4 py-4 bg-white rounded-lg shadow-md">
+      <div className="flex justify-between items-center mb-4 sm:p-1 md:p-4 bg-white rounded-lg shadow-md">
+
           <div className="flex items-center gap-2 border rounded px-3 py-2 w-1/3">
             <FiSearch />
             <input
@@ -366,6 +370,7 @@ useEffect(() => {
           setId={setId}
           setAvatar={setAvatar}
           handleDelete={handleDelete}
+          handleAssignFee={handleAssignFee}
         />
       </div>
 

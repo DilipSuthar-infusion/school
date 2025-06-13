@@ -3,7 +3,7 @@ import useClassApi from "../../hooks/useClassApi";
 import useSubjectApi from "../../hooks/useSubjectApi";
 import useUserApi from "../../hooks/useUserApi";
 import useClassRoutineApi from "../../hooks/useClassRoutineApi";
-import { Calendar1Icon, SquarePen, Trash2, X } from "lucide-react";
+import { CalculatorIcon, Calendar1Icon, CalendarCheck, Clock, NotebookPen, SquarePen, Trash2, User, X } from "lucide-react";
 import Swal from "sweetalert2";
 
 const daysOfWeek = [
@@ -26,7 +26,7 @@ const ManageClassRoutine = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [formData, setFormData] = useState({ subjectId: "", teacherId: "" });
-  const [isEditing, setIsEditing] = useState(false);
+ 
 
   const startHour = 8;
   const endHour = 15;
@@ -54,7 +54,7 @@ const ManageClassRoutine = () => {
       Swal.fire("you have already Assigned the routine")
       return; 
     }
-    // If no routine exists, open the modal for adding a new routine
+    
     setFormData({ subjectId: "", teacherId: "" });
     setSelectedSlot({ dayOfWeek: day, ...slot });
     setModalOpen(true);
@@ -227,48 +227,48 @@ const ManageClassRoutine = () => {
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-title"
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center  z-50"
         >
-          <div className="bg-white rounded-lg p-6 w-[400px]">
-            <div className="flex justify-between items-center mb-4">
-              <h2 id="modal-title" className="font-semibold text-lg">
-                {isEditing ? "Edit Routine" : "Assign Routine"}
+          <div className="bg-white w-[400px] rounded-3xl">
+            <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-6 rounded-t-3xl flex justify-between">
+              <h2 id="modal-title" className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+               <Calendar1Icon className="h-6 w-6" /> Assign Routine
               </h2>
               <button
                 onClick={() => setModalOpen(false)}
                 aria-label="Close modal"
               >
-                <X />
+                <X className="h-6 w-6 text-white" />
               </button>
             </div>
-
+            <div className="p-6">
             <div className="mb-3">
-              <label className="block mb-1 font-medium">Day</label>
+              <label className="block mb-1 font-semibold text-sm"><CalendarCheck className="w-4 h-4 text-blue-600 float-left me-1" /> Day</label>
               <input
                 type="text"
                 value={selectedSlot.dayOfWeek}
                 disabled
-                className="border p-2 w-full rounded"
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
               />
             </div>
 
             <div className="mb-3">
-              <label className="block mb-1 font-medium">Time</label>
+              <label className="block mb-1 font-semibold text-sm"><Clock className="w-4 h-4 text-blue-600 float-left me-1"/>Time</label>
               <input
                 type="text"
                 value={`${selectedSlot.startTime} - ${selectedSlot.endTime}`}
                 disabled
-                className="border p-2 w-full rounded"
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
               />
             </div>
 
             <div className="mb-3">
-              <label className="block mb-1 font-medium">Subject</label>
+              <label className="block mb-1 font-semibold text-sm"><NotebookPen className="w-4 h-4 text-blue-600 float-left me-1"/>Subject</label>
               <select
                 name="subjectId"
                 value={formData.subjectId}
                 onChange={handleChange}
-                className="border p-2 w-full rounded"
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
               >
                 <option value="">Select Subject</option>
                 {subjects.map((subject) => (
@@ -280,12 +280,12 @@ const ManageClassRoutine = () => {
             </div>
 
             <div className="mb-3">
-              <label className="block mb-1 font-medium">Teacher</label>
+              <label className="block mb-1 font-semibold text-sm"><User className="w-4 h-4 text-blue-600 float-left me-1" /> Teacher</label>
               <select
                 name="teacherId"
                 value={formData.teacherId}
                 onChange={handleChange}
-                className="border p-2 w-full rounded"
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
               >
                 <option value="">Select Teacher</option>
                 {users
@@ -298,15 +298,17 @@ const ManageClassRoutine = () => {
               </select>
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex flex-col sm:flex-row gap-3 justify-end mt-8 pt-4 border-t border-gray-200">
               <button
                 onClick={handleSubmit}
-                className="bg-blue-600 text-white px-4 py-2 rounded"
+                className="w-full px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium shadow-lg"
                 disabled={!formData.subjectId || !formData.teacherId}
               >
-                Save
+                Add Routine
               </button>
             </div>
+            </div>
+           
           </div>
         </div>
       )}

@@ -6,9 +6,11 @@ import useSubjectApi from '../../hooks/useSubjectApi';
 import ClipLoader from 'react-spinners/ClipLoader';
 import Swal from 'sweetalert2';
 const ManageTeacher = () => {
-    const { users, loading, handleAddTeacher ,handleEditUser, handleDelete} = useUserApi();
+    const { users, loading, handleAddTeacher ,handleEditUser, handleDelete, credentials} = useUserApi();
+   
     const [teacherModel, setTeacherModel] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [techerInfo, setTeacherInfo] = useState(false)
     const [openDropdown, setOpenDropdown] = useState(null);
     const closeTeacherModal = () => {
         setTeacherModel(false);
@@ -168,10 +170,10 @@ const ManageTeacher = () => {
               await handleEditUser(teacherId, formData);
           } else {
               await handleAddTeacher(formData);
+              setTeacherInfo(true)
               setTeacherModel(false);
           }
   
-          // Reset form after successful submit
           setTeacherAvatar(null);
           setTeacherProfile(null);
           setTeacherData({
@@ -347,6 +349,31 @@ const ManageTeacher = () => {
       teacherAvatar={teacherAvatar}
       handleSubmit={handleSubmitTeacher}
       />
+
+
+
+
+{techerInfo && (
+  <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8 w-[90%] sm:w-[500px] text-center">
+      <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
+        Teacher Created Successfully
+      </h2>
+      <p className="text-md sm:text-lg mb-2">
+        <strong>Email:</strong> <span className="text-gray-600">{credentials.email}</span>
+      </p>
+      <p className="text-md sm:text-lg mb-4">
+        <strong>Password:</strong> <span className="text-gray-600">{credentials.password}</span>
+      </p>
+      <button
+        onClick={() => setStudentInfo(false)}
+        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition duration-200"
+      >
+        OK
+      </button>
+    </div>
+  </div>
+)}
     </>
   )
 }

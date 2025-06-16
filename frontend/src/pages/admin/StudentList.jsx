@@ -22,10 +22,16 @@ import useFeeAssignApi from "../../hooks/useFeeAssignApi";
 
 const StudentList = () => {
   const { Classes } = useClassApi();
-  const { users, loading,handleEditUser,  handleDelete, handleAddUser, credentials } =
-    useUserApi();
-    const {handleAssignFee, feeAssign} = useFeeAssignApi()
-console.log(feeAssign)
+  const {
+    users,
+    loading,
+    handleEditUser,
+    handleDelete,
+    handleAddUser,
+    credentials,
+  } = useUserApi();
+  const { handleAssignFee, feeAssign } = useFeeAssignApi();
+ 
   const [avatar, setAvatar] = useState(null);
   const [parentAvatar, setParentAvatar] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -34,15 +40,15 @@ console.log(feeAssign)
   const [openDropdown, setOpenDropdown] = useState(null);
   const [studentInfo, setStudentInfo] = useState(false);
   const [parentModel, setParentModel] = useState(false);
-  const [id, setId] = useState(null)
+  const [id, setId] = useState(null);
   const [edit, setEdit] = useState(false);
   const [error, setError] = useState({});
-
+  const [openFeeDetail, setOpenFeeDetail] = useState(false);
+  const [feeDetail, setFeeDetail] = useState([]);
 
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [selectedClass, setSelectedClass] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-
 
   const [formData, setFormData] = useState({
     username: "",
@@ -66,9 +72,6 @@ console.log(feeAssign)
     relationType: "",
     profilePicture: null,
   });
-
-  
-
 
   const validateStudentForm = () => {
     const newErrors = {};
@@ -98,12 +101,9 @@ console.log(feeAssign)
     if (!formData.address.trim()) {
       newErrors.addressErr = "Please enter address.";
     }
-    
-    if (!id && !profile) {
-      
-        newErrors.fileErr = "Please upload a profile picture.";
 
-      
+    if (!id && !profile) {
+      newErrors.fileErr = "Please upload a profile picture.";
     }
     setError(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -116,7 +116,7 @@ console.log(feeAssign)
     }
     if (parentFromData.motherName.trim().length < 3) {
       newErrors.motherNameErr = "Mother name must be at least 3 characters.";
-    } 
+    }
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(parentFromData.email)) {
       newErrors.parentEmailErr = "Please enter a valid email.";
@@ -141,7 +141,7 @@ console.log(feeAssign)
       newErrors.parentFileErr = "Please upload a profile picture.";
     }
     setError(newErrors);
-    return Object.keys(newErrors).length === 0; 
+    return Object.keys(newErrors).length === 0;
   };
 
   const closeStudentModal = () => {
@@ -183,7 +183,8 @@ console.log(feeAssign)
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {console.log(id)
+    if (file) {
+      console.log(id);
       setAvatar(URL.createObjectURL(file));
       setProfile(file);
       setFormData((prev) => ({ ...prev, profilePicture: file }));
@@ -211,7 +212,7 @@ console.log(feeAssign)
 
   const handleSubmitStudent = async (e) => {
     e.preventDefault();
-  
+
     if (!validateStudentForm()) {
       Swal.fire({
         icon: "error",
@@ -220,7 +221,7 @@ console.log(feeAssign)
       });
       return;
     }
-  
+
     const submitData = new FormData();
     submitData.append("profilePicture", profile);
     submitData.append("username", formData.username);
@@ -232,7 +233,7 @@ console.log(feeAssign)
     submitData.append("classId", formData.classId);
     submitData.append("address", formData.address);
     submitData.append("role", "student");
-  
+
     try {
       if (id) {
         await handleEditUser(id, submitData);
@@ -240,7 +241,7 @@ console.log(feeAssign)
         await handleAddUser(submitData);
         setStudentInfo(true);
       }
-  
+
       setAvatar(null);
       setProfile(null);
       setFormData({
@@ -264,7 +265,6 @@ console.log(feeAssign)
       });
     }
   };
-  
 
   const handleSubmitParent = async (e) => {
     e.preventDefault();
@@ -281,41 +281,46 @@ console.log(feeAssign)
       ParentData.append("studentId", parentFromData.studentId);
       ParentData.append("role", "parent");
 
-      await handleAddUser (ParentData);
+      await handleAddUser(ParentData);
       closeParentModal();
       setStudentInfo(true);
     } else {
       Swal.fire({
         icon: "error",
         text: "Please fill in all required fields.",
-        confirmButtonText : "OK",
-        
-
+        confirmButtonText: "OK",
       });
     }
   };
-useEffect(() => {
+
+  const handleFeeDetails = async (fee) => {
+    console.log(fee)
+    setOpenFeeDetail(true);
+    setFeeDetail(fee);
+  };
+
+  useEffect(() => {
     let filtered = users;
 
     if (selectedClass) {
-      filtered = filtered.filter(student => student.classId === selectedClass);
+      filtered = filtered.filter(
+        (student) => student.classId === selectedClass
+      );
     }
 
     if (searchTerm) {
-      filtered = filtered.filter(student =>
+      filtered = filtered.filter((student) =>
         student.username.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     setFilteredStudents(filtered);
   }, [selectedClass, searchTerm, users]);
-  
 
   return (
     <>
       <div className="p-2">
-      <div className="flex justify-between items-center mb-4 sm:p-1 md:p-4 bg-white rounded-lg shadow-md">
-
+        <div className="flex justify-between items-center mb-4 sm:p-1 md:p-4 bg-white rounded-lg shadow-md">
           <div className="flex items-center gap-2 border rounded px-3 py-2 w-1/3">
             <FiSearch />
             <input
@@ -326,17 +331,16 @@ useEffect(() => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          
-          <div className="flex gap-4 items-center">
-          <select
-            className="text-black px-2 py-2 rounded appearance-none bg-gray-200 border border-gray-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            value={selectedClass}  
-            onChange={(e) => {
-              setSelectedClass(e.target.value);
-              setSearchTerm("");
-            }}
-            >
 
+          <div className="flex gap-4 items-center">
+            <select
+              className="text-black px-2 py-2 rounded appearance-none bg-gray-200 border border-gray-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              value={selectedClass}
+              onChange={(e) => {
+                setSelectedClass(e.target.value);
+                setSearchTerm("");
+              }}
+            >
               <option value="">Select Class</option>
               {Classes.map((classItem) => (
                 <option key={classItem.id} value={classItem.id}>
@@ -352,6 +356,9 @@ useEffect(() => {
             </button>
           </div>
         </div>
+
+
+        
 
         <StudentTable
           students={filteredStudents}
@@ -371,31 +378,34 @@ useEffect(() => {
           setAvatar={setAvatar}
           handleDelete={handleDelete}
           handleAssignFee={handleAssignFee}
+          feeAssign={feeAssign}
+          handleFeeDetails={handleFeeDetails}
         />
       </div>
 
       {studentInfo && (
-  <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8 w-[90%] sm:w-[500px] text-center">
-      <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
-        Student Created Successfully
-      </h2>
-      <p className="text-md sm:text-lg mb-2">
-        <strong>Email:</strong> <span className="text-gray-600">{credentials.email}</span>
-      </p>
-      <p className="text-md sm:text-lg mb-4">
-        <strong>Password:</strong> <span className="text-gray-600">{credentials.password}</span>
-      </p>
-      <button
-        onClick={() => setStudentInfo(false)}
-        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition duration-200"
-      >
-        OK
-      </button>
-    </div>
-  </div>
-)}
-
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8 w-[90%] sm:w-[500px] text-center">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
+              Student Created Successfully
+            </h2>
+            <p className="text-md sm:text-lg mb-2">
+              <strong>Email:</strong>{" "}
+              <span className="text-gray-600">{credentials.email}</span>
+            </p>
+            <p className="text-md sm:text-lg mb-4">
+              <strong>Password:</strong>{" "}
+              <span className="text-gray-600">{credentials.password}</span>
+            </p>
+            <button
+              onClick={() => setStudentInfo(false)}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition duration-200"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
 
       <StudentFormModal
         open={open}
@@ -404,7 +414,6 @@ useEffect(() => {
         handleChange={handleFormDataChange}
         handleFileChange={handleFileChange}
         avatar={avatar}
-       
         error={error}
         handleSubmit={handleSubmitStudent}
         edit={edit}
@@ -422,6 +431,87 @@ useEffect(() => {
         handleParentSubmit={handleSubmitParent}
         students={users}
       />
+
+      {openFeeDetail && (
+        <>
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[50]">
+            <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8 w-[90%] sm:w-[500px]">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold text-gray-800">
+                  Fee Details
+                </h2>
+                <button
+                  onClick={() => setOpenFeeDetail(false)}
+                  className="text-gray-500 hover:text-gray-700 text-xl"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="min-w-full border border-gray-300 text-sm">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      <th className="py-2 px-4 border-b border-gray-300">
+                        Sr.No.
+                      </th>
+                      <th className="py-2 px-4 border-b border-gray-300">
+                        Fee Type
+                      </th>
+                      <th className="py-2 px-4 border-b border-gray-300">
+                        Fee Amount
+                      </th>
+                      <th className="py-2 px-4 border-b border-gray-300">
+                        Status:
+                      </th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {feeDetail?.map((fee, index) => (
+                      <tr key={index} className="hover:bg-gray-50">
+                        <td className="py-2 px-4 border-b border-gray-300">
+                          {index + 1}
+                        </td>
+                        <td className="py-2 px-4 border-b border-gray-300">
+                          {fee.feeType}
+                        </td>
+                        <td className="py-2 px-4 border-b border-gray-300">
+                          ₹ {fee.amount}
+                        </td>
+                        <td className="py-2 px-4 border-b border-gray-300">
+                           {fee.status}
+                        </td>
+
+                      </tr>
+                    ))}
+                    <tr className="hover:bg-gray-50 font-semibold bg-gray-100">
+                      <td
+                        colSpan={2}
+                        className="py-2 px-4 border-b border-gray-300 text-right"
+                      >
+                        Total:
+                      </td>
+                      <td className="py-2 px-4 border-b border-gray-300">
+                        ₹ {feeDetail?.reduce((sum, fee) => sum + fee.amount, 0)}
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50 font-semibold bg-gray-100">
+                      <td
+                        colSpan={2}
+                        className="py-2 px-4 border-b border-gray-300 text-right"
+                      >
+                        Fee Status:
+                      </td>
+                      
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 };

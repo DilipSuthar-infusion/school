@@ -5,8 +5,8 @@ import wrapAsync from '../utils/wrapAsync.js';
 
 const router = express.Router();
 
-router.post('/', authenticate,authorizeRoles("admin"), wrapAsync(createClass));
-router.get('/',authenticate,authorizeRoles("admin"),wrapAsync(getAllClasses));
+router.post('/', authenticate,authorizeRoles("admin, teacher"), wrapAsync(createClass));
+router.get('/',authenticate,authorizeRoles("admin", "teacher", "student"),wrapAsync(getAllClasses));
 router.get('/:id',authenticate,authorizeRoles("admin"),wrapAsync(getClassById));
 router.patch('/:id', authenticate,authorizeRoles("admin"),wrapAsync(updateClass));
 router.post('/assign-teacher', authenticate,authorizeRoles("admin"),wrapAsync(assignClassTeacher));

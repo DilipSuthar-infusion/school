@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 const useFeeAssignApi = () => {
     const [feeAssign, setfeeAssign] = useState([])
-
+ 
   const handleAssignFee = async (id) => {
     const token = localStorage.getItem('token');
     await axios.post(`${import.meta.env.VITE_API_BASE_URL}/fees/${id}`,
@@ -14,6 +14,7 @@ const useFeeAssignApi = () => {
         },
       }
     );
+    
   };
 
   const fetchFeeAssign = async () => {

@@ -170,6 +170,13 @@ const ManageFeeStructure = () => {
         </div>
       )}
 
+
+      {!selectedClass && <>
+        <div className="overflow-x-auto">
+            <h3 className=" text-center py-5 w-full border border-gray-300 rounded-lg shadow-sm">Please select class</h3>
+          </div></>
+      }
+
       {selectedClass && (
         <>
           <h2 className="text-xl font-bold mb-4">

@@ -62,7 +62,7 @@ const useClassApi = () => {
               Authorization: `Bearer ${token}`,
             },
           });
-          
+         
           setClasses(response.data);
         } catch (error) {
           Swal.fire({

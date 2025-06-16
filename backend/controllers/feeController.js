@@ -10,7 +10,6 @@ export const assignFeeToStudent = async (req, res) => {
     if (existingFees) {
       throw new CustomError('Fees already assigned to this student', 400);
     }
-    console.log(existingFees)
 
     const student = await Student.findByPk(studentId);
     if (!student) throw new CustomError('Student not found', 404);
@@ -35,7 +34,6 @@ export const assignFeeToStudent = async (req, res) => {
       status: 'unpaid',
     }));
     await Fee.bulkCreate(fees);
-    console.log(fees)
     res.status(201).json({ message: 'Fees assigned successfully', assignedCount: fees.length });
   } catch (err) {
     res.status(500).json({ message: err.message });

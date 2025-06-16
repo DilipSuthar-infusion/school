@@ -6,27 +6,28 @@ import logo from '../assets/logo.jpg';
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { Mail } from "lucide-react";
+import { useAuth } from "../Context/Authcontext";
 
 export default function Login() {
   const { register,trigger,formState: { errors }, handleSubmit } = useForm();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (data) => {
     setLoading(true);
     setError(null);
     try {
       const res = await axios.post("http://localhost:2000/api/auth/login", data);
-  
-      const { token, role } = res.data;
-  
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
+     const role= res.data.role
+      const userData = { id: res.data.id, role: role };
+      
+      login(userData, res.data.token);
   
       if (role === "admin") navigate("/admin");
       else if (role === "student") navigate("/student/dashboard");
-      else if (role === "teacher") navigate("/teacher/dashboard");
+      else if (role === "teacher") navigate("/teacher");
       else if (role === "parent") navigate("/parent/dashboard");
   
      Swal.fire({

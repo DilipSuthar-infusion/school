@@ -4,19 +4,20 @@ import User from '../models/user.model.js';
 import CustomError from '../utils/customError.js';
 
 export const createAttendance = async (req, res) => {
-    const { studentId, classId, date, status, remarks, markedBy } = req.body;
+    const { studentId, classId, date, status, markedBy } = req.body;
     const existing = await Attendance.findOne({
       where: { studentId, classId, date }
     });
     if (existing) {
       throw new CustomError('Attendance already exists', 400);
     }
-    const newAttendance = await Attendance.create({ studentId, classId, date, status, remarks, markedBy });
+    const newAttendance = await Attendance.create({ studentId, classId, date, status, markedBy });
     res.status(201).json({ message: 'Attendance marked successfully', data: newAttendance });
   
 };
 
 export const markBulkAttendance = async (req, res) => {
+
     const { classId, date, markedBy, attendanceRecords } = req.body;
     const records = attendanceRecords.map((rec) => ({
       ...rec,
@@ -54,10 +55,11 @@ export const getClassAttendanceByDate = async (req, res) => {
 export const getAllAttendance = async (req, res) => {
     const attendanceList = await Attendance.findAll({
       include: [
-        { model: User, as: 'student', attributes: ['id', 'name'] },
-        { model: Class, as: 'class' },
-        { model: User, as: 'marker', attributes: ['id', 'name'] }
+        // { model: User, as: 'student', attributes: ['id', 'name'] },
+        // { model: User, as: 'marker', attributes: ['id', 'name'] },
+        // { model: Class, as: 'class', attributes: ['id', 'name'] }
       ],
+     
     });
     res.status(200).json(attendanceList);
 };

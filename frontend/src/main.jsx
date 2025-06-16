@@ -4,9 +4,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Routing from './Routing.jsx'
 import { BrowserRouter } from 'react-router'
+import { AuthProvider } from './Context/Authcontext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-    <Routing />
+  <AuthProvider>
+     <Routing />
+  </AuthProvider>
   </BrowserRouter>,
 )

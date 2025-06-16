@@ -23,11 +23,8 @@ const Attendance = sequelize.define(
       allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM('present', 'absent', 'late'),
+      type: DataTypes.ENUM('present', 'absent'),
       allowNull: false,
-    },
-    remarks: {
-      type: DataTypes.TEXT,
     },
     markedBy: {
       type: DataTypes.UUID,

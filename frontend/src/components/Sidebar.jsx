@@ -29,13 +29,15 @@ import {
   Calendar1
 } from 'lucide-react';
 import logo from '../assets/Images/logo.png'
+import { useAuth, user } from '../Context/Authcontext';
+import Swal from 'sweetalert2';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [activeItem, setActiveItem] = useState('dashboard');
   const [isMobile, setIsMobile] = useState(false);
-  
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -121,7 +123,7 @@ const Sidebar = () => {
         },
         { 
           key: 'add-parent',
-          name: 'Add New Parent', 
+          name: 'Add New ParehandleLogoutnt', 
           path: '/admin/parent/add',
           icon: <Plus className="w-4 h-4" />
         },
@@ -163,7 +165,7 @@ const Sidebar = () => {
     },
     {
       key: 'subjects',
-      icon: <BookOpen className="w-5 h-5" />,
+      icon: <BookOpen classNahandleLogoutme="w-5 h-5" />,
       label: 'Subjects',
       badge: '15',
       children: [
@@ -253,6 +255,19 @@ const Sidebar = () => {
       badge: null
     },
   ];
+
+
+
+  const handleLogout = async()=>{
+    await logout();
+    Swal.fire({
+      title:"Logout SucessFully"
+    })
+    navigate('/login')
+
+  }
+
+
 
   // Set active item based on current route
   useEffect(() => {
@@ -510,7 +525,7 @@ const Sidebar = () => {
                   </p>
                 </div>
               </div>
-              <button className="flex items-center gap-2 w-full px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-700/30 rounded-lg transition-colors">
+              <button onClick={handleLogout} className="flex items-center gap-2 w-full px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-700/30 rounded-lg transition-colors">
                 <LogOut className="w-4 h-4" />
                 <span>Logout</span>
               </button>

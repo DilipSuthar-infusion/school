@@ -158,21 +158,7 @@ const ManageExamResult = () => {
           </tr>
         </thead>
         <tbody>
-         {feeAssign.map((fee)=>{
-          return (
-            <>
-            <tr>
-            <th>{fee.feeType}</th>
-            <th>{fee.amount}</th>
-            <th>{fee.dueDate}</th>
-            <th>{fee.status}</th>
-            </tr>
-              
-      
-            </>
-         
-          )
-         })}
+       
         </tbody>
       </table>
     </div>

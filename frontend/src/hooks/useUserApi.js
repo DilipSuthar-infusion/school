@@ -232,7 +232,7 @@ const useUserApi = () => {
       }, []);
 
      
-    return { users, loading, error, handleDelete ,handleAddUser,AddParent,fetchStudentDetails,studentDetails, handleEditUser,credentials,handleAddTeacher};
+    return { users, loading, error, handleDelete ,handleAddUser,AddParent,fetchStudentDetails,studentDetails, handleEditUser,credentials,handleAddTeacher,fetchUsers};
 }
 
 export default useUserApi

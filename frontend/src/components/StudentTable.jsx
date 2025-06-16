@@ -17,8 +17,11 @@ const StudentTable = ({
   setAvatar,
   setId,
   handleDelete,
-  handleAssignFee
+  handleAssignFee,
+  feeAssign,
+  handleFeeDetails,
 }) => {
+  
   return (
     <div className="w-full overflow-x-auto rounded-lg shadow">
       <table className="min-w-max w-full table-auto text-sm border-collapse bg-white">
@@ -37,120 +40,185 @@ const StudentTable = ({
             <th className="p-3">Address</th>
             <th className="p-3">Phone</th>
             <th className="p-3">Contact</th>
+            <th className="p-3">Fee Assigned</th>
             <th className="p-3 rounded-tr-lg">Actions</th>
           </tr>
         </thead>
         <tbody>
           {loading ? (
             <tr>
-              <td colSpan={14} className="text-center p-12">Loading...</td>
+              <td colSpan={14} className="text-center p-12">
+                Loading...
+              </td>
             </tr>
           ) : students.length === 0 ? (
             <tr>
-              <td colSpan={14} className="text-center p-12 text-gray-500">No students found.</td>
+              <td colSpan={14} className="text-center p-12 text-gray-500">
+                No students found.
+              </td>
             </tr>
           ) : (
-            students.filter(student => student.role === "student").map((student, idx) => (
-              <tr key={student.id || idx} className="border-b hover:bg-gray-50 even:bg-gray-100 odd:bg-white">
-                <td className="p-3 font-medium">{idx + 1}</td>
-                <td className="p-2 w-20">
-                  <img
-                    src={`http://localhost:2000/${student.profilePicture}`}
-                    alt="avatar"
-                    className="w-16 h-16 object-cover rounded-md"
-                  />
-                </td>
-                <td className="p-3 font-medium">{student.username}</td>
-                <td className="p-3 text-orange-500 font-semibold">{student.admissionNumber || "N/A"}</td>
-                <td className="p-3">{Classes.find(c => c.id === student.classId)?.classname || "N/A"}</td>
-                <td className="p-3">{student.Parents?.[0]?.username || "N/A"}</td>
-                <td className="p-3">{student.Parents?.[0]?.motherName || "N/A"}</td>
-                <td className="p-3 truncate max-w-[150px]">{student.email}</td>
-                <td className="p-3">{student.dateOfBirth ? new Date(student.dateOfBirth).toLocaleDateString() : "N/A"}</td>
-                <td className="p-3">{student.gender || "N/A"}</td>
-                <td className="p-3 truncate max-w-[150px]">{student.address || "N/A"}</td>
-                <td className="p-3">{student.phone || "N/A"}</td>
-                <td className="p-3">
-                  <div className="flex gap-3 text-blue-600">
-                    {student.phone && (
-                      <a href={`tel:${student.phone}`} title="Call">
-                        <FiPhone className="cursor-pointer hover:text-orange-500 transition" />
-                      </a>
-                    )}
-                    {student.email && (
-                      <a href={`mailto:${student.email}`} title="Email">
-                        <FiMail className="cursor-pointer hover:text-orange-500 transition" />
-                      </a>
-                    )}
-                  </div>
-                </td>
-                <td className="p-3 relative">
-                  <FiMoreVertical
-                    className="cursor-pointer"
-                    aria-label="More actions"
-                    onClick={() => setOpenDropdown(openDropdown === student.id ? null : student.id)}
-                  />
-                  {openDropdown === student.id && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-10">
-                      <button
-                        className="w-full px-4 py-2 text-left hover:bg-gray-100"
-                        onClick={() => {
-                          setParentModel(true);
-                          setParentFromData(prev => ({ ...prev, studentId: student.id }));
-                          setOpenDropdown(null);
-                        }}
-                      >
-                        Add Parent
-                      </button>
-                      <button className="w-full px-4 py-2 text-left hover:bg-gray-100 text-gray-500">
-                        <Link to={`/admin/student/list/${student.id}`} className="text-decoration-none">View</Link>
-                      </button>
-                      <button
-                        className="w-full px-4 py-2 text-left hover:bg-gray-100"
-                        onClick={() => {
-                          setId(student.id);
-                          setOpen(true);
-                          setFormData({
-                            username: student.username,
-                            email: student.email,
-                            phone: student.phone,
-                            gender: student.gender,
-                            dateOfBirth: student.dateOfBirth,
-                            bloodGroup: student.bloodGroup,
-                            classId: student.classId,
-                            address: student.address,
-                            profilePicture: profile,
-                          });
-                          setEdit(true);
-                          setAvatar(student.profilePicture ? `http://localhost:2000/${student.profilePicture}` : null);
-                          setOpenDropdown(null);
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100"
-                        onClick={() => {
-                          handleDelete(student.id);
-                          setOpenDropdown(null);
-                        }}
-                      >
-                        Delete
-                      </button>
-                      <button
-                        className="w-full px-4 py-2 text-left text-black-600 hover:bg-gray-100"
-                        onClick={() => {
-                          handleAssignFee(student.id);
-                          setOpenDropdown(null);
-                        }}
-                      >
-                        Fee Assign
-                      </button>
+            students
+              .filter((student) => student.role === "student")
+              .map((student, idx) => (
+                <tr
+                  key={student.id || idx}
+                  className="border-b hover:bg-gray-50 even:bg-gray-100 odd:bg-white"
+                >
+                  <td className="p-3 font-medium">{idx + 1}</td>
+                  <td className="p-2 w-20">
+                    <img
+                      src={`http://localhost:2000/${student.profilePicture}`}
+                      alt="avatar"
+                      className="w-16 h-16 object-cover rounded-md"
+                    />
+                  </td>
+                  <td className="p-3 font-medium">{student.username}</td>
+                  <td className="p-3 text-orange-500 font-semibold">
+                    {student.admissionNumber || "N/A"}
+                  </td>
+                  <td className="p-3">
+                    {Classes.find((c) => c.id === student.classId)?.classname ||
+                      "N/A"}
+                  </td>
+                  <td className="p-3">
+                    {student.Parents?.[0]?.username || "N/A"}
+                  </td>
+                  <td className="p-3">
+                    {student.Parents?.[0]?.motherName || "N/A"}
+                  </td>
+                  <td className="p-3 truncate max-w-[150px]">
+                    {student.email}
+                  </td>
+                  <td className="p-3">
+                    {student.dateOfBirth
+                      ? new Date(student.dateOfBirth).toLocaleDateString()
+                      : "N/A"}
+                  </td>
+                  <td className="p-3">{student.gender || "N/A"}</td>
+                  <td className="p-3 truncate max-w-[150px]">
+                    {student.address || "N/A"}
+                  </td>
+                  <td className="p-3">{student.phone || "N/A"}</td>
+                  <td className="p-3">
+                    <div className="flex gap-3 text-blue-600">
+                      {student.phone && (
+                        <a href={`tel:${student.phone}`} title="Call">
+                          <FiPhone className="cursor-pointer hover:text-orange-500 transition" />
+                        </a>
+                      )}
+                      {student.email && (
+                        <a href={`mailto:${student.email}`} title="Email">
+                          <FiMail className="cursor-pointer hover:text-orange-500 transition" />
+                        </a>
+                      )}
                     </div>
-                  )}
-                </td>
-              </tr>
-            ))
+                  </td>
+                  <td className="p-3">
+                  {(() => {
+                    
+  const assignedFee = feeAssign.filter(
+    (fee) => fee.studentId === student.id
+  );
+  return assignedFee.length > 0 ? (
+    <span className="text-green-600 font-semibold">
+      <button onClick={() => handleFeeDetails(assignedFee)}>
+        Fee Assigned
+      </button>
+    </span>
+  ) : (
+    <span className="text-red-600 font-semibold">
+      Fee Not Assigned
+    </span>
+  );
+})()}
+                  </td>
+                
+                  <td className="p-3 relative">
+                    <FiMoreVertical
+                      className="cursor-pointer"
+                      aria-label="More actions"
+                      onClick={() =>
+                        setOpenDropdown(
+                          openDropdown === student.id ? null : student.id
+                        )
+                      }
+                    />
+                    {openDropdown === student.id && (
+                      <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-10">
+                        <button
+                          className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                          onClick={() => {
+                            setParentModel(true);
+                            setParentFromData((prev) => ({
+                              ...prev,
+                              studentId: student.id,
+                            }));
+                            setOpenDropdown(null);
+                          }}
+                        >
+                          Add Parent
+                        </button>
+                        <button className="w-full px-4 py-2 text-left hover:bg-gray-100 text-gray-500">
+                          <Link
+                            to={`/admin/student/list/${student.id}`}
+                            className="text-decoration-none"
+                          >
+                            View
+                          </Link>
+                        </button>
+                        <button
+                          className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                          onClick={() => {
+                            setId(student.id);
+                            setOpen(true);
+                            setFormData({
+                              username: student.username,
+                              email: student.email,
+                              phone: student.phone,
+                              gender: student.gender,
+                              dateOfBirth: student.dateOfBirth,
+                              bloodGroup: student.bloodGroup,
+                              classId: student.classId,
+                              address: student.address,
+                              profilePicture: profile,
+                            });
+                            setEdit(true);
+                            setAvatar(
+                              student.profilePicture
+                                ? `http://localhost:2000/${student.profilePicture}`
+                                : null
+                            );
+                            setOpenDropdown(null);
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100"
+                          onClick={() => {
+                            handleDelete(student.id);
+                            setOpenDropdown(null);
+                          }}
+                        >
+                          Delete
+                        </button>
+                        <button
+                          className="w-full px-4 py-2 text-left text-black-600 hover:bg-gray-100"
+                          onClick={() => {
+                            handleAssignFee(student.id);
+                            alert("fee Assigned");
+                            
+                            setOpenDropdown(null);
+                          }}
+                        >
+                          Fee Assign
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))
           )}
         </tbody>
       </table>

@@ -20,12 +20,19 @@ import ManageExam from './pages/admin/ManageExam'
 import ManageExamResult from './pages/admin/ManageExamResult'
 import ManageFeeStructure from './pages/admin/ManageFeeStructure'
 
+import StudentDashboard from './pages/Student/StudentDashboard'
+import ManageAttendence from './pages/admin/ManageAttendence'
+import ManageStudentAttendence from './pages/Teacher/ManageStudentAttendence'
+import AttendanceDashboard from './pages/Teacher/AttendanceDashboard'
+import Layout from './Website/Pages/Layout'
+import Topbar from './Website/Components/Topbar'
+
 const Routing = () => {
   return (
     <>
         <Routes>
       {/* Auth Route */}
-      <Route path='/' element={<Login />} />
+      <Route path='/login' element={<Login />} />
 
       {/* Admin Routes */}
       <Route path='/admin' element={<Home />}>
@@ -41,14 +48,27 @@ const Routing = () => {
         <Route path='exam/list'  element={<ManageExam/>}/>
         <Route path='exam/results' element={<ManageExamResult />} />
         <Route path='fees/struct' element={<ManageFeeStructure />}/>
+        <Route path='attendance' element={<ManageAttendence />} />
       </Route>
 
     
       <Route path='/teacher' element={<Home />}>
         <Route index element={<TeacherDashboard />} />
+        <Route path='attendence' element={<ManageStudentAttendence />}/>
+        <Route path='dashboard' element={<AttendanceDashboard />}/>
         
       </Route>
+      <Route path='/student/dashboard' element={<Home />}>
+        <Route index element={<StudentDashboard />} />
+      </Route>
 
+
+      <Route path='/' element={<Layout />}>
+          <Route element={<Topbar/>}>
+          
+          
+          </Route>
+      </Route>
    
       <Route path='*' element={<PageNotFound />} />
     </Routes>

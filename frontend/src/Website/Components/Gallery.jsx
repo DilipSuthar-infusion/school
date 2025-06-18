@@ -54,14 +54,14 @@ const Gallery = () => {
   return (
     <div className=" px-4 py-20 bg-gradient-to-b from-gray-50 to-white">
       <div className="text-center">
-        <span class="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+        <span className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
           <BookOpen className="w-4" />
           Snapshots of School Life
         </span>
       </div>
 
       <h2 className="text-3xl font-bold mb-2 md:mb-4 text-center">Photo Gallery</h2>
-      <p class="text-sm text-center sm:text-lg text-gray-600 max-w-2xl mx-auto">
+      <p className="text-sm text-center sm:text-lg text-gray-600 max-w-2xl mx-auto">
         Explore highlights of our vibrant campus life, from classrooms to
         cultural events and beyond
       </p>

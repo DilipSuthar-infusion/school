@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FiMoreVertical, FiSearch } from "react-icons/fi";
 import { ClipLoader } from "react-spinners";
+import GalleryView from "../../components/GalleryView";
 
 const ManageGallery = () => {
   const [loading, setLoading] = useState(false);
@@ -53,7 +54,8 @@ const ManageGallery = () => {
 
 
       {activeBtn == "Event" && <div>
-        dhkfhjkfhdkjvg</div>}
+
+        <GalleryView data='dfhufhffh'/></div>}
 
 
         {activeBtn == "Annual Function" && <div>

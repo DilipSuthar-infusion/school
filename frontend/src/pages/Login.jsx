@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { Mail } from "lucide-react";
 import { useAuth } from "../Context/Authcontext";
+import FullScreenLoader from "../components/FullScreenLoader";
 
 export default function Login() {
   const { register,trigger,formState: { errors }, handleSubmit } = useForm();
@@ -45,6 +46,7 @@ export default function Login() {
   
   return (
     <Container fluid className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+      {loading && <FullScreenLoader />}
       <Card className="shadow-lg d-flex flex-row overflow-hidden" style={{ width: '900px', border: 'none' }}>
         
         {/* Left side */}

@@ -39,7 +39,6 @@ const ManageStudentAttendence = ({ teacherId }) => {
     await markBulkAttendance(
       selectedClassId,
       date,
-      user,
       students.map((s) => ({
         studentId: s.id,
         status: s.status || "present",

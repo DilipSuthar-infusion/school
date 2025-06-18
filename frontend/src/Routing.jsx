@@ -25,7 +25,13 @@ import ManageAttendence from './pages/admin/ManageAttendence'
 import ManageStudentAttendence from './pages/Teacher/ManageStudentAttendence'
 import AttendanceDashboard from './pages/Teacher/AttendanceDashboard'
 import Layout from './Website/Pages/Layout'
-import Topbar from './Website/Components/Topbar'
+import AttencenceView from './pages/Student/AttencenceView'
+import ManageStudyMeterial from './pages/Teacher/ManageStudyMeterial'
+import StudyMeterial from './pages/Student/StudyMeterial'
+import NavigationBar from './Website/Components/NavigationBar'
+import ContectUs from './Website/Pages/ContectUs'
+import GalleryPage from './Website/Pages/GalleryPage'
+import AboutUsPage from './Website/Pages/AboutUsPage'
 
 const Routing = () => {
   return (
@@ -56,18 +62,26 @@ const Routing = () => {
         <Route index element={<TeacherDashboard />} />
         <Route path='attendence' element={<ManageStudentAttendence />}/>
         <Route path='dashboard' element={<AttendanceDashboard />}/>
+        <Route path='study' element={<ManageStudyMeterial />}/>
         
       </Route>
       <Route path='/student/dashboard' element={<Home />}>
         <Route index element={<StudentDashboard />} />
+        <Route path='view' element={<AttencenceView />}/>
+        <Route path='studyMeterial' element={<StudyMeterial/>}/>
       </Route>
 
 
-      <Route path='/' element={<Layout />}>
-          <Route element={<Topbar/>}>
+      <Route path='/' element={<NavigationBar />}>
+          <Route index element={<Layout/>}/>
+          <Route path='/about' element={<AboutUsPage />} />
+          <Route path='/gallery' element={<GalleryPage />} />
+
+          <Route path='/contact' element={<ContectUs />} />
+
           
           
-          </Route>
+
       </Route>
    
       <Route path='*' element={<PageNotFound />} />

@@ -211,6 +211,7 @@ const ManageParents = () => {
           <table className="w-full table-auto text-sm border-collapse">
             <thead className="bg-blue-100 text-left text-blue-600">
               <tr>
+              <th className="p-3">Sr.No.</th>
                 <th className="p-3">Parent's Photo</th>
                 <th className="p-3">Father Name</th>
                 <th className="p-3">Mother Name</th>
@@ -241,7 +242,8 @@ const ManageParents = () => {
                   ?.filter(user => user.role === 'parent')
                   .map((parent, idx) => (
                     <tr key={parent.id || idx} className="border-b hover:bg-gray-50">
-                      <td className="p-2 w-20">
+                      <td className="p-2 w-20">{idx+1}</td>
+                      <td className="p-2 w-20 text-center">
                         <img
                           src={`http://localhost:2000/${parent.profilePicture}`}
                           alt="avatar"

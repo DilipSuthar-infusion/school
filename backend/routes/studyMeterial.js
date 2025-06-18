@@ -8,7 +8,7 @@ import { authenticate, authorizeRoles } from '../middleware/auth.middleware.js';
 import wrapAsync from '../utils/wrapAsync.js';
 
 
-router.post('/', authenticate,authorizeRoles("teacher"), upload.single('file'), wrapAsync(createStudyMaterial));
+router.post('/', authenticate,authorizeRoles("teacher"), upload.single('filePath'), wrapAsync(createStudyMaterial));
 router.delete('/:id',authenticate,authorizeRoles("teacher"), wrapAsync(deleteStudyMaterialById));
 router.get('/',authenticate,authorizeRoles("student","teacher","parent","admin"), wrapAsync(getStudyMaterials));
 

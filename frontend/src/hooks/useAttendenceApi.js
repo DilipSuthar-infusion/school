@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 
 const useAttendenceApi = () => {
   const [attendance, setAttendance] = useState([])
-     const markBulkAttendance =async(classId, date, markedBy, attendanceRecords)=>{
+     const markBulkAttendance =async(classId, date, attendanceRecords)=>{
             try {
                 const token = localStorage.getItem('token');
                 await axios.post(
@@ -13,8 +13,7 @@ const useAttendenceApi = () => {
                     {
                       classId,
                       date,
-                      markedBy,
-                      attendanceRecords
+                      attendanceRecords,
                     },
                     {
                       headers: {
@@ -47,7 +46,7 @@ const useAttendenceApi = () => {
                   },
                 }
               );
-              console.log(response.data)
+              
               setAttendance(response.data)
           
           } catch (error) {
@@ -60,10 +59,28 @@ const useAttendenceApi = () => {
           }
         }
 
+
+        const deleteAttendanceByDate = async (studentId, date) => {
+          try {
+            const token = localStorage.getItem('token');
+            const res = await axios.delete(`/api/attendance/${studentId}?date=${date}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            return res.data;
+          } catch (err) {
+            console.error("Delete error:", err);
+            throw err;
+          }
+        };
+
         useEffect(() => {
           getAttendanceData();
         }, []);
-        return {markBulkAttendance , attendance}
+        return {markBulkAttendance , attendance,deleteAttendanceByDate}
 }
 
 export default useAttendenceApi

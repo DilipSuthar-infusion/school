@@ -1,367 +1,270 @@
-import React, { useEffect, useState } from "react";
-import useAttendanceApi from "../../hooks/useAttendenceApi";
-import useClassApi from "../../hooks/useClassApi";
-import { useAuth } from "../../Context/Authcontext";
-import { 
-  Calendar, 
-  CheckCircle, 
-  XCircle, 
-  TrendingUp,
-  ChevronLeft,
-  ChevronRight,
-  Award,
-  Target,
-  BookOpen
-} from "lucide-react";
+import { useAuth } from '../../Context/Authcontext';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { format } from 'date-fns';
 
-const AttencenceView = () => {
-  const { getStudentAttendance } = useAttendanceApi();
-  const { Classes } = useClassApi();
+const groupByMonth = (records) => {
+  const grouped = Array.from({ length: 12 }, () => []);
+  records.forEach((record) => {
+    const month = new Date(record.date).getMonth();
+    grouped[month].push(record);
+  });
+  return grouped;
+};
+
+const monthNames = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+const AttendanceView = () => {
   const { user } = useAuth();
-
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+  const [attendanceByMonth, setAttendanceByMonth] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [attendanceData, setAttendanceData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [expandedMonth, setExpandedMonth] = useState(null);
 
-  const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
 
-  const getDaysInMonth = (month, year) => {
-    return new Date(year, month + 1, 0).getDate();
-  };
-
-  const getMonthData = () => {
-    const daysInMonth = getDaysInMonth(selectedMonth, selectedYear);
-    const monthStart = new Date(selectedYear, selectedMonth, 1);
-    const firstDayOfWeek = monthStart.getDay();
-    
-    return { daysInMonth, firstDayOfWeek };
-  };
-
-  const fetchAttendanceData = async () => {
-    setLoading(true);
-    try {
-      // Replace with actual API call
-      // const data = await getStudentAttendance(user.id, selectedMonth, selectedYear);
-      
-      // Mock data for demonstration
-      const { daysInMonth } = getMonthData();
-      const mockData = {
-        studentId: user.id,
-        studentName: user.username || user.name,
-        className: Classes.find(c => c.id === user.classId)?.classname || 'N/A',
-        rollNumber: user.rollNumber || 'N/A',
-        days: {}
-      };
-
-      // Generate mock attendance for each day
-      for (let day = 1; day <= daysInMonth; day++) {
-        const date = new Date(selectedYear, selectedMonth, day);
-        const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-        
-        if (!isWeekend && date <= new Date()) {
-          mockData.days[day] = Math.random() > 0.15 ? 'present' : 'absent';
-        }
-      }
-
-      setAttendanceData(mockData);
-    } catch (error) {
-      console.error('Error fetching attendance data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const yearOptions = Array.from({ length: 3 }, (_, i) => new Date().getFullYear() - i);
 
   useEffect(() => {
-    if (user) {
-      fetchAttendanceData();
+    if (user?.id) {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem('token');
+      
+      axios
+        .get(`${import.meta.env.VITE_API_BASE_URL}/attendance/${user.id}/year/${selectedYear}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          const grouped = groupByMonth(res.data);
+          setAttendanceByMonth(grouped);
+        })
+        .catch((err) => {
+          console.error(err);
+          setError('Failed to load attendance data');
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
-  }, [selectedMonth, selectedYear, user]);
+  }, [user, selectedYear]);
 
-  const calculateStats = () => {
-    if (!attendanceData) return { present: 0, absent: 0, total: 0, percentage: 0 };
-    
-    const days = Object.values(attendanceData.days);
-    const present = days.filter(d => d === 'present').length;
-    const absent = days.filter(d => d === 'absent').length;
-    const total = present + absent;
-    const percentage = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
-    
-    return { present, absent, total, percentage };
+  const calculateAttendanceRate = (records) => {
+    if (records.length === 0) return 0;
+    const presentCount = records.filter(r => r.status === "present").length;
+    return Math.round((presentCount / records.length) * 100);
   };
 
-  const navigateMonth = (direction) => {
-    if (direction === 'prev') {
-      if (selectedMonth === 0) {
-        setSelectedMonth(11);
-        setSelectedYear(selectedYear - 1);
-      } else {
-        setSelectedMonth(selectedMonth - 1);
-      }
-    } else {
-      if (selectedMonth === 11) {
-        setSelectedMonth(0);
-        setSelectedYear(selectedYear + 1);
-      } else {
-        setSelectedMonth(selectedMonth + 1);
-      }
-    }
+  const getAttendanceColor = (rate) => {
+    if (rate >= 90) return 'text-green-600';
+    if (rate >= 75) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
-  const getAttendanceGrade = (percentage) => {
-    if (percentage >= 95) return { grade: 'A+', color: 'text-green-600', bg: 'bg-green-100' };
-    if (percentage >= 90) return { grade: 'A', color: 'text-green-600', bg: 'bg-green-100' };
-    if (percentage >= 85) return { grade: 'B+', color: 'text-blue-600', bg: 'bg-blue-100' };
-    if (percentage >= 80) return { grade: 'B', color: 'text-blue-600', bg: 'bg-blue-100' };
-    if (percentage >= 75) return { grade: 'C+', color: 'text-yellow-600', bg: 'bg-yellow-100' };
-    if (percentage >= 70) return { grade: 'C', color: 'text-yellow-600', bg: 'bg-yellow-100' };
-    return { grade: 'D', color: 'text-red-600', bg: 'bg-red-100' };
+  const getProgressBarColor = (rate) => {
+    if (rate >= 90) return 'bg-green-500';
+    if (rate >= 75) return 'bg-yellow-500';
+    return 'bg-red-500';
   };
 
-  const stats = calculateStats();
-  const attendanceGrade = getAttendanceGrade(stats.percentage);
-  const { daysInMonth, firstDayOfWeek } = getMonthData();
+  // Calculate overall statistics
+  const totalRecords = attendanceByMonth.flat().length;
+  const totalPresent = attendanceByMonth.flat().filter(r => r.status === "present").length;
+  const overallRate = totalRecords > 0 ? Math.round((totalPresent / totalRecords) * 100) : 0;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <span className="ml-3 text-indigo-600 font-medium">Loading attendance data...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+            <div className="text-red-600 text-lg font-medium mb-2">Error Loading Data</div>
+            <p className="text-red-500">{error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-3 sm:p-4 lg:p-6">
-      <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <div className="bg-white rounded-2xl shadow-xl mb-6 overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-6">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-              <div className="flex items-center text-white">
-                <div className="bg-white/20 p-3 rounded-xl mr-4">
-                  <BookOpen className="w-8 h-8" />
-                </div>
-                <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold">My Attendance</h1>
-                  <p className="text-blue-100 mt-1">Track your attendance record</p>
-                </div>
-              </div>
-
-              {/* Month Navigation */}
-              <div className="flex items-center bg-white/10 rounded-xl p-1">
-                <button
-                  onClick={() => navigateMonth('prev')}
-                  className="p-2 rounded-lg hover:bg-white/20 transition-colors"
-                >
-                  <ChevronLeft className="w-5 h-5 text-white" />
-                </button>
-                <span className="px-4 py-2 text-white font-medium min-w-[150px] text-center">
-                  {months[selectedMonth]} {selectedYear}
-                </span>
-                <button
-                  onClick={() => navigateMonth('next')}
-                  className="p-2 rounded-lg hover:bg-white/20 transition-colors"
-                >
-                  <ChevronRight className="w-5 h-5 text-white" />
-                </button>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Attendance Overview</h1>
+              <p className="text-gray-600">Track your attendance across the year</p>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              {/* Year Selector */}
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(Number(e.target.value))}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              >
+                {yearOptions.map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
             </div>
           </div>
 
-          {/* Student Info Bar */}
-          {attendanceData && (
-            <div className="bg-gray-50 px-6 py-4 border-b">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                    {attendanceData.studentName.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{attendanceData.studentName}</h3>
-                    <p className="text-gray-600">{attendanceData.className} • Roll No: {attendanceData.rollNumber}</p>
-                  </div>
-                </div>
-                
-                {/* Grade Badge */}
-                <div className={`${attendanceGrade.bg} ${attendanceGrade.color} px-4 py-2 rounded-xl flex items-center`}>
-                  <Award className="w-5 h-5 mr-2" />
-                  <span className="font-bold">Grade: {attendanceGrade.grade}</span>
-                </div>
+          {/* Overall Statistics */}
+          {totalRecords > 0 && (
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-4 text-white">
+                <div className="text-sm opacity-90">Total Days</div>
+                <div className="text-2xl font-bold">{totalRecords}</div>
+              </div>
+              <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg p-4 text-white">
+                <div className="text-sm opacity-90">Present Days</div>
+                <div className="text-2xl font-bold">{totalPresent}</div>
+              </div>
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-600 rounded-lg p-4 text-white">
+                <div className="text-sm opacity-90">Overall Rate</div>
+                <div className="text-2xl font-bold">{overallRate}%</div>
               </div>
             </div>
           )}
         </div>
 
-        {loading ? (
-          <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
-            <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading your attendance...</p>
-          </div>
-        ) : attendanceData ? (
-          <>
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-600 text-sm">Present Days</p>
-                    <p className="text-2xl font-bold text-green-600">{stats.present}</p>
-                  </div>
-                  <CheckCircle className="w-8 h-8 text-green-500" />
-                </div>
-              </div>
+        {/* Monthly Attendance Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {attendanceByMonth.map((records, index) => {
+            const presentCount = records.filter((r) => r.status === "present").length;
+            const absentCount = records.filter((r) => r.status === "absent").length;
+            const attendanceRate = calculateAttendanceRate(records);
+            const isExpanded = expandedMonth === index;
 
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-600 text-sm">Absent Days</p>
-                    <p className="text-2xl font-bold text-red-600">{stats.absent}</p>
-                  </div>
-                  <XCircle className="w-8 h-8 text-red-500" />
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-600 text-sm">Attendance %</p>
-                    <p className="text-2xl font-bold text-blue-600">{stats.percentage}%</p>
-                  </div>
-                  <TrendingUp className="w-8 h-8 text-blue-500" />
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-600 text-sm">Target</p>
-                    <p className="text-2xl font-bold text-purple-600">85%</p>
-                  </div>
-                  <Target className="w-8 h-8 text-purple-500" />
-                </div>
-              </div>
-            </div>
-
-            {/* Calendar */}
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-              <div className="p-6">
-                {/* Week Headers */}
-                <div className="grid grid-cols-7 gap-2 mb-4">
-                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                    <div key={day} className="text-center font-semibold text-gray-600 py-3 bg-gray-50 rounded-lg">
-                      {day}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Calendar Days */}
-                <div className="grid grid-cols-7 gap-2">
-                  {/* Empty cells for days before month starts */}
-                  {Array.from({ length: firstDayOfWeek }, (_, i) => (
-                    <div key={`empty-${i}`} className="aspect-square"></div>
-                  ))}
-                  
-                  {/* Days of the month */}
-                  {Array.from({ length: daysInMonth }, (_, i) => {
-                    const day = i + 1;
-                    const date = new Date(selectedYear, selectedMonth, day);
-                    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                    const isFuture = date > new Date();
-                    const isToday = date.toDateString() === new Date().toDateString();
-                    const status = attendanceData.days[day];
-                    
-                    let cellClass = "aspect-square flex items-center justify-center rounded-xl font-bold text-lg transition-all transform hover:scale-105 ";
-                    
-                    if (isToday) {
-                      cellClass += "ring-4 ring-blue-300 ";
-                    }
-                    
-                    if (isFuture) {
-                      cellClass += "bg-gray-100 text-gray-400";
-                    } else if (isWeekend) {
-                      cellClass += "bg-gray-200 text-gray-500";
-                    } else if (status === 'present') {
-                      cellClass += "bg-green-100 text-green-700 border-2 border-green-300 shadow-md";
-                    } else if (status === 'absent') {
-                      cellClass += "bg-red-100 text-red-700 border-2 border-red-300 shadow-md";
-                    } else {
-                      cellClass += "bg-gray-100 text-gray-600";
-                    }
-
-                    return (
-                      <div key={day} className={cellClass}>
-                        <span>{day}</span>
+            return (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+              >
+                {/* Month Header */}
+                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-4 text-white">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold">{monthNames[index]}</h3>
+                    <div className="text-right">
+                      <div className="text-sm opacity-90">Rate</div>
+                      <div className={`text-xl font-bold ${records.length > 0 ? 'text-white' : 'text-gray-300'}`}>
+                        {records.length > 0 ? `${attendanceRate}%` : 'N/A'}
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Legend and Progress */}
-              <div className="bg-gray-50 px-6 py-4 border-t">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                  {/* Legend */}
-                  <div className="flex flex-wrap items-center gap-4 text-sm">
-                    <div className="flex items-center">
-                      <div className="w-4 h-4 bg-green-100 border-2 border-green-300 rounded mr-2"></div>
-                      <span className="text-gray-600">Present</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-4 h-4 bg-red-100 border-2 border-red-300 rounded mr-2"></div>
-                      <span className="text-gray-600">Absent</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-4 h-4 bg-gray-200 rounded mr-2"></div>
-                      <span className="text-gray-600">Weekend</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-4 h-4 bg-blue-300 rounded mr-2 ring-2 ring-blue-300"></div>
-                      <span className="text-gray-600">Today</span>
                     </div>
                   </div>
-
+                  
                   {/* Progress Bar */}
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-gray-600">Progress to 85%:</span>
-                    <div className="w-32 bg-gray-200 rounded-full h-3">
-                      <div 
-                        className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500"
-                        style={{ width: `${Math.min((stats.percentage / 85) * 100, 100)}%` }}
-                      ></div>
+                  {records.length > 0 && (
+                    <div className="mt-3">
+                      <div className="bg-white bg-opacity-30 rounded-full h-2">
+                        <div
+                          className="bg-white rounded-full h-2 transition-all duration-500"
+                          style={{ width: `${attendanceRate}%` }}
+                        ></div>
+                      </div>
                     </div>
-                    <span className="text-sm font-medium text-gray-700">
-                      {Math.min(Math.round((stats.percentage / 85) * 100), 100)}%
-                    </span>
-                  </div>
+                  )}
+                </div>
+
+                {/* Month Content */}
+                <div className="p-4">
+                  {records.length === 0 ? (
+                    <div className="text-center py-8">
+                      <div className="text-gray-400 text-4xl mb-2">📅</div>
+                      <p className="text-gray-400 italic">No records for this month</p>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Summary Stats */}
+                      <div className="flex justify-between items-center mb-4">
+                        <div className="flex items-center gap-4 text-sm">
+                          <div className="flex items-center gap-1">
+                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <span className="text-green-700 font-medium">{presentCount}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                            <span className="text-red-700 font-medium">{absentCount}</span>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setExpandedMonth(isExpanded ? null : index)}
+                          className="text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors"
+                        >
+                          {isExpanded ? 'Hide Details' : 'View Details'}
+                        </button>
+                      </div>
+
+                      {/* Detailed Records */}
+                      {isExpanded && (
+                        <div className="border-t pt-4">
+                          <div className="space-y-2 max-h-48 overflow-y-auto">
+                            {records
+                              .sort((a, b) => new Date(b.date) - new Date(a.date))
+                              .map((record) => (
+                              <div
+                                key={record.id}
+                                className={`flex items-center justify-between p-3 rounded-lg border-l-4 ${
+                                  record.status === "present"
+                                    ? "bg-green-50 border-green-500"
+                                    : "bg-red-50 border-red-500"
+                                }`}
+                              >
+                                <div>
+                                  <div className="font-medium text-gray-900">
+                                    {format(new Date(record.date), "dd MMM yyyy")}
+                                  </div>
+                                  <div className="text-sm text-gray-500">
+                                    {format(new Date(record.date), "EEEE")}
+                                  </div>
+                                </div>
+                                <div
+                                  className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                    record.status === "present"
+                                      ? "bg-green-100 text-green-800"
+                                      : "bg-red-100 text-red-800"
+                                  }`}
+                                >
+                                  {record.status.toUpperCase()}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
-            </div>
+            );
+          })}
+        </div>
 
-            {/* Motivational Message */}
-            <div className="mt-6 bg-white rounded-2xl shadow-xl p-6">
-              <div className="text-center">
-                {stats.percentage >= 85 ? (
-                  <div className="text-green-600">
-                    <CheckCircle className="w-12 h-12 mx-auto mb-3" />
-                    <h3 className="text-xl font-bold mb-2">Excellent Attendance! 🎉</h3>
-                    <p className="text-gray-600">Keep up the great work! Your consistent attendance shows dedication.</p>
-                  </div>
-                ) : stats.percentage >= 75 ? (
-                  <div className="text-yellow-600">
-                    <Target className="w-12 h-12 mx-auto mb-3" />
-                    <h3 className="text-xl font-bold mb-2">Good Progress! 📈</h3>
-                    <p className="text-gray-600">You're doing well! Try to maintain regular attendance to reach 85%.</p>
-                  </div>
-                ) : (
-                  <div className="text-red-600">
-                    <TrendingUp className="w-12 h-12 mx-auto mb-3" />
-                    <h3 className="text-xl font-bold mb-2">Needs Improvement 💪</h3>
-                    <p className="text-gray-600">Focus on improving your attendance. Every day counts towards your success!</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </>
-        ) : (
-          <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
-            <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+        {/* Empty State */}
+        {totalRecords === 0 && (
+          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
+            <div className="text-gray-400 text-6xl mb-4">📊</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No Attendance Data</h3>
-            <p className="text-gray-600">No attendance records found for this month.</p>
+            <p className="text-gray-600">No attendance records found for {selectedYear}</p>
           </div>
         )}
       </div>
@@ -369,4 +272,4 @@ const AttencenceView = () => {
   );
 };
 
-export default AttencenceView;
+export default AttendanceView;

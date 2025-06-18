@@ -1,13 +1,14 @@
 // src/context/AuthContext.jsx
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);   
   const [token, setToken] = useState(null);  // store JWT token
-
+  const navigate = useNavigate()
   // Load from localStorage on refresh
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -32,6 +33,7 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    navigate('/login')
   };
 
   return (

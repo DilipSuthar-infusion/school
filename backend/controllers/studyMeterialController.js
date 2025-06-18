@@ -3,8 +3,10 @@ import Class from '../models/class.model.js';
 import StudyMaterial from '../models/studymeterial.model.js'
 import Subject from '../models/subject.model.js';
 import User from '../models/user.model.js';
+import CustomError from '../utils/customError.js';
 
 export const createStudyMaterial = async (req, res) => {
+
     const { title, description, classId, subjectId } = req.body;
     const filePath = req.file?.path || req.body.filePath;
     const user = req.user;
@@ -62,23 +64,23 @@ export const getStudyMaterials = async (req, res) => {
       {
         model: Class,
         as: 'class', // alias for StudyMaterial -> Class
-        attributes: ['name'],
+        attributes: ['classname'],
         include: [
           {
             model: User,
-            as: 'classTeacher', // alias for Class -> User
+            as: 'classTeacher', 
             attributes: ['username'],
           },
         ],
       },
       {
         model: Subject,
-        as: 'subject', // alias for StudyMaterial -> Subject
-        attributes: ['name'],
+        as: 'subject', 
+        attributes: ['subjectName'],
       },
       {
         model: User,
-        as: 'teacher', // alias for StudyMaterial -> User (uploader)
+        as: 'teacher', 
         attributes: ['username'],
       },
     ],
@@ -88,5 +90,38 @@ export const getStudyMaterials = async (req, res) => {
     return res.status(404).json({ message: 'No study materials found' });
   }
 
-  res.status(200).json({ data: materials });
+  res.status(200).json( materials );
+};
+
+
+
+export const getStudentClassStudyMaterial = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const student = await User.findOne({
+      where: { id: userId, role: 'student' },
+    });
+
+    if (!student) {
+      throw new CustomError(404, 'Student user not found');
+    }
+
+ 
+    const materials = await StudyMaterial.findAll({
+      where: { classId: student.classId },
+      include: [
+        { association: 'class', attributes: ['classname'] },
+        { association: 'subject', attributes: ['subjectName'] },
+        { association: 'teacher', attributes: ['username'] },
+      ],
+    });
+
+    res.status(200).json({ success: true, data: materials });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(error.statusCode || 500)
+      .json({ success: false, message: error.message || 'Server error' });
+  }
 };

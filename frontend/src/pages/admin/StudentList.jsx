@@ -184,7 +184,6 @@ const StudentList = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      console.log(id);
       setAvatar(URL.createObjectURL(file));
       setProfile(file);
       setFormData((prev) => ({ ...prev, profilePicture: file }));
@@ -294,7 +293,6 @@ const StudentList = () => {
   };
 
   const handleFeeDetails = async (fee) => {
-    console.log(fee)
     setOpenFeeDetail(true);
     setFeeDetail(fee);
   };

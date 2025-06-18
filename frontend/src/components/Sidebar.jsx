@@ -29,7 +29,7 @@ import {
   Calendar1
 } from 'lucide-react';
 import logo from '../assets/Images/logo.png'
-import { useAuth, user } from '../Context/Authcontext';
+import { useAuth } from '../Context/Authcontext';
 import Swal from 'sweetalert2';
 
 const Sidebar = () => {
@@ -37,7 +37,7 @@ const Sidebar = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [activeItem, setActiveItem] = useState('dashboard');
   const [isMobile, setIsMobile] = useState(false);
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -165,7 +165,7 @@ const Sidebar = () => {
     },
     {
       key: 'subjects',
-      icon: <BookOpen classNahandleLogoutme="w-5 h-5" />,
+      icon: <BookOpen className="w-5 h-5" />,
       label: 'Subjects',
       badge: '15',
       children: [
@@ -263,7 +263,7 @@ const Sidebar = () => {
     Swal.fire({
       title:"Logout SucessFully"
     })
-    navigate('/login')
+    
 
   }
 
@@ -518,10 +518,10 @@ const Sidebar = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-white truncate">
-                    Admin User
+                    {user.role}
                   </p>
                   <p className="text-xs text-slate-400 truncate">
-                    admin@school.com
+                    {user.email}
                   </p>
                 </div>
               </div>

@@ -57,7 +57,7 @@ app.use('/api/subjects', subjectRoutes);
 app.use('/api/classroutines', classRoutineRoutes);
 app.use('/api/payment', paymentRoute);
 app.use('/api/invoice', invoiceRoute);
-app.use('/api/study-materials', studyMaterialRoute);
+app.use('/api/studymaterials', studyMaterialRoute);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/exams', examRoutes);

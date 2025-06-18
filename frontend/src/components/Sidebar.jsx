@@ -248,10 +248,10 @@ const Sidebar = () => {
       ]
     },
     {
-      key: 'reports',
+      key: 'gallery',
       icon: <FileSpreadsheet className="w-5 h-5" />,
-      label: 'Reports',
-      path: '/admin/reports',
+      label: 'Manage Gallery',
+      path: '/admin/gallery',
       badge: null
     },
   ];

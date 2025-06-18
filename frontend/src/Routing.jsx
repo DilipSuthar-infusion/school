@@ -32,6 +32,7 @@ import NavigationBar from './Website/Components/NavigationBar'
 import ContectUs from './Website/Pages/ContectUs'
 import GalleryPage from './Website/Pages/GalleryPage'
 import AboutUsPage from './Website/Pages/AboutUsPage'
+import ManageGallery from './pages/admin/ManageGallery'
 
 const Routing = () => {
   return (
@@ -55,6 +56,8 @@ const Routing = () => {
         <Route path='exam/results' element={<ManageExamResult />} />
         <Route path='fees/struct' element={<ManageFeeStructure />}/>
         <Route path='attendance' element={<ManageAttendence />} />
+        <Route path='gallery' element={<ManageGallery />} />
+        
       </Route>
 
     

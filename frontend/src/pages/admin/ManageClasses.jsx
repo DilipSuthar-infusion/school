@@ -54,16 +54,16 @@ const ManageClasses = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault(); 
     if (!validateForm()) {
       return;
     }
       if (classId) {
-        const {sucess, error } = await handleEditClass(classId, formData);
-        if(sucess){
+        const {success, error,data } = await handleEditClass(classId, formData);
+        if(success){
           Swal.fire({
             icon: "success",
-            text: "Class created successfully",
+            text: data,
             confirmButtonText: "OK",
           });
         }else{
@@ -74,13 +74,13 @@ const ManageClasses = () => {
           })
         }
       } else {
-        const {sucess, error, data } = await handleAddClass(formData);
-        if(sucess){
+        const {success, error, data } = await handleAddClass(formData);
+        if(success){
           Swal.fire({
             icon: "success",
             text: data,
             confirmButtonText: "OK",
-          });
+          })
         }else{
           Swal.fire({
             icon: "error",
@@ -109,6 +109,23 @@ const ManageClasses = () => {
 
    
   };
+  const handleClassDelete = async(id)=>{
+    const {success, error, data } = await handleDelete(id);
+    setOpenDropdown(null);
+    if(success){
+      Swal.fire({
+        icon: "success",
+        text: data,
+        confirmButtonText: "OK",
+      })
+    }else{
+      Swal.fire({
+        icon: "error",
+        title: error,
+        text: "Something went wrong!",
+      })
+    }
+  }
 
   return (
     <>
@@ -196,10 +213,7 @@ const ManageClasses = () => {
                         </button>
                         <button
                           className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100"
-                          onClick={() => {
-                            handleDelete(cls.id);
-                            setOpenDropdown(null);
-                          }}
+                          onClick={() => handleClassDelete(cls.id)}
                         >
                           Delete
                         </button>

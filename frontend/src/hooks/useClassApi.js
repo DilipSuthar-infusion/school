@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
 
 
 const useClassApi = () => {
@@ -21,7 +20,8 @@ const useClassApi = () => {
           );
           handlefetchClasses();
           setLoading(false);
-          return { success: true, data: response.data };
+  
+          return { success: true, data: response?.data?.message };
         } catch (error) {
           return { success: false, error: error.response?.data?.message };
           
@@ -38,7 +38,7 @@ const useClassApi = () => {
             },
           });
           setClasses(Classes.filter(classObj => classObj.id !== id));
-          return {success: true, data: response.data}
+          return {success: true, data: response?.data?.message}
         } catch (error) {
           return { success: false, error: error.response?.data?.message };
         }

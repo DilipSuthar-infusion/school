@@ -13,12 +13,12 @@ export const createClass = async (req, res) => {
     if (existingClass) {
       throw new CustomError('Class with same section already exist', 400);
     }
-    const newClass = await Class.create({
+  await Class.create({
       classname,
       section,
       roomNumber,
     });
-    return res.status(201).json({ message: 'Class created successfully', newClass });
+    return res.status(201).json({ message: 'Class created successfully' });
 };
 
 export const getAllClasses = async (req, res) => {
@@ -99,7 +99,6 @@ export const deleteAssignedClassTeacher = async (req, res) => {
 
 export const deleteClass = async (req, res) => {
     const { id } = req.params;
-    console.log(id)
     const classObj = await Class.findByPk(id);
     if (!classObj) {
       throw new CustomError('Class not found', 404);

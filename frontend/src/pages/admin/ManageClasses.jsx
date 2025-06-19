@@ -5,9 +5,14 @@ import { BookAIcon, BookCopy, DoorClosed, House, User, X } from "lucide-react";
 import Swal from "sweetalert2";
 import useUserApi from "../../hooks/useUserApi";
 const ManageClasses = () => {
-  const { handleAddClass, Classes, handleDelete, handleEditClass, handleAssignClassTeacher } =
-    useClassApi();
-  const { users  } = useUserApi();
+  const {
+    handleAddClass,
+    Classes,
+    handleDelete,
+    handleEditClass,
+    handleAssignClassTeacher,
+  } = useClassApi();
+  const { users } = useUserApi();
   const [classesModel, setClassesModel] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [formData, setFormData] = useState({
@@ -53,31 +58,41 @@ const ManageClasses = () => {
     if (!validateForm()) {
       return;
     }
-    try {
       if (classId) {
-        await handleEditClass(classId, formData);
-        Swal.fire({
-          icon: "success",
-          text: "Class updated successfully",
-          confirmButtonText: "OK",
-        });
+        const {sucess, error } = await handleEditClass(classId, formData);
+        if(sucess){
+          Swal.fire({
+            icon: "success",
+            text: "Class created successfully",
+            confirmButtonText: "OK",
+          });
+        }else{
+          Swal.fire({
+            icon: "error",
+            title: error,
+            text: "Something went wrong!",
+          })
+        }
       } else {
-        await handleAddClass(formData);
-        Swal.fire({
-          icon: "success",
-          text: "Class created successfully",
-          confirmButtonText: "OK",
-        });
+        const {sucess, error, data } = await handleAddClass(formData);
+        if(sucess){
+          Swal.fire({
+            icon: "success",
+            text: data,
+            confirmButtonText: "OK",
+          });
+        }else{
+          Swal.fire({
+            icon: "error",
+            title: error,
+            text: "Something went wrong!",
+          })
+        }
       }
       setFormData({ classname: "", section: "", roomNumber: "" });
       setClassesModel(false);
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        text: "Failed to save class. Please try again.",
-        confirmButtonText: "OK",
-      });
-    }
+
+    
   };
 
   const handleClassTeacher = async (e) => {
@@ -88,15 +103,12 @@ const ManageClasses = () => {
     await handleAssignClassTeacher(classTeacherData);
     setAssignTeacherData({
       classId: "",
-      teacherId: ""
-    })
-    setAssignTeacherModel(false)
-  
-    Swal.fire({
-      title: "Added Successfully",
+      teacherId: "",
     });
+    setAssignTeacherModel(false);
+
+   
   };
-  
 
   return (
     <>
@@ -140,7 +152,10 @@ const ManageClasses = () => {
                   <td className="p-3">{cls.classname}</td>
                   <td className="p-3">{cls.section}</td>
                   <td className="p-3">{cls.roomNumber}</td>
-                  <td className="p-3">{users.find((user) => user.id === cls.teacherId)?.username || "Not Assigned"}</td>
+                  <td className="p-3">
+                    {users.find((user) => user.id === cls.teacherId)
+                      ?.username || "Not Assigned"}
+                  </td>
                   <td className="p-3 relative">
                     <FiMoreVertical
                       className="cursor-pointer"
@@ -297,7 +312,7 @@ const ManageClasses = () => {
           </div>
         </div>
       )}
- 
+
       {assignTeacherModel && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-3xl shadow-lg max-w-sm w-full">

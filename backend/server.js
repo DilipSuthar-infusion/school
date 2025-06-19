@@ -20,7 +20,7 @@ import eventRoutes from './routes/eventRoute.js';
 import examRoutes from './routes/examRoutes.js';
 import examResultRoutes from './routes/examResultRoutes.js';
 
-
+import cookieParser from 'cookie-parser';
 import {errorHandler} from './middleware/errorHandler.js';
 import { associateModels } from './models/index.js';
 // import User from './models/user.model.js';
@@ -31,8 +31,9 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const app = express();
 
+const app = express();
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -42,9 +43,6 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
-// Error handler middleware
-app.use(errorHandler);
 
 
 // Routes
@@ -96,6 +94,9 @@ app.use('/api/exam-results', examResultRoutes);
 app.get('/', (req, res) => {
   console.log(req.url, req.method, req.headers);
 });
+
+// Error handler middleware
+app.use(errorHandler);
 
 
 // Sync DB and start server

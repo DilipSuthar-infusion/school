@@ -8,6 +8,7 @@ import {
 import useUserApi from "../../hooks/useUserApi";
 import useClassApi from "../../hooks/useClassApi";
 import useEventApi from "../../hooks/useEventApi";
+import ProjectGraph from "./ProjectGraph";
 
 export default function Dashboard() {
   const {users} = useUserApi();
@@ -52,7 +53,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-700">
-     
+     <ProjectGraph />
 
       <section className="bg-gray-50 pt-20 pb-28 sm:pt-26 sm:pb-26">
         <div className="max-w-[1200px] mx-auto px-6 text-center">

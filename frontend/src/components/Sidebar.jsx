@@ -11,24 +11,27 @@ import {
   X, 
   ChevronRight,
   User,
-  Plus,
   List,
   FileText,
   Calendar,
   BarChart3,
   MessageSquare,
-  Settings,
   CreditCard,
   Bell,
-  FileSpreadsheet,
-  Clock,
   Award,
   BookmarkCheck,
-  MapPin,
   LogOut,
-  Calendar1
+  Calendar1,
+  CheckSquare,
+  Upload,
+  Eye,
+  Download,
+  CalendarCheck,
+  School,
+  HandCoins,
+  Images
 } from 'lucide-react';
-import logo from '../assets/Images/logo.png'
+import logo from '../assets/Images/logo.png';
 import { useAuth } from '../Context/Authcontext';
 import Swal from 'sweetalert2';
 
@@ -37,251 +40,383 @@ const Sidebar = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [activeItem, setActiveItem] = useState('dashboard');
   const [isMobile, setIsMobile] = useState(false);
-  const { logout, user } = useAuth();
+  const { logout, user, userInfo } = useAuth();  
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Complete menuItems array
-  const menuItems = [
-    {
-      key: 'dashboard',
-      icon: <Home className="w-5 h-5" />,
-      label: 'Dashboard',
-      path: '/admin',
-      badge: null
-    },
-    {
-      key: 'analytics',
-      icon: <BarChart3 className="w-5 h-5" />,
-      label: 'Analytics',
-      path: '/admin/analytics',
-      badge: null
-    },
-    {
-      key: 'student',
-      icon: <GraduationCap className="w-5 h-5" />,
-      label: 'Students',
-      badge: '24',
-      children: [
-        { 
-          key: 'student-list',
-          name: 'Student List', 
-          path: '/admin/student/list',
-          icon: <List className="w-4 h-4" />
-        },
-        { 
-          key: 'student-detail',
-          name: 'Student Details', 
-          path: '/admin/student/detail',
-          icon: <FileText className="w-4 h-4" />
-        },
-        { 
-          key: 'add-student',
-          name: 'Add New Student', 
-          path: '/admin/student/add',
-          icon: <Plus className="w-4 h-4" />
-        },
-      ],
-    },
-    {
-      key: 'teacher',
-      icon: <UserCheck className="w-5 h-5" />,
-      label: 'Teachers',
-      badge: '12',
-      children: [
-        { 
-          key: 'teacher-list',
-          name: 'Teacher List', 
-          path: '/admin/teacher/list',
-          icon: <List className="w-4 h-4" />
-        },
-        { 
-          key: 'add-teacher',
-          name: 'Add Teacher', 
-          path: '/admin/teacher/add',
-          icon: <Plus className="w-4 h-4" />
-        },
-      ],
-    },
-    {
-      key: 'parent',
-      icon: <Users className="w-5 h-5" />,
-      label: 'Parents',
-      badge: '18',
-      children: [
-        { 
-          key: 'parent-list',
-          name: 'Parent List', 
-          path: '/admin/parent/list',
-          icon: <List className="w-4 h-4" />
-        },
-        { 
-          key: 'parent-detail',
-          name: 'Parent Details', 
-          path: '/admin/parent/detail',
-          icon: <FileText className="w-4 h-4" />
-        },
-        { 
-          key: 'add-parent',
-          name: 'Add New ParehandleLogoutnt', 
-          path: '/admin/parent/add',
-          icon: <Plus className="w-4 h-4" />
-        },
-      ],
-    },
-    {
-      key: 'Events',
-      icon: <Grid3X3 className="w-5 h-5" />,
-      label: 'Events',
-      badge: '8',
-      children: [
-        { 
-          key: 'manage-events',
-          name: 'Manage Events',
-          path: '/admin/events',
-          icon: <Grid3X3 className="w-4 h-4" />
-        }
-      ],
-    },
-    {
-      key: 'classes',
-      icon: <Grid3X3 className="w-5 h-5" />,
-      label: 'Classes',
-      badge: '8',
-      children: [
-        { 
-          key: 'manage-classes',
-          name: 'Manage Classes', 
-          path: '/admin/classes',
-          icon: <Grid3X3 className="w-4 h-4" />
+  // Define menu items based on user role
+  const menuItems = {
+   admin: [
+        {
+          key: 'dashboard',
+          icon: <Home className="w-5 h-5" />,
+          label: 'Dashboard',
+          path: '/admin',
+          badge: null
         },
         {
-          key: 'manage-classRoutine',
-          name: 'Manage Class Routine',
-          path: '/admin/classRoutine',
-          icon: <Calendar1 className="w-4 h-4" />
+          key: 'gallery',
+          icon: <Images className="w-5 h-5"/>,
+          label: 'Manage Gallery',
+          path: '/admin/gallery',
+          badge: null
+        },
+        {
+          key: 'attendance',
+          icon: <BookmarkCheck className="w-5 h-5" />,
+          label: 'Attendance',
+          path: '/admin/attendance',
+          badge: 'New'
+        },
+        {
+          key: 'student',
+          icon: <GraduationCap className="w-5 h-5" />,
+          label: 'Students',
+          badge: '24',
+          children: [
+            { 
+              key: 'student-list',
+              name: 'Manage Student', 
+              path: '/admin/student/list',
+              icon: <List className="w-4 h-4" />
+            }
+
+          ],
+        },
+        {
+          key: 'teacher',
+          icon: <UserCheck className="w-5 h-5" />,
+          label: 'Teachers',
+          badge: '12',
+          children: [
+            { 
+              key: 'teacher-list',
+              name: 'Manage Teachers', 
+              path: '/admin/teacher/list',
+              icon: <List className="w-4 h-4" />
+            }
+          ],
+        },
+        {
+          key: 'parent',
+          icon: <Users className="w-5 h-5" />,
+          label: 'Parents',
+          badge: '18',
+          children: [
+            { 
+              key: 'parent-list',
+              name: 'Manage Parent', 
+              path: '/admin/parent/list',
+              icon: <List className="w-4 h-4" />
+            },
+          ],
+        },
+        {
+          key: 'Events',
+          icon: <CalendarCheck className="w-5 h-5" />,
+          label: 'Events',
+          badge: '8',
+          children: [
+            { 
+              key: 'manage-events',
+              name: 'Manage Events',
+              path: '/admin/events',
+              icon: <Grid3X3 className="w-4 h-4" />
+            }
+          ],
+        },
+        {
+          key: 'classes',
+          icon: <School className="w-5 h-5"/>,
+          label: 'Classes',
+          badge: '8',
+          children: [
+            { 
+              key: 'manage-classes',
+              name: 'Manage Classes', 
+              path: '/admin/classes',
+              icon: <Grid3X3 className="w-4 h-4" />
+            },
+            {
+              key: 'manage-classRoutine',
+              name: 'Manage Class Routine',
+              path: '/admin/classRoutine',
+              icon: <Calendar1 className="w-4 h-4" />
+            }
+          ],
+        },
+        {
+          key: 'subjects',
+          icon: <BookOpen className="w-5 h-5" />,
+          label: 'Subjects',
+          badge: '15',
+          children: [
+            { 
+              key: 'manage-subjects',
+              name: 'Manage Subjects', 
+              path: '/admin/subject/list',
+              icon: <BookOpen className="w-4 h-4" />
+            },
+          ],
+        },
+        {
+          key: 'exams',
+          icon: <Award className="w-5 h-5" />,
+          label: 'Exams & Grades',
+          path: '/admin/exams',
+          badge: '5',
+          children: [
+            { 
+              key: 'manage-exams',
+              name: 'Manage Exams', 
+              path: '/admin/exam/list',
+              icon: <BookOpen className="w-4 h-4" />
+            },
+            { 
+              key: 'manage-exams-result',
+              name: 'Manage Exams Results', 
+              path: '/admin/exam/results',
+              icon: <BookOpen className="w-4 h-4" />
+            }
+          ]
+        },
+        {
+          key: 'fees',
+          icon: <HandCoins className="w-5 h-5" />,
+          label: 'Fee Management',
+          path: '/admin/fees',
+          badge: '3',
+          children: [
+            { 
+              key: 'fee-structure',
+              name: 'Manage Fee-Structure', 
+              path: '/admin/fees/struct',
+              icon: <BookOpen className="w-4 h-4" />
+            },
+            { 
+              key: 'manage-exams-result',
+              name: 'Manage Exams Results', 
+              path: '/admin/exam/results',
+              icon: <BookOpen className="w-4 h-4" />
+            }
+          ]
+        },
+      
+      ],
+      teacher: [
+        {
+          key: 'dashboard',
+          icon: <Home className="w-5 h-5" />,
+          label: 'Dashboard',
+          path: '/teacher',
+          badge: null
+        },
+        {
+          key: 'attendance-dashboard',
+          icon: <BarChart3 className="w-5 h-5" />,
+          label: 'Attendance Dashboard',
+          path: '/teacher/dashboard',
+          badge: null
+        },
+        {
+          key: 'student-attendance',
+          icon: <CheckSquare className="w-5 h-5" />,
+          label: 'Student Attendance',
+          path: '/teacher/attendence',
+          badge: 'Daily'
+        },
+        {
+          key: 'study-material',
+          icon: <Upload className="w-5 h-5" />,
+          label: 'Study Material',
+          path: '/teacher/study',
+          badge: null
+        },
+        {
+          key: 'my-classes',
+          icon: <Grid3X3 className="w-5 h-5" />,
+          label: 'My Classes',
+          path: '/teacher/classes',
+          badge: null
+        },
+        {
+          key: 'my-students',
+          icon: <GraduationCap className="w-5 h-5" />,
+          label: 'My Students',
+          path: '/teacher/students',
+          badge: null
+        },
+        {
+          key: 'timetable',
+          icon: <Calendar className="w-5 h-5" />,
+          label: 'My Timetable',
+          path: '/teacher/timetable',
+          badge: null
+        },
+        {
+          key: 'assignments',
+          icon: <FileText className="w-5 h-5" />,
+          label: 'Assignments',
+          path: '/teacher/assignments',
+          badge: null
         }
       ],
-    },
-    {
-      key: 'subjects',
-      icon: <BookOpen className="w-5 h-5" />,
-      label: 'Subjects',
-      badge: '15',
-      children: [
-        { 
-          key: 'manage-subjects',
-          name: 'Manage Subjects', 
-          path: '/admin/subject/list',
-          icon: <BookOpen className="w-4 h-4" />
+      student: [
+        {
+          key: 'dashboard',
+          icon: <Home className="w-5 h-5" />,
+          label: 'Dashboard',
+          path: '/student/dashboard',
+          badge: null
         },
+        {
+          key: 'attendance-view',
+          icon: <Eye className="w-5 h-5" />,
+          label: 'My Attendance',
+          path: '/student/dashboard/view',
+          badge: null
+        },
+        {
+          key: 'study-material',
+          icon: <Download className="w-5 h-5" />,
+          label: 'Study Material',
+          path: '/student/dashboard/studyMeterial',
+          badge: 'New'
+        },
+        {
+          key: 'timetable',
+          icon: <Calendar className="w-5 h-5" />,
+          label: 'My Timetable',
+          path: '/student/timetable',
+          badge: null
+        },
+        {
+          key: 'assignments',
+          icon: <FileText className="w-5 h-5" />,
+          label: 'Assignments',
+          path: '/student/assignments',
+          badge: null
+        },
+        {
+          key: 'grades',
+          icon: <Award className="w-5 h-5" />,
+          label: 'My Grades',
+          path: '/student/grades',
+          badge: null
+        },
+        {
+          key: 'subjects',
+          icon: <BookOpen className="w-5 h-5" />,
+          label: 'My Subjects',
+          path: '/student/subjects',
+          badge: null
+        },
+        {
+          key: 'profile',
+          icon: <User className="w-5 h-5" />,
+          label: 'My Profile',
+          path: '/student/profile',
+          badge: null
+        }
       ],
-    },
-    {
-      key: 'attendance',
-      icon: <BookmarkCheck className="w-5 h-5" />,
-      label: 'Attendance',
-      path: '/admin/attendance',
-      badge: 'New'
-    },
-    {
-      key: 'timetable',
-      icon: <Calendar className="w-5 h-5" />,
-      label: 'Time Table',
-      path: '/admin/timetable',
-      badge: null
-    },
-    {
-      key: 'exams',
-      icon: <Award className="w-5 h-5" />,
-      label: 'Exams & Grades',
-      path: '/admin/exams',
-      badge: '5',
-      children: [
-        { 
-          key: 'manage-exams',
-          name: 'Manage Exams', 
-          path: '/admin/exam/list',
-          icon: <BookOpen className="w-4 h-4" />
+      parent: [
+        {
+          key: 'dashboard',
+          icon: <Home className="w-5 h-5" />,
+          label: 'Dashboard',
+          path: '/parent/dashboard',
+          badge: null
         },
-        { 
-          key: 'manage-exams-result',
-          name: 'Manage Exams Results', 
-          path: '/admin/exam/results',
-          icon: <BookOpen className="w-4 h-4" />
+        {
+          key: 'my-children',
+          icon: <GraduationCap className="w-5 h-5" />,
+          label: 'My Children',
+          path: '/parent/children',
+          badge: null
+        },
+        {
+          key: 'attendance',
+          icon: <Eye className="w-5 h-5" />,
+          label: 'Attendance Report',
+          path: '/parent/attendance',
+          badge: null
+        },
+        {
+          key: 'grades',
+          icon: <Award className="w-5 h-5" />,
+          label: 'Academic Report',
+          path: '/parent/grades',
+          badge: null
+        },
+        {
+          key: 'fees',
+          icon: <CreditCard className="w-5 h-5" />,
+          label: 'Fee Status',
+          path: '/parent/fees',
+          badge: 'Due'
+        },
+        {
+          key: 'timetable',
+          icon: <Calendar className="w-5 h-5" />,
+          label: 'Class Schedule',
+          path: '/parent/timetable',
+          badge: null
+        },
+        {
+          key: 'teachers',
+          icon: <UserCheck className="w-5 h-5" />,
+          label: 'Teachers',
+          path: '/parent/teachers',
+          badge: null
+        },
+        {
+          key: 'events',
+          icon: <Bell className="w-5 h-5" />,
+          label: 'School Events',
+          path: '/parent/events',
+          badge: '3'
+        },
+        {
+          key: 'communication',
+          icon: <MessageSquare className="w-5 h-5" />,
+          label: 'Messages',
+          path: '/parent/messages',
+          badge: null
         }
       ]
-    },
-    {
-      key: 'library',
-      icon: <BookOpen className="w-5 h-5" />,
-      label: 'Library',
-      path: '/admin/library',
-      badge: null
-    },
-    {
-      key: 'transport',
-      icon: <MapPin className="w-5 h-5" />,
-      label: 'Transport',
-      path: '/admin/transport',
-      badge: null
-    },
-    {
-      key: 'fees',
-      icon: <CreditCard className="w-5 h-5" />,
-      label: 'Fee Management',
-      path: '/admin/fees',
-      badge: '3',
-      children: [
-        { 
-          key: 'fee-structure',
-          name: 'Manage Fee-Structure', 
-          path: '/admin/fees/struct',
-          icon: <BookOpen className="w-4 h-4" />
-        },
-        { 
-          key: 'manage-exams-result',
-          name: 'Manage Exams Results', 
-          path: '/admin/exam/results',
-          icon: <BookOpen className="w-4 h-4" />
-        }
-      ]
-    },
-    {
-      key: 'gallery',
-      icon: <FileSpreadsheet className="w-5 h-5" />,
-      label: 'Manage Gallery',
-      path: '/admin/gallery',
-      badge: null
-    },
-  ];
+  };
 
-
-
-  const handleLogout = async()=>{
+  const handleLogout = async () => {
     await logout();
     Swal.fire({
-      title:"Logout SucessFully"
-    })
+      title: "Logged Out Successfully",
+      icon: "success",
+      timer: 2000,
+      showConfirmButton: false,
+      customClass: {
+          popup: 'swal-small-popup',
+          title: 'swal-small-title',
+          confirmButton: 'swal-small-btn',
+        }
+    });
     
-
-  }
-
-
+  };
 
   // Set active item based on current route
   useEffect(() => {
     const currentPath = location.pathname;
-    
+    const roleMenuItems = menuItems[userInfo?.role?.toLowerCase?.()] || [];
+
+
     // Check for direct matches first
-    const directMatch = menuItems.find(item => item.path === currentPath);
+    const directMatch = roleMenuItems.find(item => item.path === currentPath);
     if (directMatch) {
       setActiveItem(directMatch.key);
       return;
     }
 
     // Check for child matches
-    for (const item of menuItems) {
+    for (const item of roleMenuItems) {
       if (item.children) {
         const childMatch = item.children.find(child => child.path === currentPath);
         if (childMatch) {
@@ -291,7 +426,7 @@ const Sidebar = () => {
         }
       }
     }
-  }, [location.pathname]);
+  }, [location.pathname, user]);
 
   // Check if mobile on mount and resize
   useEffect(() => {
@@ -401,7 +536,7 @@ const Sidebar = () => {
         {/* Menu */}
         <nav className="flex-1 overflow-y-auto py-4 px-2 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
           <ul className="space-y-1 ps-0">
-            {menuItems.map((item) => (
+          {(menuItems[userInfo?.role?.toLowerCase?.()] || []).map((item) => (
               <li key={item.key}>
                 <div
                   className={`group relative flex items-center cursor-pointer select-none rounded-xl transition-all duration-200 ${
@@ -433,17 +568,6 @@ const Sidebar = () => {
                         {item.label}
                       </span>
 
-                      {/* Badge */}
-                      {item.badge && (
-                        <span className={`ml-2 px-2 py-1 text-xs font-semibold rounded-full ${
-                          item.badge === 'New' 
-                            ? 'bg-green-500/20 text-green-300'
-                            : 'bg-blue-500/20 text-blue-300'
-                        }`}>
-                          {item.badge}
-                        </span>
-                      )}
-
                       {/* Dropdown Arrow */}
                       {item.children && (
                         <ChevronRight
@@ -453,19 +577,6 @@ const Sidebar = () => {
                         />
                       )}
                     </>
-                  )}
-
-                  {/* Tooltip for collapsed sidebar */}
-                  {!isOpen && !isMobile && (
-                    <div className="absolute left-full ml-2 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-xl border border-slate-600">
-                      {item.label}
-                      {item.badge && (
-                        <span className="ml-2 px-1.5 py-0.5 text-xs bg-blue-500/30 rounded">
-                          {item.badge}
-                        </span>
-                      )}
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 bg-slate-800 rotate-45 border-l border-b border-slate-600"></div>
-                    </div>
                   )}
                 </div>
 
@@ -514,14 +625,14 @@ const Sidebar = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center">
-                  <User className="w-5 h-5 text-white" />
+                  <User  className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-white truncate">
-                    {user.role}
+                   {userInfo?.role}
                   </p>
                   <p className="text-xs text-slate-400 truncate">
-                    {user.email}
+                    {userInfo?.email}
                   </p>
                 </div>
               </div>
@@ -533,7 +644,7 @@ const Sidebar = () => {
           ) : (
             <div className="flex justify-center">
               <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center group cursor-pointer hover:scale-110 transition-transform">
-                <User className="w-5 h-5 text-white" />
+                <User  className="w-5 h-5 text-white" />
               </div>
             </div>
           )}

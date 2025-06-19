@@ -16,13 +16,7 @@ export const login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
-      maxAge: 86400000,
-    });
-
+   
     return res.status(200).json({
       token,
       id: user.id,
@@ -35,19 +29,20 @@ export const login = async (req, res) => {
 
 export const getCurrentUser = async (req, res) => {
   try {
-    const token = req.cookies.token;
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) return res.status(401).json({ message: 'Unauthorized' });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await User.findByPk(decoded.id, {
+    const userinfo = await User.findByPk(decoded.id, {
       attributes: ['id', 'username', 'email', 'role']
     });
 
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    if (!userinfo) return res.status(404).json({ message: 'User not found' });
 
-    res.status(200).json({ user });
+    res.status(200).json({ userinfo });
   } catch (err) {
     res.status(401).json({ message: 'Invalid token' });
   }

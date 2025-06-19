@@ -21,7 +21,6 @@ const StudentTable = ({
   feeAssign,
   handleFeeDetails,
 }) => {
-  
   return (
     <div className="w-full overflow-x-auto rounded-lg shadow">
       <table className="min-w-max w-full table-auto text-sm border-collapse bg-white">
@@ -115,25 +114,24 @@ const StudentTable = ({
                     </div>
                   </td>
                   <td className="p-3">
-                  {(() => {
-                    
-  const assignedFee = feeAssign.filter(
-    (fee) => fee.studentId === student.id
-  );
-  return assignedFee.length > 0 ? (
-    <span className="text-green-600 font-semibold">
-      <button onClick={() => handleFeeDetails(assignedFee)}>
-        Fee Assigned
-      </button>
-    </span>
-  ) : (
-    <span className="text-red-600 font-semibold">
-      Fee Not Assigned
-    </span>
-  );
-})()}
+                    {(() => {
+                      const assignedFee = feeAssign.filter(
+                        (fee) => fee.studentId === student.id
+                      );
+                      return assignedFee.length > 0 ? (
+                        <span className="text-green-600 font-semibold">
+                          <button onClick={() => handleFeeDetails(assignedFee)}>
+                            Fee Assigned
+                          </button>
+                        </span>
+                      ) : (
+                        <span className="text-red-600 font-semibold">
+                          Fee Not Assigned
+                        </span>
+                      );
+                    })()}
                   </td>
-                
+
                   <td className="p-3 relative">
                     <FiMoreVertical
                       className="cursor-pointer"
@@ -145,7 +143,7 @@ const StudentTable = ({
                       }
                     />
                     {openDropdown === student.id && (
-                      <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-10">
+                      <div className="absolute right-10 mt-2 w-40 bg-white border rounded shadow z-10">
                         <button
                           className="w-full px-4 py-2 text-left hover:bg-gray-100"
                           onClick={() => {
@@ -208,7 +206,7 @@ const StudentTable = ({
                           onClick={() => {
                             handleAssignFee(student.id);
                             alert("fee Assigned");
-                            
+
                             setOpenDropdown(null);
                           }}
                         >

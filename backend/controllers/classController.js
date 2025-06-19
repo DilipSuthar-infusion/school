@@ -11,7 +11,7 @@ export const createClass = async (req, res) => {
     }
     const existingClass = await Class.findOne({ where: { classname, section } });
     if (existingClass) {
-      throw new CustomError('Class with this name and section already exists', 400);
+      throw new CustomError('Class with same section already exist', 400);
     }
     const newClass = await Class.create({
       classname,

@@ -10,7 +10,7 @@ const useClassApi = () => {
     const handleAddClass = async (formData) => {
         try {
           const token = localStorage.getItem('token');
-          await axios.post(
+          const response = await axios.post(
             `${import.meta.env.VITE_API_BASE_URL}/classes`,
             formData,
             {
@@ -21,13 +21,10 @@ const useClassApi = () => {
           );
           handlefetchClasses();
           setLoading(false);
+          return { success: true, data: response.data };
         } catch (error) {
-          Swal.fire({
-            title: 'Error',
-            text: error.response?.data?.message || error.message,
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
+          return { success: false, error: error.response?.data?.message };
+          
         }
       };
 
@@ -35,20 +32,15 @@ const useClassApi = () => {
 
         try {
           const token = localStorage.getItem('token');
-          await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/classes/${id}`, {
+          const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/classes/${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
           setClasses(Classes.filter(classObj => classObj.id !== id));
-          
+          return {success: true, data: response.data}
         } catch (error) {
-          Swal.fire({
-            title: 'Error',
-            text: error.response?.data?.message || error.message,
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
+          return { success: false, error: error.response?.data?.message };
         }
       };
 
@@ -64,13 +56,11 @@ const useClassApi = () => {
           });
          
           setClasses(response.data);
+
+        return {success: true, data: response.data}
         } catch (error) {
-          Swal.fire({
-            title: 'Error',
-            text: error.response?.data?.message || error.message,
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
+          return { success: false, error: error.response?.data?.message };
+        
         }
       };
 
@@ -90,21 +80,18 @@ const useClassApi = () => {
           );
           await handlefetchClasses();
           setLoading(false);
+          return {success: true, data: response.data}
         } catch (error) {
-          Swal.fire({
-            title: 'Error',
-            text: error.response?.data?.message || error.message,
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
+          return { success: false, error: error.response?.data?.message };
         }
+        
       };
 
 
       const handleAssignClassTeacher = async (classTeacherData) => {
         try{
           const token = localStorage.getItem('token');
-          const res = await axios.post(
+          const response = await axios.post(
             `${import.meta.env.VITE_API_BASE_URL}/classes/assign-teacher`,
             classTeacherData,
             {
@@ -115,14 +102,11 @@ const useClassApi = () => {
             }
           );
          await handlefetchClasses()
-        }catch (error) {
-          Swal.fire({
-            title: 'Error',
-            text: error.response?.data?.message || error.message,
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
+         return {success: true, data: response.data}
+        } catch (error) {
+          return { success: false, error: error.response?.data?.message };
         }
+        
       }
 
       useEffect(() => {

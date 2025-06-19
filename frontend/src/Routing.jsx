@@ -33,6 +33,8 @@ import ContectUs from './Website/Pages/ContectUs'
 import GalleryPage from './Website/Pages/GalleryPage'
 import AboutUsPage from './Website/Pages/AboutUsPage'
 import ManageGallery from './pages/admin/ManageGallery'
+import PrivateRoute from './components/PrivateRoute'
+import Unauthorized from './components/Unauthorized'
 
 const Routing = () => {
   return (
@@ -42,7 +44,7 @@ const Routing = () => {
       <Route path='/login' element={<Login />} />
 
       {/* Admin Routes */}
-      <Route path='/admin' element={<Home />}>
+      <Route path='/admin' element={<PrivateRoute allowedRoles={['admin']}><Home /></PrivateRoute>}>
         <Route index element={<Dashboard />} />
         <Route path='student/list' element={<StudentList />} />
         <Route path='student/list/:studentId' element={<StudentDetail />} />
@@ -61,14 +63,18 @@ const Routing = () => {
       </Route>
 
     
-      <Route path='/teacher' element={<Home />}>
+      <Route path='/teacher' element={<PrivateRoute allowedRoles={['teacher']}>
+    <Home />
+  </PrivateRoute>}>
         <Route index element={<TeacherDashboard />} />
         <Route path='attendence' element={<ManageStudentAttendence />}/>
         <Route path='dashboard' element={<AttendanceDashboard />}/>
         <Route path='study' element={<ManageStudyMeterial />}/>
         
       </Route>
-      <Route path='/student/dashboard' element={<Home />}>
+      <Route path='/student/dashboard' element={<PrivateRoute allowedRoles={['student']}>
+    <Home />
+  </PrivateRoute>}>
         <Route index element={<StudentDashboard />} />
         <Route path='view' element={<AttencenceView />}/>
         <Route path='studyMeterial' element={<StudyMeterial/>}/>
@@ -86,7 +92,7 @@ const Routing = () => {
           
 
       </Route>
-   
+      <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path='*' element={<PageNotFound />} />
     </Routes>
     </>

@@ -1,11 +1,19 @@
 import React, { useState } from "react";
-import { FiMoreVertical, FiSearch } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import { ClipLoader } from "react-spinners";
 import GalleryView from "../../components/GalleryView";
+import GalleryImgModal from "../../components/GalleryImgModal";
 
 const ManageGallery = () => {
   const [loading, setLoading] = useState(false);
-  const [activeBtn, setActiveBtn] = useState(null)
+  const [activeBtn, setActiveBtn] = useState("Event");
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState(null)
+  const [imageView, setImageView] = useState([]);
+  const [imagePath, setImagePath] = useState(null)
+  const [formdata, setFromdata] = useState({
+    imgcategory : ""
+  })
 
   const categories = [
     {
@@ -21,6 +29,26 @@ const ManageGallery = () => {
       label: "Newspaper",
     },
   ];
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    const fileURLs = files.map((file) => URL.createObjectURL(file));
+    setImageView(fileURLs);
+    setImagePath(files);
+  };
+  const handleChange = (e) =>{
+    const {name, value} = e.target;
+    setFromdata((prev) =>({...prev , [name] :value}))
+  }
+
+
+  const handleSubmit =(e)=>{
+      e.preventDefault()
+      const imageData = new FormData()
+      imageData.append('galleryImgPath',imagePath)
+      imageData.append('imgcategory', formdata.imgcategory)
+      
+  }
+ 
   return (
     <>
       <div className="p-2">
@@ -34,8 +62,10 @@ const ManageGallery = () => {
               className="outline-none bg-transparent w-full"
             />
           </div>
-          <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded hover:bg-blue-600">
-            + Add Teacher
+          <button onClick={()=>{
+            setOpen(true)
+          }} className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded hover:bg-blue-600">
+            + Add Image
           </button>
         </div>
         <div className="flex justify-center items-center mb-4 px-4 py-4 bg-white rounded-lg shadow-md">
@@ -68,6 +98,17 @@ const ManageGallery = () => {
 
       {activeBtn == "Newspaper" && <div>
         gfdgrertuykk</div>}
+
+
+        {open && <GalleryImgModal 
+        setOpen={setOpen}
+        handleSubmit={handleSubmit}
+        error={error}
+        handleFileChange={handleFileChange}
+        imageView={imageView}
+        handleChange={handleChange}
+        formdata={formdata}/>}
+
 
     </>
   );

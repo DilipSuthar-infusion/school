@@ -34,7 +34,7 @@ export const assignFeeToStudent = async (req, res) => {
       status: 'unpaid',
     }));
     await Fee.bulkCreate(fees);
-    res.status(201).json({ message: 'Fees assigned successfully', assignedCount: fees.length });
+    res.status(201).json({ message: 'Fees assigned successfully'});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import useClassApi from "../../hooks/useClassApi";
 import useFeeStructApi from "../../hooks/useFeeStructApi";
+import Swal from "sweetalert2";
 
 // Reusable Class Select Component
 const ClassSelect = ({ value, onChange, Classes }) => (
@@ -33,6 +34,7 @@ const ManageFeeStructure = () => {
     feeType: "",
     amount: "",
   });
+  const [error, setError]=useState();
 
   const { Classes } = useClassApi();
   const { feeStructures, handleAddFeeStructure, handleDeleteFeeStruct } = useFeeStructApi();
@@ -42,19 +44,57 @@ const ManageFeeStructure = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+
+
   const validateForm = () => {
     const { feeType, amount } = formData;
-    if ( !feeType || !amount) {
-      alert("All fields are required.");
-      return false;
+    const newErrors = {};
+  
+    if (!feeType?.trim()) {
+      newErrors.feeType = "Please select a valid Fee Type.";
     }
-    return true;
+  
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+      newErrors.amount = "Amount must be a valid number greater than 0.";
+    }
+  
+    setError(newErrors);
+  
+    return Object.keys(newErrors).length === 0;
   };
+  
+  
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-   
-    await handleAddFeeStructure(formData)
+    const validation = validateForm();
+    if (validation !== true) {
+      return;
+    }
+   const { error, data, success } = await handleAddFeeStructure(formData)
+   if(success){
+    Swal.fire({
+      icon: "success",
+      text: data,
+      confirmButtonText: "OK",
+      confirmButtonColor: "#f97316",
+  customClass: {
+    popup: 'swal-small-popup',
+    title: 'swal-small-title',
+    text: 'swal-small-text',
+    confirmButton: 'swal-small-btn',
+  }
+    })
+  }else{
+    Swal.fire({
+      icon: "error",
+      title: error,
+      text: "Something went wrong!",
+    })
+  
+
+  }
+  setError("")
     setFormData({
       classId: selectedClass,
       feeType: "",
@@ -63,16 +103,35 @@ const ManageFeeStructure = () => {
     });
     setShowModal(false);
   };
+
+  const handleDeleteExam = async(id) => {
+    const {error, success, data} = await handleDeleteFeeStruct(id)
+      if(success){
+        Swal.fire({
+          icon: "success",
+          text: data,
+          confirmButtonText: "OK",
+          confirmButtonColor: "#f97316",
+      customClass: {
+        popup: 'swal-small-popup',
+        title: 'swal-small-title',
+        text: 'swal-small-text',
+        confirmButton: 'swal-small-btn',
+      }
+        })
+      }else{
+        Swal.fire({
+          icon: "error",
+          title: error,
+          text: "Something went wrong!",
+        })
+  }}
  
   const sortedFeeStructure = (Array.isArray(feeStructures) ? feeStructures : [])
   .filter((feeStruct) => feeStruct.classId === selectedClass)
   .sort((a, b) => a.feeType.localeCompare(b.feeType));
 
-  const handleDeleteExam = async(id) => {
-    if (window.confirm("Are you sure you want to delete this fee structure?")) {
-      await handleDeleteFeeStruct(id)
-    }
-  };
+
 
   if (!Classes || !feeStructures) {
     return <div>Loading data...</div>;
@@ -106,7 +165,7 @@ const ManageFeeStructure = () => {
         </div>
       </div>
 
-      {/* Modal */}
+
       {showModal && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300">
           <div className="bg-white rounded-3xl shadow-lg max-w-sm w-full">
@@ -116,7 +175,9 @@ const ManageFeeStructure = () => {
                 Add Fee Structure
               </h3>
               <button
-                onClick={() => setShowModal(false)}
+                onClick={() => {setShowModal(false)
+                  setError("")}
+                }
                 className="text-white hover:text-red-200 p-1"
               >
                 <X className="w-6 h-6" />
@@ -131,13 +192,14 @@ const ManageFeeStructure = () => {
             name="feeType"
             value={formData.feeType}
             onChange={handleChange}
-            className="w-full border p-2 rounded mt-1 bg-gray-50"
+            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
           >
             <option> Select FeeType</option>
             <option value="Tuition Fee">Tuition Fee</option>
             <option value="Exam Fee">Exam Fee</option>
             <option value="Transport Fee">Transport Fee</option>
           </select>
+          {error.feeType && <p className="text-red-600 text-sm mt-1">{error.feeType}</p>}
                 </div>
 
                 <div>
@@ -148,10 +210,11 @@ const ManageFeeStructure = () => {
                     type="number"
                     name="amount"
                     placeholder="Ex. 5000"
-                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-gray-50 focus:bg-white"
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
                     onChange={handleChange}
                     value={formData.amount}
                   />
+                 {error.amount && <p className="text-red-600 text-sm mt-1">{error.amount}</p>}
                 </div>
 
                 
@@ -172,36 +235,39 @@ const ManageFeeStructure = () => {
 
 
       {!selectedClass && <>
-        <div className="overflow-x-auto">
-            <h3 className=" text-center py-5 w-full border border-gray-300 rounded-lg shadow-sm">Please select class</h3>
+        <div className="overflow-x-auto bg-white rounded-lg">
+            <div className=" text-center py-5 w-full   rounded-lg shadow-lg">Please select class</div>
           </div></>
       }
 
       {selectedClass && (
         <>
+        
+
+          <div className="overflow-x-auto bg-white rounded-lg p-4">
           <h2 className="text-xl font-bold mb-4">
             Fee Structures for{" "}
             {Classes.find((c) => c.id === selectedClass)?.classname || "Selected Class"}
           </h2>
-
-          <div className="overflow-x-auto">
-            <table className="w-full border border-gray-300 rounded-lg shadow-sm">
+            <table className="w-full  border-gray-300 rounded-lg shadow-sm">
               <thead className="bg-blue-50 text-left text-blue-600 font-semibold">
                 <tr>
-                  <th className="px-4 py-2">Fee Type</th>
-                  <th className="px-4 py-2">Amount</th>
-                  <th className="px-4 py-2">Actions</th>
+                  <th className="py-2 text-center">Sr. No.</th>
+                  <th className="py-2 text-center">Fee Type</th>
+                  <th className="py-2 text-center">Amount</th>
+                  <th className="py-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {sortedFeeStructure.map((fee) => (
-                  <tr key={fee.id}>
-                    <td className="border border-gray-300 px-4 py-2">{fee.feeType}</td>
-                    <td className="border border-gray-300 px-4 py-2">{fee.amount}</td>
-                    <td className="border border-gray-300 px-4 py-2">
+                {sortedFeeStructure.map((fee, idx) => (
+                  <tr key={fee.id} className="hover:bg-gray-50 even:bg-gray-100 odd:bg-white">
+                    <td className="text-center px-4 py-3">{idx+1}</td>
+                    <td className="text-center px-4 py-3">{fee.feeType}</td>
+                    <td className="text-center px-4 py-3">{fee.amount}</td>
+                    <td className="text-center px-4 py-3">
                       <button
                         onClick={() => handleDeleteExam(fee.id)}
-                        className="text-red-600 hover:underline"
+                        className="text-white font-semibold px-3  py-1 rounded  text-decoration-none bg-gradient-to-r from-amber-500 to-orange-600"
                       >
                         Delete
                       </button>

@@ -10,12 +10,12 @@ router.use(authenticate);
 
 
 
-router.post('/',authorizeRoles('admin'), eventController.createEvent);
+router.post('/',authenticate,authorizeRoles('admin'), eventController.createEvent);
 
-router.get('/',authorizeRoles('admin', 'teacher', 'student', 'parent'), eventController.getAllEvents);
+router.get('/',authenticate,authorizeRoles('admin', 'teacher', 'student', 'parent'), eventController.getAllEvents);
 
-router.put('/:id', eventController.updateEvent);
+router.put('/:id',authenticate,authorizeRoles('admin'), eventController.updateEvent);
 
-router.delete('/:id', eventController.deleteEvent);
+router.delete('/:id',authenticate,authorizeRoles('admin'), eventController.deleteEvent);
 
 export default router;

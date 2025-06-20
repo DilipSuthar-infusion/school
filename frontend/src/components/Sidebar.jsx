@@ -273,7 +273,7 @@ const Sidebar = () => {
           key: 'attendance-view',
           icon: <Eye className="w-5 h-5" />,
           label: 'My Attendance',
-          path: '/student/dashboard/view',
+          path: '/student/dashboard/attenanceview',
           badge: null
         },
         {
@@ -284,10 +284,10 @@ const Sidebar = () => {
           badge: 'New'
         },
         {
-          key: 'timetable',
+          key: 'event',
           icon: <Calendar className="w-5 h-5" />,
-          label: 'My Timetable',
-          path: '/student/timetable',
+          label: 'Events',
+          path: '/student/dashboard/event',
           badge: null
         },
         {

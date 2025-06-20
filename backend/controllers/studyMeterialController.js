@@ -117,7 +117,7 @@ export const getStudentClassStudyMaterial = async (req, res) => {
       ],
     });
 
-    res.status(200).json({ success: true, data: materials });
+    res.status(200).json( materials );
   } catch (error) {
     console.error(error);
     res

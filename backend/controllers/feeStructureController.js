@@ -2,7 +2,6 @@ import FeesStructure from '../models/feeStructure.model.js';
 
 
 export const addFeeStructure = async (req, res) => {
-      console.log(req.body)
     const { classId, feeType, amount } = req.body;
     if (!classId || !feeType || !amount) {
       throw new Error('Missing required fields', 400);
@@ -13,13 +12,13 @@ export const addFeeStructure = async (req, res) => {
       throw new Error('Fee structure already exists', 400);
     }
 
-    const newFeeStructure = await FeesStructure.create({
+     await FeesStructure.create({
       classId,
       feeType,
       amount,
       });
 
-    res.status(201).json({ message: 'Fee structure added', feeStructure: newFeeStructure });
+    res.status(201).json({ message: 'Fee structure added'});
 
 };
 
@@ -29,7 +28,7 @@ export const fetchFeeStruct = async(req,res)=>{
     if(!Feedata){
       throw new Error("Data Not found", 404)
     }
-    res.status(200).json(Feedata );
+    res.status(200).json( Feedata );
 }
 
 

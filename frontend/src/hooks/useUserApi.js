@@ -120,6 +120,31 @@ const useUserApi = () => {
         }
       };
 
+      const handleUpdatePassword = async(passdata) =>{
+    
+        try {
+          const token = localStorage.getItem('token');
+          const response =  await axios.post(
+            `${import.meta.env.VITE_API_BASE_URL}/user/updatePassword`,
+            passdata,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+         
+          await fetchUsers();
+          return {success:true, data: response?.data?.message}
+        
+        } catch (error) {
+          return { success:false, error: error?.response?.data.message}
+          }
+        }
+      
+
+
+
       const handleEditUser = async (id, formData) => {
         if (!formData) return;
       
@@ -232,7 +257,7 @@ const useUserApi = () => {
       }, []);
 
      
-    return { users, loading, error, handleDelete ,handleAddUser,AddParent,fetchStudentDetails,studentDetails, handleEditUser,credentials,handleAddTeacher,fetchUsers};
+    return { users, loading, error, handleDelete ,handleAddUser,AddParent,fetchStudentDetails,studentDetails, handleEditUser,credentials,handleAddTeacher,fetchUsers,handleUpdatePassword};
 }
 
 export default useUserApi

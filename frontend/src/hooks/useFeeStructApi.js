@@ -4,8 +4,9 @@ const useFeeStructApi = () => {
     const [feeStructures, setfeeStructures] = useState([])
     
     const handleAddFeeStructure = async(formData)=>{
+      try{
         const token = localStorage.getItem('token')
-    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/fee-structures`, formData,
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/fee-structures`, formData,
         {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -14,7 +15,11 @@ const useFeeStructApi = () => {
     )
 
     await fetchFeeStruct()
+    return {success: true, data: response?.data?.message}
+    }catch(error){
+      return{ success: false, error:error?.response?.data?.message}
     }
+  }
 
 
 
@@ -32,14 +37,15 @@ const useFeeStructApi = () => {
 
   const handleDeleteFeeStruct = async(id) =>{
     const token = localStorage.getItem('token')
-    await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/fee-structures/${id}`, 
+    const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/fee-structures/${id}`, 
         {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
     )
-    setfeeStructures((feeStruct)=>(feeStruct.id !== id))
+    setfeeStructures(feeStructures.filter(feeStruct => feeStruct.id !== id));
+    return{success:true, data: response?.data?.message}
   }
 
 

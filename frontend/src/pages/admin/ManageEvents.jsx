@@ -67,28 +67,82 @@ const ManageEvents = () => {
       return;
     }
 
-    try {
       if (edit && eventId) {
-        await handleEditEvent(eventId, formData);
-        Swal.fire({
-          icon: "success",
-          text: "Event updated successfully",
-          confirmButtonText: "OK",
-        });
+        const {error, success, data} = await handleEditEvent(eventId, formData);
+        if(success){
+          Swal.fire({
+            icon: "success",
+            text: data,
+            confirmButtonText: "OK",
+            confirmButtonColor: "#f97316",
+        customClass: {
+          popup: 'swal-small-popup',
+          title: 'swal-small-title',
+          text: 'swal-small-text',
+          confirmButton: 'swal-small-btn',
+        }
+          })
+        }else{
+          Swal.fire({
+            icon: "error",
+            title: error,
+            text: "Something went wrong!",
+          })
+        }
       } else {
-        await handleAddEvent(formData);
+       const {error, success, data} =  await handleAddEvent(formData);
+       if(success){
         Swal.fire({
           icon: "success",
-          text: "Event added successfully",
+          text: data,
           confirmButtonText: "OK",
-        });
+          confirmButtonColor: "#f97316",
+        customClass: {
+          popup: 'swal-small-popup',
+          title: 'swal-small-title',
+          text: 'swal-small-text',
+          confirmButton: 'swal-small-btn',
+        }
+        })
+      }else{
+        Swal.fire({
+          icon: "error",
+          title: error,
+          text: "Something went wrong!",
+        })
       }
-
+        
+      }
       closeStudentModal();
-    } catch (error) {
-      console.error("Error adding/editing event:", error);
-    }
+   
   };
+
+
+  const handleEventDelete = async(id) =>{
+    const { error, data, success} = await handleDelete(id);
+    if(success){
+      Swal.fire({
+        icon: "success",
+        text: data,
+        confirmButtonText: "OK",
+        confirmButtonColor: "#f97316",
+        customClass: {
+          popup: 'swal-small-popup',
+          title: 'swal-small-title',
+          text: 'swal-small-text',
+          confirmButton: 'swal-small-btn',
+        }
+      })
+    }else{
+      Swal.fire({
+        icon: "error",
+        title: error,
+        text: "Something went wrong!",
+
+      })
+    }
+    setOpenDropdown(null);
+  }
 
   return (
     <>
@@ -188,10 +242,9 @@ const ManageEvents = () => {
                           </button>
                           <button
                             className="w-full px-4 py-2 text-left hover:bg-gray-100 text-red-600"
-                            onClick={() => {
-                              handleDelete(event.id);
-                              setOpenDropdown(null);
-                            }}
+                            onClick={() => 
+                              handleEventDelete(event.id)
+                              }
                           >
                             Delete
                           </button>

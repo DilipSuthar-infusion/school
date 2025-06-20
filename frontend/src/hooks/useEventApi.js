@@ -9,7 +9,7 @@ const useEventApi = () => {
     const handleAddEvent = async (formData) => {
         try {
           const token = localStorage.getItem('token');
-          await axios.post(
+          const response = await axios.post(
             `${import.meta.env.VITE_API_BASE_URL}/events`,
             formData,
             {
@@ -20,34 +20,24 @@ const useEventApi = () => {
           );
           handlefetchEvents();
           setLoading(false);
+          return { success: true, data: response?.data?.message}
         } catch (error) {
-          Swal.fire({
-            title: 'Error',
-            text: error.response?.data?.message || error.message,
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
+           return {success:false, error:error.response?.data?.message}
         }
       };
 
       const handleDelete = async (id) => {
-        console.log(id)
         try {
           const token = localStorage.getItem('token');
-          await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/events/${id}`, {
+          const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/events/${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
           setEvents(Events.filter(eventObj => eventObj.id !== id));
-          
+          return { success: true, data: response?.data?.message}
         } catch (error) {
-          Swal.fire({
-            title: 'Error',
-            text: error.response?.data?.message || error.message,
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
+          return {success:false, error:error.response?.data?.message}
         }
       };
 
@@ -78,7 +68,7 @@ const useEventApi = () => {
       const handleEditEvent = async (id,formData) => {
         try {          
           const token = localStorage.getItem('token');
-          await axios.put(
+          const response = await axios.put(
             `${import.meta.env.VITE_API_BASE_URL}/events/${id}`,
             formData,
             {
@@ -89,13 +79,9 @@ const useEventApi = () => {
           );
           await handlefetchEvents();
           setLoading(false);
+          return { success:true, data:response?.data?.message }
         } catch (error) {
-          Swal.fire({
-            title: 'Error',
-            text: error.response?.data?.message || error.message,
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
+          return { success:false, error:error?.response?.data?.message }
         }
       };
 

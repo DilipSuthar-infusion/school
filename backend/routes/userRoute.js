@@ -6,7 +6,7 @@ import upload from '../middleware/upload.js';
 const router = express.Router();
 
 router.post('/', authenticate, authorizeRoles("admin"),upload.single('profilePicture'), wrapAsync(createUserWithRole));
-router.post('/updatePassword', authenticate, authorizeRoles("student", "teacher", "admin"), wrapAsync(updatePassword));
+router.post('/updatePassword', authenticate, authorizeRoles("student", "teacher", "admin", "parent"), wrapAsync(updatePassword));
 router.get('/', authenticate, authorizeRoles("admin", "teacher", "student"), wrapAsync(getAllUsers));
 router.get('/:id', authenticate, authorizeRoles("admin"), wrapAsync(getUserById));
 router.patch('/:id', authenticate,upload.single('profilePicture'), authorizeRoles("admin"), wrapAsync(updateUser));

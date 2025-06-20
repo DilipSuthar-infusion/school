@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
-  // Load token and user from localStorage on initial load
+
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');

@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 const useStudyMeterialApi = () => {
   const [studyMeterial, setStudyMeterial] = useState([]);
 const  [studentMeterial, setStudentMeterial] = useState([])
-
+const [studentClassMeterial, setStudentClassMeterial] = useState([])
 
   const handleCreateStudyMeterial = async(formData)=>{
     try {
@@ -82,12 +82,34 @@ const  [studentMeterial, setStudentMeterial] = useState([])
         });
       }
   }
+
+
+
+  const fetchClassStudyMeterial = async()=>{
+    try {
+      const token = localStorage.getItem('token');
+  
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/studymaterials/student`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setStudentClassMeterial(response.data)
+      
+    } catch (error) {
+      
+    }
+  }
   useEffect(()=>{
     fetchMeterial()
+    fetchClassStudyMeterial()
   },[])
 
 
-  return { handleCreateStudyMeterial, studyMeterial, fetchAllStudyMeterial,studentMeterial}
+  return { handleCreateStudyMeterial, studyMeterial, fetchAllStudyMeterial,studentMeterial,studentClassMeterial}
 }
 
 export default useStudyMeterialApi

@@ -60,27 +60,17 @@ const AttendanceView = () => {
     return Math.round((presentCount / records.length) * 100);
   };
 
-  const getAttendanceColor = (rate) => {
-    if (rate >= 90) return 'text-green-600';
-    if (rate >= 75) return 'text-yellow-600';
-    return 'text-red-600';
-  };
 
-  const getProgressBarColor = (rate) => {
-    if (rate >= 90) return 'bg-green-500';
-    if (rate >= 75) return 'bg-yellow-500';
-    return 'bg-red-500';
-  };
 
-  // Calculate overall statistics
+
   const totalRecords = attendanceByMonth.flat().length;
   const totalPresent = attendanceByMonth.flat().filter(r => r.status === "present").length;
   const overallRate = totalRecords > 0 ? Math.round((totalPresent / totalRecords) * 100) : 0;
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="max-w-full mx-auto">
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
             <span className="ml-3 text-indigo-600 font-medium">Loading attendance data...</span>
@@ -92,8 +82,8 @@ const AttendanceView = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="max-w-full mx-auto">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
             <div className="text-red-600 text-lg font-medium mb-2">Error Loading Data</div>
             <p className="text-red-500">{error}</p>
@@ -104,9 +94,8 @@ const AttendanceView = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="max-w-full mx-auto">
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
@@ -119,7 +108,7 @@ const AttendanceView = () => {
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(Number(e.target.value))}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none outline-0"
               >
                 {yearOptions.map(year => (
                   <option key={year} value={year}>{year}</option>
@@ -128,7 +117,7 @@ const AttendanceView = () => {
             </div>
           </div>
 
-          {/* Overall Statistics */}
+
           {totalRecords > 0 && (
             <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-4 text-white">
@@ -147,7 +136,6 @@ const AttendanceView = () => {
           )}
         </div>
 
-        {/* Monthly Attendance Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {attendanceByMonth.map((records, index) => {
             const presentCount = records.filter((r) => r.status === "present").length;
@@ -160,7 +148,6 @@ const AttendanceView = () => {
                 key={index}
                 className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
               >
-                {/* Month Header */}
                 <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-4 text-white">
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-semibold">{monthNames[index]}</h3>
@@ -172,7 +159,7 @@ const AttendanceView = () => {
                     </div>
                   </div>
                   
-                  {/* Progress Bar */}
+
                   {records.length > 0 && (
                     <div className="mt-3">
                       <div className="bg-white bg-opacity-30 rounded-full h-2">
@@ -185,7 +172,6 @@ const AttendanceView = () => {
                   )}
                 </div>
 
-                {/* Month Content */}
                 <div className="p-4">
                   {records.length === 0 ? (
                     <div className="text-center py-8">
@@ -194,7 +180,7 @@ const AttendanceView = () => {
                     </div>
                   ) : (
                     <>
-                      {/* Summary Stats */}
+ 
                       <div className="flex justify-between items-center mb-4">
                         <div className="flex items-center gap-4 text-sm">
                           <div className="flex items-center gap-1">
@@ -214,7 +200,6 @@ const AttendanceView = () => {
                         </button>
                       </div>
 
-                      {/* Detailed Records */}
                       {isExpanded && (
                         <div className="border-t pt-4">
                           <div className="space-y-2 max-h-48 overflow-y-auto">
@@ -259,7 +244,7 @@ const AttendanceView = () => {
           })}
         </div>
 
-        {/* Empty State */}
+
         {totalRecords === 0 && (
           <div className="bg-white rounded-xl shadow-lg p-12 text-center">
             <div className="text-gray-400 text-6xl mb-4">📊</div>

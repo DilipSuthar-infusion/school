@@ -1,8 +1,111 @@
-import React from "react";
+import React, { useState } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Breadcrumb from "../Components/Breadcrumb";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const ContectUs = () => {
+  const [formData, setFormData] = useState({
+    Username:"",
+    Email:"",
+    Phone:"",
+    Subject:"",
+    Message:""
+
+  })
+  const [error, setError] = useState([])
+
+  const handleChange = (e)=>{
+    const {name, value}= e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+
+
+  const handleValidate=()=>{
+    let newErrors = [];
+    if(!formData.Username){
+       newErrors.Username='username is Required'
+    }
+    if(formData.Username.length < 3){
+      newErrors.Username='username must be greater then 3'
+    }
+    if(!formData.Email){
+      newErrors.Email = "Email is Required"
+    }
+    if(formData.Phone <= 10){
+      newErrors.Phone = 'Phone number must be 10 digits'
+    }
+    if(!formData.Subject){
+      newErrors.Subject = 'Subject is Required'
+    }
+    if(!formData.Message){
+      newErrors.Message = 'Message is Required'
+    }
+    setError(newErrors)
+    return Object.keys(newErrors).length == 0
+  } 
+
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if(!handleValidate()){
+      return
+    }
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/submitInquiry`,
+        formData 
+      );
+
+
+      if (response.data.success) {
+        Swal.fire({
+          icon: "success",
+          text: response.data.message,
+          confirmButtonText: "OK",
+          confirmButtonColor: "#f97316",
+          customClass: {
+            popup: 'swal-small-popup',
+            title: 'swal-small-title',
+            text: 'swal-small-text',
+            confirmButton: 'swal-small-btn',
+          }
+        })
+        setFormData({ Username: "", Email: "", Phone: "",Subject:"", Message: "" }); 
+      } else if(response.data.error) {
+        console.log(error)
+        Swal.fire({
+          icon: "error",
+          text: error.message,
+          confirmButtonText: "OK",
+          confirmButtonColor: "#f97316",
+          customClass: {
+            popup: 'swal-small-popup',
+            title: 'swal-small-title',
+            text: 'swal-small-text',
+            confirmButton: 'swal-small-btn',
+          }
+        })
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        text: error.message,
+        confirmButtonText: "OK",
+        confirmButtonColor: "#f97316",
+        customClass: {
+          popup: 'swal-small-popup',
+          title: 'swal-small-title',
+          text: 'swal-small-text',
+          confirmButton: 'swal-small-btn',
+        }
+      })
+    }
+  };
   return (
     <>
     <Breadcrumb label={'Contact Us'}/>
@@ -14,59 +117,75 @@ const ContectUs = () => {
         </p>
 
         <div className="grid md:grid-cols-2 gap-10 mt-10">
-          {/* Inquiry Form */}
-          <form className="bg-white shadow-lg rounded-lg p-6 space-y-5">
+          <form className="bg-white shadow-lg rounded-lg p-6 space-y-5" onSubmit={handleSubmit}>
             <div>
               <label className="block font-medium mb-1">Full Name</label>
               <input
+              name="Username"
+              value={formData.Username}
+              onChange={handleChange}
                 type="text"
                 placeholder="Enter your name"
-                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
+                className="w-full border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {error?.Username && <p className="text-sm text-red-500">{error.Username}</p>}
             </div>
 
             <div>
               <label className="block font-medium mb-1">Email Address</label>
               <input
+              name="Email"
+              value={formData.Email}
+              onChange={handleChange}
                 type="email"
                 placeholder="Enter your email"
-                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
+                className="w-full border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {error?.Email && <p className="text-sm text-red-500">{error.Email}</p>}
             </div>
 
             <div>
               <label className="block font-medium mb-1">Phone Number</label>
               <input
+              name="Phone"
+              value={formData.Phone}
+              onChange={handleChange}
                 type="tel"
                 placeholder="Enter your phone number"
-                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
+                className="w-full border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {error?.Phone && <p className="text-sm text-red-500">{error.Phone}</p>}
             </div>
 
             <div>
               <label className="block font-medium mb-1">Subject</label>
               <input
+              name="Subject"
+              value={formData.Subject}
+              onChange={handleChange}
                 type="text"
                 placeholder="What is your inquiry about?"
-                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {error?.Subject && <p className="text-sm text-red-500">{error.Subject}</p>}
             </div>
 
             <div>
               <label className="block font-medium mb-1">Message</label>
               <textarea
+              name="Message"
+              value={formData.Message}
+              onChange={handleChange}
                 rows="4"
                 placeholder="Write your message..."
-                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               ></textarea>
+              {error?.Message && <p className="text-sm text-red-500">{error.Message}</p>}
             </div>
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-all"
+              className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white py-2 px-4 rounded transition-all"
             >
               Submit Inquiry
             </button>

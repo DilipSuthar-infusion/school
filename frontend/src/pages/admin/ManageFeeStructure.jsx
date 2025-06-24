@@ -199,7 +199,7 @@ const ManageFeeStructure = () => {
             <option value="Exam Fee">Exam Fee</option>
             <option value="Transport Fee">Transport Fee</option>
           </select>
-          {error.feeType && <p className="text-red-600 text-sm mt-1">{error.feeType}</p>}
+          {error?.feeType && <p className="text-red-600 text-sm mt-1">{error.feeType}</p>}
                 </div>
 
                 <div>
@@ -214,7 +214,7 @@ const ManageFeeStructure = () => {
                     onChange={handleChange}
                     value={formData.amount}
                   />
-                 {error.amount && <p className="text-red-600 text-sm mt-1">{error.amount}</p>}
+                 {error?.amount && <p className="text-red-600 text-sm mt-1">{error.amount}</p>}
                 </div>
 
                 

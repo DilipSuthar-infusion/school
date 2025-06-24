@@ -49,13 +49,13 @@ const Layout = () => {
     <Programs />
     <Acadamic />
     <Gallery />
-   
-
-   
-
       <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-        <div class="text-center"><div class="inline-flex items-center text-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-4"><BookOpen className='w-4'/>Milestones We've Reached</div></div>
+        <div className="text-center">
+          <div className="inline-flex items-center text-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+            <BookOpen className='w-4'/>Milestones We've Reached
+            </div>
+        </div>
           <div className="text-center mb-8 lg:mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2 md:mb-4">Why Choose Apollo International?</h2>
             <p className="text-sm sm:text-lg text-gray-600 max-w-2xl mx-auto">

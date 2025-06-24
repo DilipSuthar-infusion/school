@@ -17,7 +17,7 @@ import sequelize from "../config/database.js";
         allowNull: false,
       },
       paymentMethod: {
-        type: DataTypes.ENUM("cash", "creditCard", "bankTransfer"),
+        type: DataTypes.ENUM("UPI","Bank Account"),
         allowNull: false,
       },
       transactionId: {

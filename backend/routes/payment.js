@@ -1,4 +1,4 @@
-// routes/paymentRoutes.js
+
 import express from 'express';
 import { applyPayment, getInvoicePayments } from '../controllers/paymentController.js';
 import { authenticate, authorizeRoles } from '../middleware/auth.middleware.js';

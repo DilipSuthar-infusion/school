@@ -46,7 +46,7 @@ export default function Navbar() {
                             admin: "/admin/adminprofile",
                             teacher: "/teacher/teacherprofile",
                             student: "/student/dashboard/studentprofile",
-                            parent: "/parent/dashboard/profile",
+                            parent: "/parent/dashboard/parentprofile",
                           }[userInfo.role]
                         }
                         className="block px-4 py-2 text-sm text-black font-semibold data-focus:outline-hidden text-decoration-none hover:bg-gray-200 transition-all duration-200"

@@ -1,24 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FiPhone, FiMail, FiMoreVertical, FiSearch } from "react-icons/fi";
-import {
-  X,
-  Camera,
-  User,
-  Mail,
-  Phone,
-  Calendar,
-  MapPin,
-  Users,
-  Briefcase,
-} from "lucide-react";
-import ClipLoader from "react-spinners/ClipLoader";
+import { FiSearch } from "react-icons/fi";
 import Swal from "sweetalert2";
 import StudentTable from "../../components/StudentTable";
 import StudentFormModal from "../../components/StudentFromModal";
 import ParentFormModal from "../../components/ParentFormModal";
 import useUserApi from "../../hooks/useUserApi";
 import useClassApi from "../../hooks/useClassApi";
-import useFeeAssignApi from "../../hooks/useFeeAssignApi";
+
 
 const StudentList = () => {
   const { Classes } = useClassApi();
@@ -30,7 +18,6 @@ const StudentList = () => {
     handleAddUser,
     credentials,
   } = useUserApi();
-  const { handleAssignFee, feeAssign } = useFeeAssignApi();
  
   const [avatar, setAvatar] = useState(null);
   const [parentAvatar, setParentAvatar] = useState(null);
@@ -43,8 +30,7 @@ const StudentList = () => {
   const [id, setId] = useState(null);
   const [edit, setEdit] = useState(false);
   const [error, setError] = useState({});
-  const [openFeeDetail, setOpenFeeDetail] = useState(false);
-  const [feeDetail, setFeeDetail] = useState([]);
+ 
 
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [selectedClass, setSelectedClass] = useState("");
@@ -292,10 +278,10 @@ const StudentList = () => {
     }
   };
 
-  const handleFeeDetails = async (fee) => {
-    setOpenFeeDetail(true);
-    setFeeDetail(fee);
-  };
+
+
+
+
 
   useEffect(() => {
     let filtered = users;
@@ -375,9 +361,6 @@ const StudentList = () => {
           setId={setId}
           setAvatar={setAvatar}
           handleDelete={handleDelete}
-          handleAssignFee={handleAssignFee}
-          feeAssign={feeAssign}
-          handleFeeDetails={handleFeeDetails}
         />
       </div>
 
@@ -430,86 +413,7 @@ const StudentList = () => {
         students={users}
       />
 
-      {openFeeDetail && (
-        <>
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[50]">
-            <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8 w-[90%] sm:w-[500px]">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-800">
-                  Fee Details
-                </h2>
-                <button
-                  onClick={() => setOpenFeeDetail(false)}
-                  className="text-gray-500 hover:text-gray-700 text-xl"
-                >
-                  &times;
-                </button>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="min-w-full border border-gray-300 text-sm">
-                  <thead className="bg-gray-100">
-                    <tr>
-                      <th className="py-2 px-4 border-b border-gray-300">
-                        Sr.No.
-                      </th>
-                      <th className="py-2 px-4 border-b border-gray-300">
-                        Fee Type
-                      </th>
-                      <th className="py-2 px-4 border-b border-gray-300">
-                        Fee Amount
-                      </th>
-                      <th className="py-2 px-4 border-b border-gray-300">
-                        Status:
-                      </th>
-                      
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {feeDetail?.map((fee, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="py-2 px-4 border-b border-gray-300">
-                          {index + 1}
-                        </td>
-                        <td className="py-2 px-4 border-b border-gray-300">
-                          {fee.feeType}
-                        </td>
-                        <td className="py-2 px-4 border-b border-gray-300">
-                          ₹ {fee.amount}
-                        </td>
-                        <td className="py-2 px-4 border-b border-gray-300">
-                           {fee.status}
-                        </td>
-
-                      </tr>
-                    ))}
-                    <tr className="hover:bg-gray-50 font-semibold bg-gray-100">
-                      <td
-                        colSpan={2}
-                        className="py-2 px-4 border-b border-gray-300 text-right"
-                      >
-                        Total:
-                      </td>
-                      <td className="py-2 px-4 border-b border-gray-300">
-                        ₹ {feeDetail?.reduce((sum, fee) => sum + fee.amount, 0)}
-                      </td>
-                    </tr>
-                    <tr className="hover:bg-gray-50 font-semibold bg-gray-100">
-                      <td
-                        colSpan={2}
-                        className="py-2 px-4 border-b border-gray-300 text-right"
-                      >
-                        Fee Status:
-                      </td>
-                      
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+    
     </>
   );
 };

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import axios from 'axios';
 import logo from '../assets/logo.jpg';
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
-import { KeyRound, Mail } from "lucide-react";
+import { ArrowBigLeft, ArrowLeft, KeyRound, Mail } from "lucide-react";
 import { useAuth } from "../Context/Authcontext";
 import FullScreenLoader from "../components/FullScreenLoader";
 
@@ -28,10 +28,10 @@ export default function Login() {
       else if (role === "student") navigate("/student/dashboard");
       else if (role === "teacher") navigate("/teacher");
       else if (role === "parent") navigate("/parent/dashboard");
-
+      
       Swal.fire({
         title: 'Login Successful',
-        text: 'You have successfully logged in',
+        text: res?.data?.message,
         icon: 'success',
         confirmButtonText: 'OK',
         confirmButtonColor: "#f97316",
@@ -97,7 +97,7 @@ export default function Login() {
 
               <div>
                 <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
-                  <KeyRound className="float-left w-4 h-4 text-blue-600 me-2" />
+                  <KeyRound className="float-left w-4 h-4 text-blue-600 me-1" />
                   Password
                 </label>
                 <input
@@ -123,6 +123,7 @@ export default function Login() {
               >
                 {loading ? 'Signing in...' : 'Sign In'}
               </button>
+              <Link to="/" className="text-center text-sm text-blue-500 hover:underline text-decoration-none"><ArrowLeft className="float-left w-5 h-5 mt-1" /> Back to Home</Link>
             </form>
           </div>
         </div>

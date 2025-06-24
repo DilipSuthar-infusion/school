@@ -139,7 +139,7 @@ const ProfilePage = () => {
                 <div>
                   <span className="text-gray-500 text-sm">Wife Name:</span>{" "}
                   <p className="font-medium text-xl">
-                    {userInfo?.Parents[0]?.motherName}
+                    {userInfo?.motherName}
                   </p>
                 </div>
                 <div>
@@ -149,7 +149,7 @@ const ProfilePage = () => {
                 <div>
                   <span className="text-gray-500 text-sm">Email:</span>{" "}
                   <p className="font-medium text-xl">
-                    {userInfo?.Parents[0]?.email}
+                    {userInfo?.email}
                   </p>
                 </div>
                 <div>

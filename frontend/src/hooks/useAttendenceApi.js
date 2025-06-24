@@ -8,7 +8,7 @@ const useAttendenceApi = () => {
      const markBulkAttendance =async(classId, date, attendanceRecords)=>{
             try {
                 const token = localStorage.getItem('token');
-                await axios.post(
+             const response = await axios.post(
                     `${import.meta.env.VITE_API_BASE_URL}/attendance/bulk`,
                     {
                       classId,
@@ -21,16 +21,10 @@ const useAttendenceApi = () => {
                       },
                     }
                   );
-                Swal.fire({
-                    title: 'Saved'
-                })
+                setAttendance(prev => [...prev, attendanceRecords]);
+                return { success: true, data: response?.data?.message };
               } catch (error) {
-                Swal.fire({
-                  title: 'Error',
-                  text: error.response?.data?.message || error.message,
-                  icon: 'error',
-                  confirmButtonText: 'OK',
-                });
+                return { success: false, data: error?.response?.data?.message};
               }
         }
 
@@ -83,4 +77,4 @@ const useAttendenceApi = () => {
         return {markBulkAttendance , attendance,deleteAttendanceByDate}
 }
 
-export default useAttendenceApi
+export default useAttendenceApi;

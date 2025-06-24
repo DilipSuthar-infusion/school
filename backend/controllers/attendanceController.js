@@ -16,18 +16,80 @@ export const createAttendance = async (req, res) => {
     res.status(201).json({ message: 'Attendance marked successfully', data: newAttendance });
   
 };
-
 export const markBulkAttendance = async (req, res) => {
-    const { classId, date, attendanceRecords } = req.body;
-    const records = attendanceRecords.map((rec) => ({
-      ...rec,
-      classId,
-      date,
-      markedBy:req.user.id,
-    }));
-    const newRecords = await Attendance.bulkCreate(records, { ignoreDuplicates: true });
-    res.status(201).json({ message: 'Bulk attendance marked', data: newRecords });
+  const { classId, date, attendanceRecords } = req.body;
+  const markedBy = req.user.id;
+
+  try {
+    const existingRecords = await Attendance.findAll({
+      where: {
+        classId,
+        date,
+        studentId: attendanceRecords.map((r) => r.studentId),
+      },
+    });
+
+    const existingStudentIds = new Set(existingRecords.map((r) => r.studentId));
+
+    const newRecords = attendanceRecords
+      .filter((r) => !existingStudentIds.has(r.studentId))
+      .map((r) => ({
+        ...r,
+        classId,
+        date,
+        markedBy,
+      }));
+
+    const inserted = await Attendance.bulkCreate(newRecords);
+
+    if (existingRecords.length > 0 && inserted.length === 0) {
+      return res.status(200).json({
+        message: 'Attendance already exists for all selected students on this date.',
+        existing: existingRecords,
+        inserted: [],
+      });
+    } else if (existingRecords.length > 0 && inserted.length > 0) {
+      return res.status(200).json({
+        message: 'Partial attendance marked. Some records already existed.',
+        existing: existingRecords,
+        inserted,
+      });
+    } else {
+      return res.status(201).json({
+        message: 'Bulk attendance marked successfully.',
+        inserted,
+      });
+    }
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      message: 'Failed to mark bulk attendance',
+      error: err.message || err,
+    });
+  }
 };
+
+
+
+
+
+export const getMonthlyAttendance = async (req, res) => {
+  const { classId, month, year } = req.query;
+  const records = await Attendance.findAll({
+    where: {
+      classId,
+      date: {
+        [Op.between]: [
+          `${year}-${month}-01`,
+          `${year}-${month}-31`,
+        ],
+      },
+    },
+  });
+  res.json(records);
+};
+
 
 
 
@@ -134,5 +196,4 @@ export const deleteYearlyAttendance = async (req, res) => {
     console.error("Delete Yearly Attendance Error:", error);
     res.status(500).json({ message: "Failed to delete attendance records." });
   }
-};
-
+}; 

@@ -1,27 +1,16 @@
 import React from "react";
 import Slider from "react-slick";
-import slide1 from "../../assets/Images/Slide 1.jpg";
-import slide2 from "../../assets/Images/slide2.jpeg";
-import slide3 from "../../assets/Images/slide3.jpg";
-import slide4 from "../../assets/Images/slide4.webp";
-import slide5 from "../../assets/Images/slide5.jpg";
-import slide6 from "../../assets/Images/slide6.jpg";
-import slide7 from "../../assets/Images/slide7.jpg";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { BookOpen } from "lucide-react";
+import useGalleryApi from "../../hooks/useGalleryApi";
+import { useNavigate } from "react-router";
 
-const images = [
-  { src: slide1 },
-  { src: slide2 },
-  { src: slide3 },
-  { src: slide4 },
-  { src: slide5 },
-  { src: slide6 },
-  { src: slide7 },
-];
 
 const Gallery = () => {
+  const navigate = useNavigate();
+  const { gallery } = useGalleryApi();
   const settings = {
     infinite: true,
     autoplay: true,
@@ -66,16 +55,24 @@ const Gallery = () => {
         cultural events and beyond
       </p>
       <Slider {...settings} className=" mt-8 md:mt-16">
-        {images.map((img, index) => (
+        {gallery.map((img, index) => (
           <div key={index} className="px-2">
             <img
-              src={img.src}
+              src={`http://localhost:2000/${img.galleryImgPath.replace(
+                /\\/g,
+                "/"
+              )}`}
               alt={`Slide ${index}`}
               className="rounded-xl w-full h-64 object-cover shadow-lg"
             />
           </div>
         ))}
       </Slider>
+      <div className="flex justify-center mt-8 md:mt-16">
+        <button onClick={()=> navigate('/gallery')} className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg shadow-lg hover:brightness-110">
+          View All
+        </button>
+        </div>
     </div>
   );
 };

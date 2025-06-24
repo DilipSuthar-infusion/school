@@ -17,9 +17,8 @@ const StudentTable = ({
   setAvatar,
   setId,
   handleDelete,
-  handleAssignFee,
-  feeAssign,
-  handleFeeDetails,
+
+
 }) => {
   return (
     <div className="w-full overflow-x-auto rounded-lg shadow">
@@ -39,7 +38,6 @@ const StudentTable = ({
             <th className="p-3">Address</th>
             <th className="p-3">Phone</th>
             <th className="p-3">Contact</th>
-            <th className="p-3">Fee Assigned</th>
             <th className="p-3 rounded-tr-lg">Actions</th>
           </tr>
         </thead>
@@ -113,24 +111,7 @@ const StudentTable = ({
                       )}
                     </div>
                   </td>
-                  <td className="p-3">
-                    {(() => {
-                      const assignedFee = feeAssign.filter(
-                        (fee) => fee.studentId === student.id
-                      );
-                      return assignedFee.length > 0 ? (
-                        <span className="text-green-600 font-semibold">
-                          <button onClick={() => handleFeeDetails(assignedFee)}>
-                            Fee Assigned
-                          </button>
-                        </span>
-                      ) : (
-                        <span className="text-red-600 font-semibold">
-                          Fee Not Assigned
-                        </span>
-                      );
-                    })()}
-                  </td>
+                  
 
                   <td className="p-3 relative">
                     <FiMoreVertical
@@ -201,17 +182,7 @@ const StudentTable = ({
                         >
                           Delete
                         </button>
-                        <button
-                          className="w-full px-4 py-2 text-left text-black-600 hover:bg-gray-100"
-                          onClick={() => {
-                            handleAssignFee(student.id);
-                            alert("fee Assigned");
-
-                            setOpenDropdown(null);
-                          }}
-                        >
-                          Fee Assign
-                        </button>
+                        
                       </div>
                     )}
                   </td>

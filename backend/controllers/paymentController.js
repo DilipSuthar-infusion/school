@@ -1,30 +1,26 @@
 import Payment from '../models/payment.model.js';
 import Invoice from '../models/invoice.model.js';
+import CustomError from '../utils/customError.js';
 
 export const applyPayment = async (req, res) => {
-  try {
     const { invoiceId } = req.params;
     const { amount, paymentMethod, transactionId } = req.body;
     
     const invoice = await Invoice.findByPk(invoiceId);
-    if (!invoice) return res.status(404).json({ message: 'Invoice not found' });
+    if (!invoice) throw CustomError(404,"Invoice not Found");
 
-    const payment = await Payment.create({
+    await Payment.create({
       invoiceId,
       amount,
       paymentMethod,
-      transactionId: paymentMethod === 'Cash' ? null : transactionId,
+      transactionId: transactionId,
       paymentDate: new Date(),
     });
-
-    invoice.paidAmount += amount;
-    invoice.status = invoice.paidAmount >= invoice.totalAmount ? 'paid' : 'partial';
+    invoice.totalAmount = 0,
+    invoice.paidAmount= amount;
     await invoice.save();
 
-    res.status(201).json(payment);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+    res.status(201).json({message: "Fee Payment Successfully"});
 };
 
 export const getInvoicePayments = async (req, res) => {

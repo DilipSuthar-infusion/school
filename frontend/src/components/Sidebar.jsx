@@ -194,9 +194,9 @@ const Sidebar = () => {
               icon: <BookOpen className="w-4 h-4" />
             },
             { 
-              key: 'manage-exams-result',
-              name: 'Manage Exams Results', 
-              path: '/admin/exam/results',
+              key: 'manage-invoice',
+              name: 'Manage Student Invoice', 
+              path: '/admin/fees/invoicegenerate',
               icon: <BookOpen className="w-4 h-4" />
             }
           ]
@@ -291,33 +291,13 @@ const Sidebar = () => {
           badge: null
         },
         {
-          key: 'assignments',
-          icon: <FileText className="w-5 h-5" />,
-          label: 'Assignments',
-          path: '/student/assignments',
-          badge: null
-        },
-        {
-          key: 'grades',
-          icon: <Award className="w-5 h-5" />,
-          label: 'My Grades',
-          path: '/student/grades',
-          badge: null
-        },
-        {
-          key: 'subjects',
-          icon: <BookOpen className="w-5 h-5" />,
-          label: 'My Subjects',
-          path: '/student/subjects',
-          badge: null
-        },
-        {
-          key: 'profile',
-          icon: <User className="w-5 h-5" />,
-          label: 'My Profile',
-          path: '/student/profile',
+          key: 'fees',
+          icon: <Calendar className="w-5 h-5" />,
+          label: 'Fees',
+          path: '/student/dashboard/fee',
           badge: null
         }
+      
       ],
       parent: [
         {
@@ -328,60 +308,25 @@ const Sidebar = () => {
           badge: null
         },
         {
-          key: 'my-children',
-          icon: <GraduationCap className="w-5 h-5" />,
-          label: 'My Children',
-          path: '/parent/children',
-          badge: null
-        },
-        {
           key: 'attendance',
           icon: <Eye className="w-5 h-5" />,
           label: 'Attendance Report',
-          path: '/parent/attendance',
-          badge: null
-        },
-        {
-          key: 'grades',
-          icon: <Award className="w-5 h-5" />,
-          label: 'Academic Report',
-          path: '/parent/grades',
+          path: '/parent/dashboard/attendance',
           badge: null
         },
         {
           key: 'fees',
           icon: <CreditCard className="w-5 h-5" />,
           label: 'Fee Status',
-          path: '/parent/fees',
+          path: '/parent/dashboard/fees',
           badge: 'Due'
-        },
-        {
-          key: 'timetable',
-          icon: <Calendar className="w-5 h-5" />,
-          label: 'Class Schedule',
-          path: '/parent/timetable',
-          badge: null
-        },
-        {
-          key: 'teachers',
-          icon: <UserCheck className="w-5 h-5" />,
-          label: 'Teachers',
-          path: '/parent/teachers',
-          badge: null
         },
         {
           key: 'events',
           icon: <Bell className="w-5 h-5" />,
           label: 'School Events',
-          path: '/parent/events',
+          path: '/parent/dashboard/events',
           badge: '3'
-        },
-        {
-          key: 'communication',
-          icon: <MessageSquare className="w-5 h-5" />,
-          label: 'Messages',
-          path: '/parent/messages',
-          badge: null
         }
       ]
   };

@@ -51,8 +51,8 @@ export const createExam = async (req, res) => {
       classId,
       subjectId
     });
-
-    res.status(201).json(newExam);
+    console.log(newExam);
+    res.status(201).json({ message: 'Exam created successfully', newExam });
   } catch (error) {
     console.error('Error creating exam:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -81,14 +81,7 @@ export const getExamById = async (req, res) => {
     res.json(exam);
 };
 
-export const updateExam = async (req, res) => {
-    const { id } = req.params;
-    const exam = await Exam.findByPk(id);
-    if (!exam) throw new CustomError('Exam not found', 404);
 
-    await exam.update(req.body);
-    res.json(exam);
-};
 
 export const deleteExam = async (req, res) => {
     const { id } = req.params;

@@ -4,7 +4,6 @@ import React, { useState } from "react";
 const GalleryImgModal = ({
   setOpen,
   handleSubmit,
-  error,
   imageView,
   handleFileChange,
   handleChange,
@@ -86,24 +85,21 @@ const GalleryImgModal = ({
                       </label>
                       <select
                       onChange={handleChange}
-                        name="gender"
+                        name="imgcategory"
                         className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none bg-gray-50 focus:bg-white outline-none"
                       >
                         <option value="">Select Image Category</option>
-                        <option value="Male">Event</option>
-                        <option value="Female">Annual Function</option>
-                        <option value="Female">Sports</option>
-                        <option value="Female">NewsPaper</option>
-                        <option value="Other">Other</option>
+                        <option value="Event">Event</option>
+                        <option value="Annual Function">Annual Function</option>
+                        <option value="Sports">Sports</option>
+                        <option value="NewsPaper">NewsPaper</option>
+                        <option value="Academic">Academic</option>
+                        <option value="Cultural">Cultural</option>
+                        <option value="Infrastructure">Infrastructure</option>
+                        <option value="Achievements">Achievements</option>
                       </select>
-                      {error?.genderErr && (
-                        <p
-                          className="text-red-500 text-xs mt-1"
-                          id="gender-error"
-                        >
-                          {error.genderErr}
-                        </p>
-                      )}
+                      
+                
                     </div>
                     <div className="space-y-2">
                       <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">

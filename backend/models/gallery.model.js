@@ -7,11 +7,11 @@ import sequelize from '../config/database.js';
       primaryKey: true,
     },
     imgcategory:{
-        type:String,
+         type: DataTypes.STRING,
         allowNull: false
     },
     galleryImgPath:{
-        type: String,
+         type: DataTypes.STRING,
         allowNull: false
     }
     
@@ -20,6 +20,5 @@ import sequelize from '../config/database.js';
     tableName: 'Gallery',
   });
 
- 
 
-export default Gallery;
+  export default Gallery

@@ -19,7 +19,6 @@ export const createEvent = async (req, res) => {
 };
 
 export const getAllEvents = async (req, res) => {
-  try {
     const events = await Event.findAll({
       include: [{
         model: User,
@@ -29,10 +28,6 @@ export const getAllEvents = async (req, res) => {
     });
 
     res.status(200).json(events);
-  } catch (error) {
-    console.error("Error fetching events:", error);
-    res.status(500).json({ message: "Failed to fetch events" });
-  }
 };
 
 

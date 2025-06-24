@@ -5,15 +5,21 @@ const useFeeAssignApi = () => {
     const [feeAssign, setfeeAssign] = useState([])
  
   const handleAssignFee = async (id) => {
-    const token = localStorage.getItem('token');
-    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/fees/${id}`,
-      {}, 
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    try{
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/fees/${id}`,
+         {}, 
+         {
+           headers: {
+             Authorization: `Bearer ${token}`,
+           },
+         }
+       );
+       return {success: true, message: response?.data?.message }
+    }catch(error){
+      return {success: false, message: error?.response?.data?.error}
+    }
+    
     
   };
 

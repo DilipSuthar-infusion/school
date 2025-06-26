@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import useAttendanceApi from '../../hooks/useAttendenceApi';
+
 
 const ManageAttendence = () => {
 //   const { getAllAttendance } = useAttendanceApi();

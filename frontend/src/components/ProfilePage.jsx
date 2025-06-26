@@ -11,8 +11,9 @@ const ProfilePage = () => {
           <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden">
             <img
               src={
-                `http://localhost:2000/${userInfo?.profilePicture}` ||
-                "https://www.w3schools.com/howto/img_avatar.png"
+                userInfo?.profilePicture
+                  ? `http://localhost:2000/${userInfo?.profilePicture}`
+                  : 'https://png.pngtree.com/png-vector/20220807/ourmid/pngtree-man-avatar-wearing-gray-suit-png-image_6102786.png'
               }
               alt="Student"
               className="w-full h-full object-cover"

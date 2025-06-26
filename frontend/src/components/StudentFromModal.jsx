@@ -26,10 +26,10 @@ const StudentFormModal = ({
         ></div>
 
         <div className="relative w-full max-w-md sm:max-w-7xl transform rounded-3xl bg-white shadow-2xl transition-all z-10">
-          <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-6 rounded-t-3xl">
+          <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 md:px-6 px-2 py-6 rounded-t-3xl">
             <div className="flex items-center justify-between">
-              <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2" id="modal-title">
-                <User className="w-6 h-6" aria-hidden="true" />
+              <h3 className="text-md md:text-2xl font-bold text-white flex items-center gap-2">
+                <User className="md:w-6 md:h-6 h-5 w-5" aria-hidden="true" />
                 {edit ? "Edit Student" : "Add New Student"}
               </h3>
               <button
@@ -45,7 +45,7 @@ const StudentFormModal = ({
          
           <form onSubmit={handleSubmit} className="px-6 py-6 max-h-[70vh] overflow-y-auto">
             <div className="space-y-6">
-              <div className="flex flex-col items-center mb-8">
+              <div className="flex flex-col items-center md:mb-8 mb-2">
                 <div className="relative group">
                   <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-blue-100 shadow-lg bg-gradient-to-br from-blue-50 to-purple-50">
                     <img
@@ -75,7 +75,7 @@ const StudentFormModal = ({
               </div>
 
               <div className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:gap-4 gap-2">
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                       <User className="w-4 h-4 text-blue-600 float-left me-1" />
@@ -86,17 +86,17 @@ const StudentFormModal = ({
                       name="username"
                       onChange={handleChange}
                       value={formData.username}
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                      className="w-full px-3 md:py-2.5  py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                       placeholder="Student Name"
                     />
                     {error?.nameErr && (
-                      <p className="text-red-500 text-xs mt-1" id="name-error">
+                      <p className="text-red-500 text-xs mt-1 mb-1">
                         {error.nameErr}
                       </p>
                     )}
                   </div>
 
-                  {/* Email */}
+
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                       <Mail className="w-4 h-4 text-blue-600 float-left me-1" />
@@ -107,12 +107,12 @@ const StudentFormModal = ({
                       name="email"
                       onChange={handleChange}
                       value={formData.email}
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                      className="w-full px-3 md:py-2.5  py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                       placeholder="student@example.com"
                       
                     />
                     {error?.emailErr && (
-                      <p className="text-red-500 text-xs mt-1" id="email-error">
+                      <p className="text-red-500 text-xs mt-1 mb-1" >
                         {error.emailErr}
                       </p>
                     )}
@@ -120,7 +120,7 @@ const StudentFormModal = ({
                 </div>
 
         
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:gap-4 gap-2">
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                       <Phone className="w-4 h-4 text-blue-600 float-left me-1" />
@@ -131,12 +131,12 @@ const StudentFormModal = ({
                       name="phone"
                       onChange={handleChange}
                       value={formData.phone}
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                      className="w-full px-3 md:py-2.5  py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                       placeholder="8596412365"
                      
                     />
                     {error?.phoneErr && (
-                      <p className="text-red-500 text-xs mt-1" id="phone-error">
+                      <p className="text-red-500 text-xs mt-1 mb-1" >
                         {error.phoneErr}
                       </p>
                     )}
@@ -151,7 +151,7 @@ const StudentFormModal = ({
                       name="gender"
                       onChange={handleChange}
                       value={formData.gender}
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none bg-gray-50 focus:bg-white outline-none"
+                      className="w-full px-3 md:py-2.5  py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none bg-gray-50 focus:bg-white outline-none"
                       
                     >
                       <option value="">Select Gender</option>
@@ -160,14 +160,14 @@ const StudentFormModal = ({
                       <option value="Other">Other</option>
                     </select>
                     {error?.genderErr && (
-                      <p className="text-red-500 text-xs mt-1" id="gender-error">
+                      <p className="text-red-500 text-xs mt-1 mb-1" >
                         {error.genderErr}
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:gap-4 gap-2">
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                       <Calendar className="w-4 h-4 text-blue-600 float-left me-1" />
@@ -178,10 +178,10 @@ const StudentFormModal = ({
                       name="dateOfBirth"
                       onChange={handleChange}
                       value={formData.dateOfBirth}
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                      className="w-full px-3 md:py-2.5  py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                     />
                     {error?.dobErr && (
-                      <p className="text-red-500 text-xs mt-1" id="dob-error">
+                      <p className="text-red-500 text-xs mt-1 mb-1" >
                         {error.dobErr}
                       </p>
                     )}
@@ -199,11 +199,11 @@ const StudentFormModal = ({
                       name="bloodGroup"
                       onChange={handleChange}
                       value={formData.bloodGroup}
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                      className="w-full px-3 md:py-2.5  py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                       placeholder="A+"
                     />
                     {error?.bloodGroupErr && (
-                      <p className="text-red-500 text-xs mt-1" id="bloodGroup-error">
+                      <p className="text-red-500 text-xs mt-1 mb-1">
                         {error.bloodGroupErr}
                       </p>
                     )}
@@ -219,7 +219,7 @@ const StudentFormModal = ({
                     name="classId"
                     onChange={handleChange}
                     value={formData.classId}
-                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none bg-gray-50 focus:bg-white outline-none"
+                    className="w-full px-3 md:py-2.5  py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none bg-gray-50 focus:bg-white outline-none"
                   >
                     <option value="">Select Class</option>
                     {Classes.map((classItem) => (
@@ -229,7 +229,7 @@ const StudentFormModal = ({
                     ))}
                   </select>
                   {error?.classErr && (
-                    <p className="text-red-500 text-xs mt-1" id="class-error">
+                    <p className="text-red-500 text-xs mt-1 mb-1" >
                       {error.classErr}
                     </p>
                   )}
@@ -246,11 +246,11 @@ const StudentFormModal = ({
                     rows={3}
                     onChange={handleChange}
                     value={formData.address}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white resize-none"
+                    className="w-full px-4 md:py-2.5  py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white resize-none"
                     placeholder="123 Main St, City, Country"
                   />
                   {error?.addressErr && (
-                    <p className="text-red-500 text-xs mt-1" id="address-error">
+                    <p className="text-red-500 text-xs mt-1 mb-1">
                       {error.addressErr}
                     </p>
                   )}

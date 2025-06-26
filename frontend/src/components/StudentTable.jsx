@@ -1,6 +1,7 @@
+import { GripVertical, Mail, Phone } from "lucide-react";
 import React from "react";
-import { FiPhone, FiMail, FiMoreVertical } from "react-icons/fi";
 import { Link } from "react-router";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const StudentTable = ({
   students,
@@ -21,11 +22,11 @@ const StudentTable = ({
 
 }) => {
   return (
-    <div className="w-full overflow-x-auto rounded-lg shadow">
+    <div className="w-full overflow-x-auto rounded-lg shadow-md">
       <table className="min-w-max w-full table-auto text-sm border-collapse bg-white">
-        <thead className="bg-blue-50 text-left text-blue-600 font-semibold">
-          <tr>
-            <th className="sm:p-1 md:p-3">SR. No.</th>
+        <thead className="bg-blue-100 text-left text-blue-600 font-semibold">
+          <tr className="text-center">
+            <th className="p-3 md:p-3">SR. No.</th>
             <th className="p-3 rounded-tl-lg">Photo</th>
             <th className="p-3">Name</th>
             <th className="p-3">Student ID</th>
@@ -43,9 +44,9 @@ const StudentTable = ({
         </thead>
         <tbody>
           {loading ? (
-            <tr>
+            <tr className="text-center">
               <td colSpan={14} className="text-center p-12">
-                Loading...
+              <ClipLoader color="#36d7b7" loading={loading} size={30} />
               </td>
             </tr>
           ) : students.length === 0 ? (
@@ -59,15 +60,15 @@ const StudentTable = ({
               .filter((student) => student.role === "student")
               .map((student, idx) => (
                 <tr
-                  key={student.id || idx}
-                  className="border-b hover:bg-gray-50 even:bg-gray-100 odd:bg-white"
+                  key={idx}
+                  className="hover:bg-gray-50 even:bg-gray-100 odd:bg-white text-center"
                 >
-                  <td className="p-3 font-medium">{idx + 1}</td>
+                  <td className="p-3 font-medium text-center">{idx + 1}.</td>
                   <td className="p-2 w-20">
                     <img
                       src={`http://localhost:2000/${student.profilePicture}`}
                       alt="avatar"
-                      className="w-16 h-16 object-cover rounded-md"
+                      className="w-16 h-16 object-cover"
                     />
                   </td>
                   <td className="p-3 font-medium">{student.username}</td>
@@ -98,24 +99,24 @@ const StudentTable = ({
                   </td>
                   <td className="p-3">{student.phone || "N/A"}</td>
                   <td className="p-3">
-                    <div className="flex gap-3 text-blue-600">
+                    <div className="flex gap-3 justify-center text-blue-600">
                       {student.phone && (
                         <a href={`tel:${student.phone}`} title="Call">
-                          <FiPhone className="cursor-pointer hover:text-orange-500 transition" />
+                          <Phone className="cursor-pointer hover:text-orange-500 transition w-4" />
                         </a>
                       )}
                       {student.email && (
                         <a href={`mailto:${student.email}`} title="Email">
-                          <FiMail className="cursor-pointer hover:text-orange-500 transition" />
+                          <Mail className="cursor-pointer hover:text-orange-500 transition w-4" />
                         </a>
                       )}
                     </div>
                   </td>
                   
 
-                  <td className="p-3 relative">
-                    <FiMoreVertical
-                      className="cursor-pointer"
+                  <td className="py-3 px-6 relative">
+                    <GripVertical
+                      className="cursor-pointer w-5"
                       aria-label="More actions"
                       onClick={() =>
                         setOpenDropdown(
@@ -124,9 +125,9 @@ const StudentTable = ({
                       }
                     />
                     {openDropdown === student.id && (
-                      <div className="absolute right-10 mt-2 w-40 bg-white border rounded shadow z-10">
+                      <div className="absolute right-10 mt-2 w-40 bg-gray-100 border-2 border-gray-200 rounded shadow-md z-10">
                         <button
-                          className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                          className="w-full px-4 py-2 text-left hover:bg-gray-300 cursor-pointer"
                           onClick={() => {
                             setParentModel(true);
                             setParentFromData((prev) => ({
@@ -138,7 +139,7 @@ const StudentTable = ({
                         >
                           Add Parent
                         </button>
-                        <button className="w-full px-4 py-2 text-left hover:bg-gray-100 text-gray-500">
+                        <button className="w-full px-4 py-2 text-left hover:bg-gray-300 cursor-pointer">
                           <Link
                             to={`/admin/student/list/${student.id}`}
                             className="text-decoration-none"
@@ -147,7 +148,7 @@ const StudentTable = ({
                           </Link>
                         </button>
                         <button
-                          className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                          className="w-full px-4 py-2 text-left hover:bg-gray-300 cursor-pointer"
                           onClick={() => {
                             setId(student.id);
                             setOpen(true);
@@ -174,7 +175,7 @@ const StudentTable = ({
                           Edit
                         </button>
                         <button
-                          className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100"
+                          className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-300 cursor-pointer"
                           onClick={() => {
                             handleDelete(student.id);
                             setOpenDropdown(null);

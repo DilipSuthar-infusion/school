@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { BookOpen, Mail, MapPin, Pen, Phone, User } from "lucide-react";
 import Breadcrumb from "../Components/Breadcrumb";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -109,76 +109,76 @@ const ContectUs = () => {
   return (
     <>
     <Breadcrumb label={'Contact Us'}/>
-    <section className="w-full bg-gray-50 py-12 px-4 lg:px-20">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-blue-700">Let's Connect With Us</h2>
-        <p className="text-center text-gray-600 max-w-xl mx-auto mb-10">
+    <section className="md:w-full bg-gray-50 py-12 px-4 lg:px-20">
+      <div className="md:max-w-8xl mx-auto">
+        <h2 className="text-2xl lg:text-5xl md:text-4xl font-medium text-center mb-4 text-blue-700">Let's Connect With Us</h2>
+        <p className="text-center text-gray-600 px-3  mb-10">
           We'd love to hear from you! Whether you have a question about admissions, programs, or anything else — our team is ready to help.
         </p>
 
-        <div className="grid md:grid-cols-2 gap-10 mt-10">
-          <form className="bg-white shadow-lg rounded-lg p-6 space-y-5" onSubmit={handleSubmit}>
+        <div className="flex flex-col md:justify-center md:flex-row md:px-5 gap-5 mx-auto md:gap-10 mt-10">
+          <form className="bg-white shadow-lg rounded-lg p-3 space-y-5 md:w-90 lg:p-6 lg:w-150" onSubmit={handleSubmit}>
             <div>
-              <label className="block font-medium mb-1">Full Name</label>
+              <label className="block font-sm mb-1 text-blue-500"><User className="float-left w-3 me-1" />Full Name</label>
               <input
               name="Username"
               value={formData.Username}
               onChange={handleChange}
                 type="text"
                 placeholder="Enter your name"
-                className="w-full border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-200 bg-gray-100 rounded px-2 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               {error?.Username && <p className="text-sm text-red-500">{error.Username}</p>}
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Email Address</label>
+              <label className="block font-sm mb-1 text-blue-500"><Mail className="float-left w-3 me-1"/> Email Address</label>
               <input
               name="Email"
               value={formData.Email}
               onChange={handleChange}
                 type="email"
                 placeholder="Enter your email"
-                className="w-full border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-200 bg-gray-100 rounded px-2 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               {error?.Email && <p className="text-sm text-red-500">{error.Email}</p>}
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Phone Number</label>
+              <label className="block font-sm mb-1 text-blue-500"><Phone className="float-left w-3 me-1"/> Phone Number</label>
               <input
               name="Phone"
               value={formData.Phone}
               onChange={handleChange}
                 type="tel"
                 placeholder="Enter your phone number"
-                className="w-full border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-200 bg-gray-100 rounded px-2 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               {error?.Phone && <p className="text-sm text-red-500">{error.Phone}</p>}
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Subject</label>
+              <label className="block font-sm mb-1 text-blue-500"><BookOpen className="float-left w-3 me-1"/> Subject</label>
               <input
               name="Subject"
               value={formData.Subject}
               onChange={handleChange}
                 type="text"
                 placeholder="What is your inquiry about?"
-                className="w-full border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-200 bg-gray-100 rounded px-2 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               {error?.Subject && <p className="text-sm text-red-500">{error.Subject}</p>}
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Message</label>
+              <label className="block font-sm mb-1 text-blue-500"><Pen className="float-left w-3 me-1"/> Message</label>
               <textarea
               name="Message"
               value={formData.Message}
               onChange={handleChange}
                 rows="4"
                 placeholder="Write your message..."
-                className="w-full border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-200 bg-gray-100 rounded px-2 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
               ></textarea>
               {error?.Message && <p className="text-sm text-red-500">{error.Message}</p>}
             </div>
@@ -191,29 +191,28 @@ const ContectUs = () => {
             </button>
           </form>
 
-          {/* Contact Details */}
-          <div className="bg-white shadow-lg rounded-lg p-6 space-y-6">
+          <div className="bg-white shadow-lg rounded-lg p-5 space-y-6 lg:w-150">
             <div className="flex items-start gap-4">
-              <Phone className="text-blue-500 mt-1" />
+              <Phone className="text-blue-500 mt-1 w-4" />
               <div>
-                <h4 className="font-semibold text-gray-800">Phone</h4>
-                <p>+91-7894561231</p>
+                <h4 className="font-semibold text-gray-800 text-sm">Phone</h4>
+                <p className="text-medium">+91-7894561231</p>
               </div>
             </div>
 
             <div className="flex items-start gap-4">
-              <Mail className="text-blue-500 mt-1" />
+              <Mail className="text-blue-500 mt-1 w-4" />
               <div>
-                <h4 className="font-semibold text-gray-800">Email</h4>
-                <p>infoapollointernational@gmail.com</p>
+                <h4 className="font-semibold text-gray-800 text-sm">Email</h4>
+                <p className="text-medium">InfoapolloInter@gmail.com</p>
               </div>
             </div>
 
             <div className="flex items-start gap-4">
-              <MapPin className="text-blue-500 mt-1" />
+              <MapPin className="text-blue-500 mt-1 w-4" />
               <div>
-                <h4 className="font-semibold text-gray-800">Address</h4>
-                <p>
+                <h4 className="font-semibold text-gray-800 text-sm">Address</h4>
+                <p className="text-medium">
                   Loyola Hall, Naranpura,
                   <br />
                   Ahmedabad, Gujarat 380013

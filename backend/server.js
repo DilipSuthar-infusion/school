@@ -17,8 +17,6 @@ import invoiceRoute from './routes/invoice.js';
 import studyMaterialRoute from './routes/studyMeterial.js';
 import attendanceRoutes from './routes/attendance.js';
 import eventRoutes from './routes/eventRoute.js';
-import examRoutes from './routes/examRoutes.js';
-import examResultRoutes from './routes/examResultRoutes.js';
 import inquiry from './routes/inquiry.js'
 import galleryRoute from './routes/gallery.js'
 
@@ -60,8 +58,6 @@ app.use('/api/invoice', invoiceRoute);
 app.use('/api/studymaterials', studyMaterialRoute);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/events', eventRoutes);
-app.use('/api/exams', examRoutes);
-app.use('/api/exam-results', examResultRoutes);
 app.use('/api/submitInquiry',inquiry)
 app.use('/api/gallery', galleryRoute)
 

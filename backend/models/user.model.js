@@ -9,8 +9,7 @@ const User = sequelize.define('User', {
     primaryKey: true,
   },
   profilePicture: {
-    type: DataTypes.STRING,
-    defaultValue: 'https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg',
+    type: DataTypes.STRING
   },
   username: {
     type: DataTypes.STRING,

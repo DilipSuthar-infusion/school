@@ -1,6 +1,5 @@
 import axios from "axios"
-import { useState } from "react"
-import { data } from "react-router"
+import { useEffect, useState } from "react"
 
 const useInvoiceApi = () => {
   const [invoice, setInvoice] = useState([])
@@ -21,7 +20,7 @@ const useInvoiceApi = () => {
         getAllInvoice()
         return{ success: true, data: response?.data?.message}
     }catch(error){
-        return{ success: false, data: error?.response?.data?.message}
+        return{ success: false, error: error?.response?.data?.message}
     }
   
   }
@@ -53,11 +52,12 @@ const useInvoiceApi = () => {
               },
             }
       )
-  
-      setAllInvoice((prev) => prev.filter((inv) => inv.id !== id));
+      
+      
+      await getAllInvoice()
       return {success:true , data: response?.data?.message}
     }catch(error){
-      return {success:false, data: error?.response?.data?.message}
+      return {success:false, error: error?.response?.data?.message}
     }
     
   }
@@ -103,11 +103,13 @@ const useInvoiceApi = () => {
         setInvoice(response.data)
         return{sucess:true, data:response?.data?.message}
     }catch(error){
-     return {sucess :false, data:error?.response?.data?.error}
+     return {sucess :false, error:error?.response?.data?.error}
     }
     }
 
-
+    useEffect(()=>{
+      getAllInvoice()
+    },[])
 
   
 

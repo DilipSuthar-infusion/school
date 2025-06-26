@@ -11,7 +11,7 @@ const Programs = () => {
               <BookOpen className="w-4 h-4" />
               Holistic Development
             </span>
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-800 mb-2 md:mb-4">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-gray-800 mb-2 md:mb-4">
               Popular Topics to Learn
             </h2>
             <p className="md:text-lg text-sm  text-gray-600 max-w-3xl mx-auto">

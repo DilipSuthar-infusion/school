@@ -4,7 +4,7 @@ import axios from 'axios';
 import logo from '../assets/logo.jpg';
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
-import { ArrowBigLeft, ArrowLeft, KeyRound, Mail } from "lucide-react";
+import { ArrowLeft, KeyRound, Mail } from "lucide-react";
 import { useAuth } from "../Context/Authcontext";
 import FullScreenLoader from "../components/FullScreenLoader";
 
@@ -72,10 +72,10 @@ export default function Login() {
 
             <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
 
-              {/* Email */}
+            
               <div>
                 <label className="text-sm font-semibold text-gray-700 mb-1">
-                  <Mail className="float-left w-4 h-4 text-blue-600 me-1" />
+                  <Mail className="float-left w-4 h-4 text-blue-600 me-1 mt-1" />
                   Email
                 </label>
                 <input
@@ -89,15 +89,15 @@ export default function Login() {
                     }
                   })}
                   onBlur={() => trigger('email')}
-                  className="w-full px-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                  className="w-full md:px-3 md:py-3 py-2 px-2 border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                 />
                 {errors.email && <p className="text-red-500 text-sm mt-2">{errors.email.message}</p>}
               </div>
 
 
               <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
-                  <KeyRound className="float-left w-4 h-4 text-blue-600 me-1" />
+                <label className="text-sm font-semibold text-gray-700 mb-1">
+                  <KeyRound className="float-left w-4 h-4 text-blue-600 me-1 mt-1" />
                   Password
                 </label>
                 <input
@@ -111,7 +111,7 @@ export default function Login() {
                     }
                   })}
                   onBlur={() => trigger('password')}
-                  className="w-full px-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                  className="w-full md:px-3 md:py-3 py-2 px-2 border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                 />
                 {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
               </div>

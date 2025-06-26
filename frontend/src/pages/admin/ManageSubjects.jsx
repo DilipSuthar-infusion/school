@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { FiEdit2, FiSearch } from "react-icons/fi";
 import useSubjectApi from "../../hooks/useSubjectApi";
 import ClipLoader from "react-spinners/ClipLoader";
 import { BookOpenCheck, BookmarkCheck, PenLine, X } from "lucide-react";

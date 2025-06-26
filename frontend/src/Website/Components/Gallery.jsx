@@ -28,7 +28,7 @@ const Gallery = () => {
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 3,
         },
       },
       {
@@ -41,7 +41,7 @@ const Gallery = () => {
   };
 
   return (
-    <div className=" px-4 py-20 bg-gradient-to-b from-gray-50 to-white">
+    <div className=" px-4 py-20 bg-gradient-to-b from-gray-50 to-white overflow-x-hidden">
       <div className="text-center">
         <span className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
           <BookOpen className="w-4" />
@@ -49,7 +49,7 @@ const Gallery = () => {
         </span>
       </div>
 
-      <h2 className="text-3xl font-bold mb-2 md:mb-4 text-center">Photo Gallery</h2>
+      <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium mb-2 md:mb-4 text-center">Photo Gallery</h2>
       <p className="text-sm text-center sm:text-lg text-gray-600 max-w-2xl mx-auto">
         Explore highlights of our vibrant campus life, from classrooms to
         cultural events and beyond
@@ -58,10 +58,7 @@ const Gallery = () => {
         {gallery.map((img, index) => (
           <div key={index} className="px-2">
             <img
-              src={`http://localhost:2000/${img.galleryImgPath.replace(
-                /\\/g,
-                "/"
-              )}`}
+              src={`http://localhost:2000/${img.galleryImgPath}`}
               alt={`Slide ${index}`}
               className="rounded-xl w-full h-64 object-cover shadow-lg"
             />
@@ -69,7 +66,7 @@ const Gallery = () => {
         ))}
       </Slider>
       <div className="flex justify-center mt-8 md:mt-16">
-        <button onClick={()=> navigate('/gallery')} className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg shadow-lg hover:brightness-110">
+        <button onClick={()=> navigate('/gallery')} className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 font-semibold  py-3 rounded-lg shadow-lg hover:brightness-110">
           View All
         </button>
         </div>

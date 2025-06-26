@@ -11,6 +11,7 @@ const ParentFormModal = ({
   error,
   handleParentSubmit,
   students,
+  setError
 }) => {
   if (!open) return null;
 
@@ -25,7 +26,7 @@ const ParentFormModal = ({
         onSubmit={handleParentSubmit}
         className="bg-white w-full max-w-7xl max-h-[90vh] rounded-lg shadow-xl overflow-hidden"
       >
-        {/* Header */}
+
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 sm:p-6 flex justify-between items-center">
           <h2 id="parent-modal-title" className="text-xl sm:text-2xl font-bold flex items-center gap-2">
             <Users className="w-6 h-6" />
@@ -33,7 +34,9 @@ const ParentFormModal = ({
           </h2>
           <button
             type="button"
-            onClick={closeParentModal}
+            onClick={()=>{closeParentModal()
+                        setError("")
+            }}
             className="text-white hover:text-red-200 transition-colors p-1"
             aria-label="Close parent modal"
           >
@@ -42,9 +45,9 @@ const ParentFormModal = ({
         </div>
 
 
-        <div className="overflow-y-auto max-h-[calc(90vh-80px)] p-4 sm:p-6 space-y-6">
+        <div className="overflow-y-auto max-h-[calc(80vh-80px)] p-4 sm:p-6 space-y-6">
 
-          <div className="flex flex-col items-center mb-6">
+          <div className="flex flex-col items-center md:mb-6 mb-4">
             <div className="relative mb-3">
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-blue-100 shadow-lg bg-gradient-to-br from-blue-50 to-purple-50">
                 <img
@@ -70,18 +73,18 @@ const ParentFormModal = ({
                 />
               </label>
             </div>
-            {error?.parentFileErr && (
-              <p className="text-red-500 text-xs mt-1">{error.parentFileErr}</p>
-            )}
             <p className="text-sm text-gray-500 text-center">
               Click to upload photo
             </p>
+            {error?.parentFileErr && (
+              <p className="text-red-500 text-xs mt-1 mb-1">{error.parentFileErr}</p>
+            )}
           </div>
 
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+              <label className="text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
                 <User className="w-4 h-4 text-blue-600 float-left me-1" />
                 Father Name
               </label>
@@ -91,14 +94,14 @@ const ParentFormModal = ({
                 value={parentFromData.username}
                 onChange={handleParentChange}
                 placeholder="Enter Father name"
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+                className="w-full px-3 md:py-2.5 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
               />
               {error?.parentNameErr && (
-                <p className="text-red-500 text-xs mt-1" id="parentName-error">{error.parentNameErr}</p>
+                <p className="text-red-500 text-xs mt-1 mb-1">{error.parentNameErr}</p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+              <label className="text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
                 <User className="w-4 h-4 text-blue-600 float-left me-1" />
                 Mother Name
               </label>
@@ -108,15 +111,15 @@ const ParentFormModal = ({
                 value={parentFromData.motherName}
                 onChange={handleParentChange}
                 placeholder="Enter Mother name"
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+                className="w-full px-3 md:py-2.5 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
               />
               {error?.parentNameErr && (
-                <p className="text-red-500 text-xs mt-1" id="parentName-error">{error.motherNameErr}</p>
+                <p className="text-red-500 text-xs mt-1 mb-1" >{error.motherNameErr}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+              <label className="text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
                 <Users className="w-4 h-4 text-blue-600 float-left me-1" />
                 Select Student
               </label>
@@ -124,7 +127,7 @@ const ParentFormModal = ({
                 name="studentId"
                 value={parentFromData.studentId}
                 onChange={handleParentChange}
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+                className="w-full px-3 md:py-2.5 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
               >
                 <option value="">Select Student</option>
                 {students.filter((student) => student.role === "student").map((student) => (
@@ -134,12 +137,12 @@ const ParentFormModal = ({
                 ))}
               </select>
               {error?.parentStudentIdErr && (
-                <p className="text-red-500 text-xs mt-1" id="parentStudentId-error">{error.parentStudentIdErr}</p>
+                <p className="text-red-500 text-xs mt-1 mb-1" >{error.parentStudentIdErr}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+              <label className=" text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
                 <Mail className="w-4 h-4 text-blue-600 float-left me-1" />
                 Email Address
               </label>
@@ -149,15 +152,15 @@ const ParentFormModal = ({
                 value={parentFromData.email}
                 onChange={handleParentChange}
                 placeholder="Enter email address"
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+                className="w-full px-3 md:py-2.5 py-1  border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
               />
               {error?.parentEmailErr && (
-                <p className="text-red-500 text-xs mt-1" id="parentEmail-error">{error.parentEmailErr}</p>
+                <p className="text-red-500 text-xs mt-1 mb-1" >{error.parentEmailErr}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+              <label className="text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
                 <Phone className="w-4 h-4 text-blue-600 float-left me-1" />
                 Phone Number
               </label>
@@ -167,15 +170,15 @@ const ParentFormModal = ({
                 value={parentFromData.phone}
                 onChange={handleParentChange}
                 placeholder="Enter phone number"
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+                className="w-full px-3 md:py-2.5 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
               />
               {error?.parentPhoneErr && (
-                <p className="text-red-500 text-xs mt-1" id="parentPhone-error">{error.parentPhoneErr}</p>
+                <p className="text-red-500 text-xs mt-1 mb-1" >{error.parentPhoneErr}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+              <label className="text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
                 <MapPin className="w-4 h-4 text-blue-600 float-left me-1" />
                 Address
               </label>
@@ -185,16 +188,16 @@ const ParentFormModal = ({
                 value={parentFromData.address}
                 onChange={handleParentChange}
                 placeholder="Enter address"
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+                className="w-full px-3 md:py-2.5 py-1  border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
                 
               />
               {error?.parentAddressErr && (
-                <p className="text-red-500 text-xs mt-1" id="parentAddress-error">{error.parentAddressErr}</p>
+                <p className="text-red-500 text-xs mt-1 mb-1" >{error.parentAddressErr}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+              <label className="text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
                 <Briefcase className="w-4 h-4 text-blue-600 float-left me-1" />
                 Occupation 
               </label>
@@ -204,11 +207,11 @@ const ParentFormModal = ({
                 value={parentFromData.occupation}
                 onChange={handleParentChange}
                 placeholder="Enter occupation"
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+                className="w-full px-3 md:py-2.5 py-1  border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
                 
               />
               {error?.parentOccupationErr && (
-                <p className="text-red-500 text-xs mt-1" id="parentOccupation-error">{error.parentOccupationErr}</p>
+                <p className="text-red-500 text-xs mt-1 mb-1" >{error.parentOccupationErr}</p>
               )}
             </div>
 
@@ -221,7 +224,7 @@ const ParentFormModal = ({
                 name="relationType"
                 value={parentFromData.relationType}
                 onChange={handleParentChange}
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+                className="w-full px-3 md:py-2.5 py-1  border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
                 
               >
                 <option value="">Select Relation</option>
@@ -229,7 +232,7 @@ const ParentFormModal = ({
                 <option value="Guardian">Guardian</option>
               </select>
               {error?.parentRelationTypeErr && (
-                <p className="text-red-500 text-xs mt-1" id="parentRelationType-error">
+                <p className="text-red-500 text-xs mt-1 mb-1" >
                   {error.parentRelationTypeErr}
                 </p>
               )}

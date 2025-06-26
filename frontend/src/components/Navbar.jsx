@@ -26,10 +26,13 @@ export default function Navbar() {
                 <div>
                   <MenuButton className="relative flex text-sm ">
                     <span className="absolute -inset-1.5" />
-                    <span className="sr-only">Open user menu</span>
                     <img
-                      alt=""
-                      src={`http://localhost:2000/${userInfo?.profilePicture}` || 'https://png.pngtree.com/png-vector/20220807/ourmid/pngtree-man-avatar-wearing-gray-suit-png-image_6102786.png'}
+                      alt="profile img"
+                      src={
+                        userInfo?.profilePicture
+                          ? `http://localhost:2000/${userInfo?.profilePicture}`
+                          : 'https://png.pngtree.com/png-vector/20220807/ourmid/pngtree-man-avatar-wearing-gray-suit-png-image_6102786.png'
+                      }
                       className="size-10 rounded-lg"
                     />
                   </MenuButton>

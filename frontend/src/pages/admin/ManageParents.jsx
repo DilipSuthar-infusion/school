@@ -1,12 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { FiEdit2, FiMail, FiMoreVertical, FiPhoneCall, FiSearch } from 'react-icons/fi';
-import useUserApi from '../../hooks/useUserApi.js';
-import { ClipLoader } from 'react-spinners';
-import ParentFormModal from '../../components/ParentFormModal.jsx';
-import Swal from 'sweetalert2';
+import React, { useMemo, useState } from "react";
+import useUserApi from "../../hooks/useUserApi.js";
+import { ClipLoader } from "react-spinners";
+import ParentFormModal from "../../components/ParentFormModal.jsx";
+import Swal from "sweetalert2";
+import { GripVertical, Search } from "lucide-react";
 
 const ManageParents = () => {
-  const { users, loading, handleDelete, handleAddUser, handleEditUser } = useUserApi();
+  const { users, loading, handleDelete, handleAddUser, handleEditUser } =
+    useUserApi();
   const [openDropdown, setOpenDropdown] = useState(null);
   const [parentModel, setParentModel] = useState(false);
   const [parentFromData, setParentFromData] = useState({
@@ -21,16 +22,13 @@ const ManageParents = () => {
     profilePicture: null,
   });
 
-
-
   const [searchTerm, setSearchTerm] = useState("");
 
   const [parentAvatar, setParentAvatar] = useState(null);
-  const [parentProfile, setParentProfile] = useState(null); 
-  const [parentId, setParentId] = useState(null); 
-  const [isEditMode, setIsEditMode] = useState(false); 
-  const [formErrors, setFormErrors] = useState({}); 
-  const [error, setError] = useState({});
+  const [parentProfile, setParentProfile] = useState(null);
+  const [parentId, setParentId] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [error, setError] = useState("");
   const closeParentModal = () => {
     setParentModel(false);
     setParentAvatar(null);
@@ -48,13 +46,13 @@ const ManageParents = () => {
       relationType: "",
       profilePicture: null,
     });
-    setFormErrors({});
+    setError("");
   };
- 
+
   const handleParentFormDataChange = (e) => {
     const { name, value } = e.target;
     setParentFromData((prevData) => ({ ...prevData, [name]: value }));
-  };  
+  };
 
   const handleParentFileChange = (e) => {
     const file = e.target.files[0];
@@ -68,10 +66,10 @@ const ManageParents = () => {
   const validateParentForm = () => {
     const newErrors = {};
     if (parentFromData.username.trim().length < 3) {
-      newErrors.parentNameErr = "Parent name must be at least 3 characters.";
+      newErrors.parentNameErr = "Parentname must be at least 3 char.";
     }
     if (parentFromData.motherName.trim().length < 3) {
-      newErrors.motherNameErr = "Mother name must be at least 3 characters.";
+      newErrors.motherNameErr = "Mothername must be at least 3 char.";
     }
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(parentFromData.email)) {
@@ -97,12 +95,12 @@ const ManageParents = () => {
       newErrors.parentFileErr = "Please upload a profile picture.";
     }
     setError(newErrors);
-    return Object.keys(newErrors).length === 0; 
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmitParent = async (e) => {
     e.preventDefault();
-    
+
     if (!validateParentForm()) {
       Swal.fire({
         icon: "error",
@@ -116,7 +114,7 @@ const ManageParents = () => {
     if (parentProfile) {
       ParentData.append("profilePicture", parentProfile);
     }
-    
+
     ParentData.append("username", parentFromData.username);
     ParentData.append("motherName", parentFromData.motherName);
     ParentData.append("email", parentFromData.email);
@@ -144,74 +142,74 @@ const ManageParents = () => {
     }
   };
 
-
   const handleEditParent = (parent) => {
     setIsEditMode(true);
     setParentId(parent.id);
     setParentModel(true);
-    
 
     if (parent.profilePicture) {
       setParentAvatar(`http://localhost:2000/${parent.profilePicture}`);
     }
-    
+
     setParentFromData({
       username: parent.username || "",
       motherName: parent.motherName || "",
       email: parent.email || "",
-      studentId: parent.Students && parent.Students.length > 0 ? parent.Students[0].id : "",
+      studentId:
+        parent.Students && parent.Students.length > 0
+          ? parent.Students[0].id
+          : "",
       phone: parent.phone || "",
       address: parent.address || "",
       occupation: parent.occupation || "",
       relationType: parent.relationType || "",
       profilePicture: parent.profilePicture || null,
     });
-    
+
     setOpenDropdown(null);
   };
   const filteredParents = useMemo(() => {
-    let filtered = users.filter(user => user.role === 'parent');
+    let filtered = users.filter((user) => user.role === "parent");
     if (searchTerm) {
-      filtered = filtered.filter(parent =>
+      filtered = filtered.filter((parent) =>
         parent.username.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     return filtered;
   }, [searchTerm, users]);
-  
 
   return (
     <>
-      <div className="p-2">
-        {/* Top Bar */}
-        <div className="flex justify-between items-center mb-4 px-4 py-4 bg-white rounded-lg shadow-md">
-          <div className="flex items-center gap-2 border rounded px-3 py-2 w-1/3">
-            <FiSearch />
-            <input
-              type="text"
-              placeholder="Search Parent Name..."
-              className="outline-none bg-transparent w-full"
-              onChange={(e) => setSearchTerm(e.target.value)}
-              value={searchTerm}
-            />
-          </div>
-          <button
-            onClick={() => {
-              setIsEditMode(false);
-              setParentModel(true);
-            }}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded hover:bg-blue-600"
-          >
-            + Add Parent
-          </button>
-        </div>
+      <div className="">
+      <div className="flex flex-col md:flex-row gap-2 justify-between items-center mb-4 md:px-4 md:py-4 py-2 px-2 bg-white rounded-lg shadow-md">
+    <div className="flex items-center gap-2 border-1 border-gray-200 bg-gray-100 rounded px-3 py-2 md:w-1/3 w-full">
+      <Search className="text-gray-500" />
+      <input
+        type="text"
+        placeholder="Search Parent Name..."
+        className="outline-none bg-transparent w-full"
+        onChange={(e) => setSearchTerm(e.target.value)}
+        value={searchTerm}
+      />
+    </div>
+    <button
+      onClick={() => {
+        setIsEditMode(false);
+        setParentModel(true);
+      }}
+      className="
+        bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded hover:bg-blue-600 md:w-1/5 w-full
+      "
+    >
+      + Add Parent
+    </button>
+  </div>
 
-
-        <div className="overflow-auto">
+        <div className="overflow-auto rounded-lg">
           <table className="w-full table-auto text-sm border-collapse">
             <thead className="bg-blue-100 text-left text-blue-600">
-              <tr>
-              <th className="p-3">Sr.No.</th>
+              <tr className='text-center'>
+                <th className="p-3">Sr.No.</th>
                 <th className="p-3">Parent's Photo</th>
                 <th className="p-3">Father Name</th>
                 <th className="p-3">Mother Name</th>
@@ -239,44 +237,48 @@ const ManageParents = () => {
                 </tr>
               ) : (
                 filteredParents
-                  ?.filter(user => user.role === 'parent')
+                  ?.filter((user) => user.role === "parent")
                   .map((parent, idx) => (
-                    <tr key={parent.id || idx} className="border-b hover:bg-gray-50">
-                      <td className="p-2 w-20">{idx+1}</td>
-                      <td className="p-2 w-20 text-center">
+                    <tr
+                      key={parent.id || idx}
+                      className="hover:bg-gray-50 even:bg-gray-100 odd:bg-white text-center"
+                    >
+                      <td className="p-3 w-20 text-center font-semibold">
+                        {idx + 1}.
+                      </td>
+                      <td className="p-3 w-20 text-center">
                         <img
                           src={`http://localhost:2000/${parent.profilePicture}`}
                           alt="avatar"
-                          className="w-20 rounded-md"
-                          onError={(e) => {
-                            e.target.src = '/default-avatar.png'; // Fallback image
-                          }}
+                          className="w-20 rounded-full"
                         />
                       </td>
                       <td className="p-3 font-medium">{parent.username}</td>
                       <td className="p-3 font-medium">{parent.motherName}</td>
                       <td className="p-3 text-orange-500 font-semibold">
-                        {parent.Students && parent.Students.length > 0 ? parent.Students[0].username : 'N/A'}
+                        {parent.Students && parent.Students.length > 0
+                          ? parent.Students[0].username
+                          : "N/A"}
                       </td>
-                      <td className="p-3">{parent.email || 'N/A'}</td>
+                      <td className="p-3">{parent.email || "N/A"}</td>
                       <td className="p-3 text-gray-700 truncate max-w-xs">
                         {parent.phone}
                       </td>
-                      <td className='p-3'>
-                        {parent.address}
-                      </td>
-                      <td className="p-3">{parent.occupation || 'N/A'}</td>
-                      <td className="p-3">{parent.relationType || 'N/A'}</td>
-                      <td className="p-3 relative">
-                        <FiMoreVertical
-                          className="cursor-pointer"
+                      <td className="p-3">{parent.address}</td>
+                      <td className="p-3">{parent.occupation || "N/A"}</td>
+                      <td className="p-3">{parent.relationType || "N/A"}</td>
+                      <td className="py-3 px-6 relative">
+                        <GripVertical
+                          className="cursor-pointer w-5"
                           onClick={() =>
-                            setOpenDropdown(openDropdown === parent.id ? null : parent.id)
+                            setOpenDropdown(
+                              openDropdown === parent.id ? null : parent.id
+                            )
                           }
                         />
 
                         {openDropdown === parent.id && (
-                          <div className="absolute right-12 mt-2 w-42 bg-white border rounded shadow z-10">
+                          <div className="absolute right-12 mt-2 w-42 bg-gray-100 border-2 border-gray-200 rounded shadow-md z-10">
                             <button
                               className="w-full px-4 py-2 text-left hover:bg-gray-100"
                               onClick={() => handleEditParent(parent)}
@@ -302,18 +304,20 @@ const ManageParents = () => {
           </table>
         </div>
       </div>
+      
 
-      <ParentFormModal 
+      <ParentFormModal
         open={parentModel}
         closeParentModal={closeParentModal}
         parentFromData={parentFromData}
         handleParentChange={handleParentFormDataChange}
         handleParentFileChange={handleParentFileChange}
         parentAvatar={parentAvatar}
-        error={formErrors}
+        error={error}
         handleParentSubmit={handleSubmitParent}
-        students={users?.filter(user => user.role === 'student')}
+        students={users?.filter((user) => user.role === "student")}
         isEditMode={isEditMode}
+        setError={setError}
       />
     </>
   );

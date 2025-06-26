@@ -53,11 +53,10 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-700">
-     <ProjectGraph />
 
-      <section className="bg-gray-50 pt-20 pb-28 sm:pt-26 sm:pb-26">
-        <div className="max-w-[1200px] mx-auto px-6 text-center">
-          <h1 className="max-w-4xl mx-auto text-5xl sm:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight">
+      <section className="bg-gray-50 pt-10 pb-10 sm:pt-26 sm:pb-26">
+        <div className="lg:max-w-[1200px] mx-auto px-2 text-center">
+          <h1 className="max-w-4xl mx-auto text-3xl sm:text-5xl text-gray-900 ">
             Welcome to Apollo International Dashboard
           </h1>
           <p className="mt-6 text-lg sm:text-xl max-w-2xl mx-auto text-gray-600">
@@ -67,11 +66,11 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <section className="max-w-[1200px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-20 mt-20">
+      <section className=" mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-10 sm:mb-20 sm:mt-20">
         {metrics.map((metric) => (
           <div
             key={metric.id}
-            className="flex items-center space-x-4 bg-white rounded-xl shadow-lg p-6 transition hover:shadow-xl cursor-pointer"
+            className="flex items-center space-x-4 bg-gray-100 rounded-xl shadow-lg p-6 transition hover:shadow-xl cursor-pointer"
           >
             <div
               className={`rounded-full p-3 ${metric.bgColor} flex items-center justify-center`}
@@ -86,7 +85,7 @@ export default function Dashboard() {
         ))}
       </section>
 
-      <section className="max-w-[1200px] mx-auto px-6 pb-16 space-y-16">
+      <section className=" mx-auto mt-16 px-6 pb-16 space-y-16">
         <FeatureCard
           title="Student Management"
           description="Easily add, update, and track student details, attendance, and academic progress."
@@ -118,7 +117,7 @@ export default function Dashboard() {
 
 function FeatureCard({ title, description, icon }) {
   return (
-    <div className="flex items-start space-x-6 p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition cursor-default">
+    <div className="flex items-start space-x-6 p-6 bg-gray-100 rounded-xl shadow-md hover:shadow-xl transition cursor-default">
       <div className="flex-shrink-0">{icon}</div>
       <div>
         <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>

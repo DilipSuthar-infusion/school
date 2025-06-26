@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FiEdit2, FiMoreVertical, FiSearch } from "react-icons/fi";
 import useClassApi from "../../hooks/useClassApi";
 import { BookAIcon, BookCopy, DoorClosed, House, User, X } from "lucide-react";
 import Swal from "sweetalert2";

@@ -24,17 +24,10 @@ const TeacherFromModal = ({
   handleTeacherSelectedDataChange,
   handleSubmit,
   isEditMode,
+  error,
+  setError
 }) => {
   if (!open) return null;
-
-
-
-
-
-
-
-
-
 
 
   return (
@@ -65,7 +58,10 @@ const TeacherFromModal = ({
                 <button
                   className="text-white hover:text-red-200 transition-colors p-1"
                   aria-label="Close modal"
-                  onClick={closeTeacherModal}
+                  onClick={()=>{
+                          closeTeacherModal()
+                           setError("")
+                  }}
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -74,7 +70,7 @@ const TeacherFromModal = ({
 
             <form className="px-6 py-6 max-h-[70vh] overflow-y-auto" onSubmit={handleSubmit}>
               <div className="space-y-6">
-                <div className="flex flex-col items-center mb-8">
+                <div className="flex flex-col items-center md:mb-8 mb-4">
                   <div className="relative group">
                     <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-blue-100 shadow-lg bg-gradient-to-br from-blue-50 to-purple-50">
                       <img
@@ -103,10 +99,11 @@ const TeacherFromModal = ({
                   <p className="mt-3 text-sm text-gray-500 font-medium">
                     Click to upload photo
                   </p>
+                  {error?.teacherFileErr && <p className="text-xs text-red-500 mb-1">{error.teacherFileErr}</p>}
                 </div>
 
                 <div className="space-y-5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:gap-6 gap-2">
                     <div className="space-y-2">
                       <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                         <User className="w-4 h-4 text-blue-600 float-left me-1" />
@@ -117,12 +114,13 @@ const TeacherFromModal = ({
                         name="username"
                         onChange={handleTeacherDataChange}
                         value={teacherData.username}
-                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                        className="w-full px-3 md:py-2.5 py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                         placeholder="Teacher Name"
                       />
+                       {error?.teacherNameErr && <p className="text-xs text-red-500">{error.teacherNameErr}</p>}
                     </div>
 
-                    {/* Email */}
+     
                     <div className="space-y-2">
                       <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                         <Mail className="w-4 h-4 text-blue-600 float-left me-1" />
@@ -133,13 +131,14 @@ const TeacherFromModal = ({
                         name="email"
                         onChange={handleTeacherDataChange}
                         value={teacherData.email}
-                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                        className="w-full px-3 md:py-2.5 py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                         placeholder="teacher@example.com"
                       />
+                      {error?.teacherEmailErr && <p className="text-xs text-red-500 mb-1">{error.teacherEmailErr}</p>}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:gap-6 gap-2">
                     <div className="space-y-2">
                       <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                         <Phone className="w-4 h-4 text-blue-600 float-left me-1" />
@@ -150,9 +149,10 @@ const TeacherFromModal = ({
                         name="phone"
                         onChange={handleTeacherDataChange}
                         value={teacherData.phone}
-                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                        className="w-full px-3 md:py-2.5 py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                         placeholder="8596412365"
                       />
+                      {error?.teacherPhoneErr && <p className="text-xs text-red-500 mb-1">{error.teacherPhoneErr}</p>}
                     </div>
 
                     <div className="space-y-2">
@@ -165,14 +165,15 @@ const TeacherFromModal = ({
                         name="qualification"
                         onChange={handleTeacherDataChange}
                         value={teacherData.qualification}
-                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                        className="w-full px-3 md:py-2.5 py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent 
                     transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                         placeholder="Ex. B.Tech"
                       />
+                      {error?.qualificationErr && <p className="text-xs text-red-500 mb-1">{error.qualificationErr}</p>}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:gap-6 gap-2">
                     <div className="space-y-2">
                       <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                         <Calendar className="w-4 h-4 text-blue-600 float-left me-1" />
@@ -183,8 +184,9 @@ const TeacherFromModal = ({
                         name="joiningDate"
                         onChange={handleTeacherDataChange}
                         value={teacherData.joiningDate}
-                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
+                        className="w-full px-3 md:py-2.5 py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                       />
+                      {error?.joiningDateErr && <p className="text-xs text-red-500 mb-1">{error.joiningDateErr}</p>}
                     </div>
 
                     <div className="space-y-2">
@@ -197,15 +199,17 @@ const TeacherFromModal = ({
                         multiple
                         onChange={handleTeacherSelectedDataChange}
                         value={teacherData.subjectsTaught}
-                        className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                        className="w-full px-3 md:py-2.5 py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent 
   transition-all duration-200 appearance-none bg-gray-50 focus:bg-white outline-none"
                       >
                         {subjects?.map((subject) => (
-                          <option key={subject.id} value={subject.subjectCode}>
+                          <option key={subject.id} value={subject.subjectCode} className="border-1 bg-gray-200 border-gray-400 outline-0 rounded px-2 py-1 mb-1">
                             {subject.subjectCode}
                           </option>
                         ))}
+                        
                       </select>
+                      {error?.subjectsTaughtErr && <p className="text-xs text-red-500 mb-1">{error.subjectsTaughtErr}</p>}
                     </div>
                   </div>
 
@@ -219,10 +223,11 @@ const TeacherFromModal = ({
                       name="salary"
                       onChange={handleTeacherDataChange}
                       value={teacherData.salary}
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                      className="w-full px-3 md:py-2.5 py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent 
                   transition-all duration-200 outline-none bg-gray-50 focus:bg-white"
                       placeholder="Ex. 10000"
                     />
+                    {error?.salaryErr && <p className="text-xs text-red-500">{error.salaryErr}</p>}
                   </div>
 
                   <div className="space-y-2">
@@ -235,9 +240,10 @@ const TeacherFromModal = ({
                       value={teacherData.address}
                       onChange={handleTeacherDataChange}
                       rows={3}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white resize-none"
+                      className="w-full px-3 md:py-2.5 py-1 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none bg-gray-50 focus:bg-white resize-none"
                       placeholder="123 Main St, City, Country"
                     />
+                    {error?.teacherAddressErr && <p className="text-xs text-red-500 mb-1">{error.teacherAddressErr}</p>}
                   </div>
                 </div>
 

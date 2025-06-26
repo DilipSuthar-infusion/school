@@ -17,12 +17,12 @@ const WhyChoose = () => {
                   description: 'Recognized for excellence in education and student outcomes'
                 },
                 {
-                  icon: '🌟',
+                  icon: <PersonStanding />,
                   title: 'Personalized Learning',
                   description: 'Tailored approach to meet individual student needs and goals'
                 },
                 {
-                  icon: '🚀',
+                  icon: <Rocket />,
                   title: 'Future-Ready',
                   description: 'Preparing students for tomorrow\'s challenges and opportunities'
                 }

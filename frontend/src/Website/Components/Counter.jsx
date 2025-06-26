@@ -20,18 +20,18 @@ const Counter = () => {
         </div>
         </div>
    
-        <h2 className="text-3xl font-bold text-center mb-2 md:mb-4">Our Achievements</h2>
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-center mb-2 md:mb-4">Our Achievements</h2>
         <p className="md:text-lg text-sm  text-center mb-8 max-w-2xl mx-auto">
             We take pride in our accomplishments that reflect our commitment to excellence in education. 
             
         </p>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6 mt-16">
             {counters.map((counter, index) => (
                 <div key={index} className="flex flex-col items-center transition-transform transform hover:scale-105">
                     <div className={`flex items-center justify-center w-16 h-16 bg-gradient-to-r ${counter.color} rounded-full mb-4 shadow-lg`}>
                         {counter.icon}
                     </div>
-                    <div className="text-3xl font-bold mb-2">
+                    <div className="text-2xl lg:text-3xl font-bold mb-2">
               <AnimatedCounter count={counter.count} />+
             </div>
                     <div className="text-sm opacity-90">{counter.label}</div>

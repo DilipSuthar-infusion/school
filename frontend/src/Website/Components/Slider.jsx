@@ -45,7 +45,7 @@ const Slider = () => {
 
     return (
         <>
-            <section id="home" className="relative h-150 md:h-200 overflow-hidden">
+            <section id="home" className="relative h-100 md:h-200 overflow-hidden">
                 {slides.map((slide, index) => (
                     <div
                         key={index}
@@ -65,30 +65,30 @@ const Slider = () => {
                         <div className="absolute inset-0 flex items-center justify-center text-center text-white px-4">
                             <div className="max-w-6xl mx-auto">
                                 <div className="mb-8">
-                                    <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-lg rounded-full px-4 py-2 mb-6 animate-fadeInUp">
+                                    <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-lg rounded-full px-4 py-2 mb-5 animate-fadeInUp">
                                         <GraduationCap className="w-4 h-4 md:w-5 md:h-5 text-amber-400" />
                                         <span className="text-xs md:text-sm font-medium">Welcome To Apollo International</span>
                                     </div>
                                     
-                                    <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fadeInUp delay-100">
+                                    <h1 className="text-3xl sm:text-6xl lg:text-6xl font-semibold lg:mb-3 leading-tight animate-fadeInUp delay-100">
                                         <span className="bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
                                             {slide.title}
                                         </span>
                                     </h1>
                                     
-                                    <h2 className="text-xl sm:text-3xl lg:text-4xl font-light mb-6 text-blue-100 animate-fadeInUp delay-200">
+                                    <h2 className="text-xl sm:text-3xl lg:text-4xl font-light lg:mb-3 text-blue-100 animate-fadeInUp delay-200">
                                         {slide.subtitle}
                                     </h2>
                                     
-                                    <p className="text-base sm:text-xl lg:text-xl mb-8 animate-fadeInUp delay-300 max-w-4xl mx-auto leading-relaxed text-gray-200">
+                                    <p className="text-base sm:text-xl lg:text-xl mb-6 animate-fadeInUp delay-300 max-w-4xl mx-auto leading-relaxed text-gray-200">
                                         {slide.description}
                                     </p>
                                 </div>
 
                                 
 
-                                <div className="flex flex-col md:flex-row gap-4 justify-center animate-fadeInUp delay-500">
-                                    <button className="group bg-gradient-to-r from-amber-500 to-orange-600 text-white px-3 py-2 rounded-full font-semibold hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:from-amber-400 hover:to-orange-500">
+                                <div className="flex md:flex-row gap-4 justify-center animate-fadeInUp delay-500">
+                                    <button className="group bg-gradient-to-r from-amber-500 to-orange-600 text-white px-3 py-2 rounded-lg font-semibold hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:from-amber-400 hover:to-orange-500">
                                        <Link to='/about' className='text-white text-decoration-none'> 
                                        <span className="flex items-center justify-center gap-2">
                                             <BookOpen className="w-5 h-5" />
@@ -96,7 +96,7 @@ const Slider = () => {
                                         </span>
                                         </Link>
                                     </button>
-                                    <button className="group border-2 border-white text-white px-3 py-2 rounded-full font-semibold hover:text-blue-900 transition-all duration-300 backdrop-blur-sm">
+                                    <button className="group border-2 border-white text-white px-3 py-2 rounded-lg font-semibold hover:text-blue-900 transition-all duration-300 backdrop-blur-sm">
                                     <Link to='/contact' className='text-white text-decoration-none'>
                                         <span className="flex items-center justify-center gap-2">
                                             <MapPin className="w-5 h-5" />
@@ -113,13 +113,13 @@ const Slider = () => {
 
                 <button
                     onClick={prevSlide}
-                    className="absolute left-4 top-140 md:top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
+                    className="absolute left-2 top-10 md:top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
                 >
                     <MoveLeftIcon className="w-6 h-6" />
                 </button>
                 <button
                     onClick={nextSlide}
-                    className="absolute right-4 top-140 md:top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
+                    className="absolute right-2 top-10 md:top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
                 >
                     <MoveRightIcon className="w-6 h-6" />
                 </button>
@@ -139,13 +139,13 @@ const Slider = () => {
                                     <Award className="w-4 h-4" />
                                         Best Programs
                                 </span>
-                                <h2 className="text-4xl lg:text-5xl font-bold text-gray-800 mb-4">Our Key Features</h2>
+                                <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-gray-800 mb-4">Our Key Features</h2>
                                 <p className="text-sm md:text-xl text-gray-600 max-w-3xl mx-auto">
                                     Discover what makes our school the perfect choice for your educational journey
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                            <div className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-3 gap-8">
                                 {[
                                     {
                                         icon: <GraduationCap className='text-white'/>,

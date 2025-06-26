@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, {  useMemo, useState } from "react";
 import useUserApi from "../../hooks/useUserApi";
 import useClassApi from "../../hooks/useClassApi";
-import { CurrencyIcon, DotSquare, PhoneCall } from "lucide-react";
+import { CurrencyIcon, DotSquare } from "lucide-react";
 import useInvoiceApi from "../../hooks/useInvoiceApi";
 import Swal from "sweetalert2";
 import useFeeStructApi from "../../hooks/useFeeStructApi";
@@ -14,12 +14,12 @@ const ManageInvoiceGenerate = () => {
     handleInvoice,
     allInvoice,
     invoice,
-    getAllInvoice,
     updateStatus,
+    getAllInvoice,
     handleDelete,
     getStudentInvoices,
   } = useInvoiceApi();
-  
+
   const [openDropdown, setOpenDropdown] = useState("");
   const [loading, setLoading] = useState();
   const [selectedClass, setSelectedClass] = useState("");
@@ -54,35 +54,36 @@ const ManageInvoiceGenerate = () => {
   };
 
   const handleInvoiceDelete = async (id) => {
-      const {error, data, success} = await handleDelete(id);
-      if(success){
-        Swal.fire({
-          icon: "success",
-          text: data,
-          confirmButtonText: "OK",
-          confirmButtonColor: "#f97316",
-          customClass: {
-            popup: "swal-small-popup",
-            title: "swal-small-title",
-            text: "swal-small-text",
-            confirmButton: "swal-small-btn",
-          },
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: error,
-          text: "Something went wrong!",
-        });
-      }
-      
-      
+    const { error, data, success } = await handleDelete(id);
+    if (success) {
+      Swal.fire({
+        icon: "success",
+        text: data,
+        confirmButtonText: "OK",
+        confirmButtonColor: "#f97316",
+        customClass: {
+          popup: "swal-small-popup",
+          title: "swal-small-title",
+          text: "swal-small-text",
+          confirmButton: "swal-small-btn",
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: error,
+        text: "Something went wrong!",
+      });
+    }
+   
   };
+
+
   const handlegetStudentInvoiceDetail = async (id) => {
     await getStudentInvoices(id);
   };
 
-
+ 
 
   return (
     <>
@@ -96,6 +97,7 @@ const ManageInvoiceGenerate = () => {
           <select
             value={selectedClass}
             onChange={(e) => setSelectedClass(e.target.value)}
+            className="outline-0 border-1 rounded px-2 py-1 appearance-none text-center focus:ring-blue-500"
           >
             <option value="">Select Class</option>
             {Classes.map((cls, idx) => (
@@ -106,140 +108,152 @@ const ManageInvoiceGenerate = () => {
           </select>
         </div>
       </div>
-
-      <div className="w-full overflow-x-auto rounded-lg shadow">
-        <table className="min-w-max w-full table-auto text-sm border-collapse bg-white">
-          <thead className="bg-blue-50 text-left text-blue-600 font-semibold">
-            <tr>
-              <th className="sm:p-1 md:p-3">SR. No.</th>
-              <th className="p-3 rounded-tl-lg">Photo</th>
-              <th className="p-3">Name</th>
-              <th className="p-3">Student ID</th>
-              <th className="p-3">Class</th>
-              <th className="p-3">Father Name</th>
-              <th className="p-3">Mother Name</th>
-              <th className="p-3">Status</th>
-              <th className="p-3 rounded-tr-lg">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
+      {!selectedClass ? (
+        <div className="bg-white shadow-sm py-5 rounded-lg flex items-center justify-content-center">
+          <h3>Please Select Class</h3>
+        </div>
+      ) : (
+        <div className="w-full overflow-x-auto rounded-lg shadow">
+          <table className="min-w-max w-full table-auto text-sm border-collapse bg-white">
+            <thead className="bg-blue-50 text-left text-blue-600 font-semibold">
               <tr>
-                <td colSpan={14} className="text-center p-12">
-                  Loading...
-                </td>
+                <th className="sm:p-1 md:p-3">SR. No.</th>
+                <th className="p-3 rounded-tl-lg">Photo</th>
+                <th className="p-3">Name</th>
+                <th className="p-3">Student ID</th>
+                <th className="p-3">Class</th>
+                <th className="p-3">Father Name</th>
+                <th className="p-3">Mother Name</th>
+                <th className="p-3">Status</th>
+                <th className="p-3 rounded-tr-lg">Actions</th>
               </tr>
-            ) : students.length === 0 ? (
-              <tr>
-                <td colSpan={14} className="text-center p-12 text-gray-500">
-                  No students found.
-                </td>
-              </tr>
-            ) : (
-              filteredStudent.map((student, idx) => (
-                <tr
-                  key={student.id || idx}
-                  className="border-b hover:bg-gray-50 even:bg-gray-100 odd:bg-white"
-                >
-                  <td className="p-3 font-medium">{idx + 1}</td>
-                  <td className="p-2 w-20">
-                    <img
-                      src={`http://localhost:2000/${student.profilePicture}`}
-                      alt="avatar"
-                      className="w-16 h-16 object-cover rounded-md"
-                    />
-                  </td>
-                  <td className="p-3 font-medium">{student.username}</td>
-                  <td className="p-3 text-orange-500 font-semibold">
-                    {student.admissionNumber || "N/A"}
-                  </td>
-                  <td className="p-3">
-                    {Classes.find((c) => c.id === student.classId)?.classname ||
-                      "N/A"}
-                  </td>
-                  <td className="p-3">
-                    {student.Parents?.[0]?.username || "N/A"}
-                  </td>
-                  <td className="p-3">
-                    {student.Parents?.[0]?.motherName || "N/A"}
-                  </td>
-
-                  <td className="p-3">
-                    {(() => {
-                      const studentInvoices = allInvoice?.filter(
-                        (invoice) => invoice.studentId === student.id
-                      );
-                      return studentInvoices.length > 0 ? (
-                        <span className="text-green-600 font-semibold">
-                            Fee Assigned
-                        </span>
-                      ) : (
-                        <span className="text-red-600 font-semibold">
-                          Fee Not Assigned
-                        </span>
-                      );
-                    })()}
-                  </td>
-
-                  <td className="p-3 relative">
-                    <DotSquare
-                      className="cursor-pointer"
-                      aria-label="More actions"
-                      onClick={() =>
-                        setOpenDropdown(
-                          openDropdown === student.id ? null : student.id
-                        )
-                      }
-                    />
-
-                    {openDropdown === student.id && (
-                      <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-10">
-                        <button
-                          className="w-full px-4 py-2 text-left hover:bg-gray-100"
-                          onClick={() => {
-                            handleInvoiceGenerate(student.id);
-                            setOpenDropdown(null);
-                          }}
-                        >
-                          Generate Invoice
-                        </button>
-
-                        <button
-                          className="w-full px-4 py-2 text-left hover:bg-gray-100 text-blue-600"
-                          onClick={() => {
-                            handlegetStudentInvoiceDetail(student.id);
-                            setOpenInvoiceDetail(true);
-                          }}
-                        >
-                          View Invoices
-                        </button>
-                        {(() => {
-                      const studentInvoices = allInvoice?.filter(
-                        (invoice) => invoice.studentId === student.id
-                      );
-                      return studentInvoices.length > 0 ? (
-                        <button
-                          className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100"
-                          onClick={() => {
-                            handleInvoiceDelete(student.id);
-                            setOpenDropdown(null);
-                          }}
-                        >
-                          Delete Latest Invoice
-                        </button>
-                      ) : (""
-                      );
-                    })()}
-                        
-                      </div>
-                    )}
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan={14} className="text-center p-12">
+                    Loading...
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              ) : students.length === 0 ? (
+                <tr>
+                  <td colSpan={14} className="text-center p-12 text-gray-500">
+                    No students found.
+                  </td>
+                </tr>
+              ) : (
+                filteredStudent.map((student, idx) => (
+                  <tr
+                    key={student.id || idx}
+                    className="border-b hover:bg-gray-50 even:bg-gray-100 odd:bg-white"
+                  >
+                    <td className="p-3 font-medium">{idx + 1}</td>
+                    <td className="p-2 w-20">
+                      <img
+                        src={`http://localhost:2000/${student.profilePicture}`}
+                        alt="avatar"
+                        className="w-16 h-16 object-cover rounded-md"
+                      />
+                    </td>
+                    <td className="p-3 font-medium">{student.username}</td>
+                    <td className="p-3 text-orange-500 font-semibold">
+                      {student.admissionNumber || "N/A"}
+                    </td>
+                    <td className="p-3">
+                      {Classes.find((c) => c.id === student.classId)?.classname ||
+                        "N/A"}
+                    </td>
+                    <td className="p-3">
+                      {student.Parents?.[0]?.username || "N/A"}
+                    </td>
+                    <td className="p-3">
+                      {student.Parents?.[0]?.motherName || "N/A"}
+                    </td>
+
+                    <td className="p-3">
+                      {(() => {
+                        const studentInvoices = allInvoice?.filter(
+                          (invoice) => invoice.studentId === student.id
+                        );
+                        
+
+                        if (studentInvoices.length === 0) {
+                          return (
+                            <span className="text-red-600 font-semibold">
+                              Fee Not Assigned
+                            </span>
+                          );
+                        }
+
+                        const hasPaid = studentInvoices.some(
+                          (inv) => inv.status === "paid"
+                        );
+
+                        return hasPaid ? (
+                          <span className="text-green-600 font-semibold">
+                            Fee Assigned (Paid)
+                          </span>
+                        ) : (
+                          <span className="text-yellow-600 font-semibold">
+                            Fee Assigned (Pending)
+                          </span>
+                        );
+                      })()}
+                    </td>
+
+                    <td className="p-3 relative">
+                      <DotSquare
+                        className="cursor-pointer"
+                        aria-label="More actions"
+                        onClick={() =>
+                          setOpenDropdown(
+                            openDropdown === student.id ? null : student.id
+                          )
+                        }
+                      />
+
+                      {openDropdown === student.id && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-10">
+                          <button
+                            className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                            onClick={() => {
+                              handleInvoiceGenerate(student.id);
+                              setOpenDropdown(null);
+                            }}
+                          >
+                            Generate Invoice
+                          </button>
+
+                          <button
+                            className="w-full px-4 py-2 text-left hover:bg-gray-100 text-blue-600"
+                            onClick={() => {
+                              handlegetStudentInvoiceDetail(student.id);
+                              setOpenInvoiceDetail(true);
+                            }}
+                          >
+                            View Invoices
+                          </button>
+
+                          <button
+                            className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100"
+                            onClick={() => {
+                              handleInvoiceDelete(student.id);
+                              setOpenDropdown(null);
+                            }}
+                          >
+                            Delete Latest Invoice
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
+
 
       {openInvoiceDetail && (
         <>
@@ -324,10 +338,10 @@ const ManageInvoiceGenerate = () => {
                             colSpan={2}
                             className="py-2 px-4 border-b border-gray-300 text-right"
                           >
-                           Paid Amount:
+                            Paid Amount:
                           </td>
                           <td className="py-2 px-4 border-b border-gray-300">
-                            ₹ {inv.paidAmount || 0.00}
+                            ₹ {inv.paidAmount || 0.0}
                           </td>
                         </tr>
                         <tr className="hover:bg-gray-50 font-semibold bg-gray-100">
@@ -338,8 +352,16 @@ const ManageInvoiceGenerate = () => {
                             Fee Status:
                           </td>
                           <td className="py-2 px-4 border-b border-gray-300">
-                            {inv.paidAmount > 0 ? <><ChangeStatus invoice={inv.id} updateStatus={updateStatus}/> </> : <>{inv.status} </> }
-                          
+                            {inv.paidAmount > 0 ? (
+                              <>
+                                <ChangeStatus
+                                  invoice={inv.id}
+                                  updateStatus={updateStatus}
+                                />{" "}
+                              </>
+                            ) : (
+                              <>{inv.status} </>
+                            )}
                           </td>
                         </tr>
                       </React.Fragment>
@@ -357,43 +379,48 @@ const ManageInvoiceGenerate = () => {
 
 export default ManageInvoiceGenerate;
 
-
-
-
-
-export const ChangeStatus = ({invoice, updateStatus}) => {
-  const [paymentStatus, setPaymentStatus] = useState(invoice.status)
-  const handleUpdateStatus = async()=>{
-  const {data, success, error} = await updateStatus(invoice);
-  if(success){
-    Swal.fire({
-      icon: "success",
-      text: data,
-      confirmButtonText: "OK",
-      confirmButtonColor: "#f97316",
-      customClass: {
-        popup: "swal-small-popup",
-        title: "swal-small-title",
-        text: "swal-small-text",
-        confirmButton: "swal-small-btn",
-      },
-    });
-  } else {
-    Swal.fire({
-      icon: "error",
-      title: error,
-      text: "Something went wrong!",
-    });
-  }
-  }
+export const ChangeStatus = ({ invoice, updateStatus }) => {
+  const [paymentStatus, setPaymentStatus] = useState(invoice.status);
+  const handleUpdateStatus = async () => {
+    const { data, success, error } = await updateStatus(invoice);
+    if (success) {
+      Swal.fire({
+        icon: "success",
+        text: data,
+        confirmButtonText: "OK",
+        confirmButtonColor: "#f97316",
+        customClass: {
+          popup: "swal-small-popup",
+          title: "swal-small-title",
+          text: "swal-small-text",
+          confirmButton: "swal-small-btn",
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: error,
+        text: "Something went wrong!",
+      });
+    }
+  };
   return (
     <>
-    <select name="status" value={paymentStatus} onChange={(e)=> setPaymentStatus(e.target.value)}>
-      <option value="unpaid">Unpaid</option>
-      <option value="paid">Paid</option>
-    </select>
-    <button type="submit" onClick={()=>handleUpdateStatus()} className="border-1 rounded px-1 py-1 ms-1">Update</button>
+      <select
+        name="status"
+        value={paymentStatus}
+        onChange={(e) => setPaymentStatus(e.target.value)}
+      >
+        <option value="unpaid">Unpaid</option>
+        <option value="paid">Paid</option>
+      </select>
+      <button
+        type="submit"
+        onClick={() => handleUpdateStatus()}
+        className="border-1 rounded px-1 py-1 ms-1"
+      >
+        Update
+      </button>
     </>
-    
-  )
-}
+  );
+};

@@ -15,7 +15,7 @@ const Home = () => {
         <Navbar />
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto bg-gray-100 p-3 md:p-4 ">
+        <main className="flex-1 overflow-y-auto bg-gray-100 md:p-4 ">
           <Outlet />
         </main>
       </div>

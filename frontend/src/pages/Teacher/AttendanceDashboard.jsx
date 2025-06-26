@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import useClassApi from '../../hooks/useClassApi';
 import useUserApi from '../../hooks/useUserApi';
 import axios from 'axios';
-import { FiCalendar, FiUsers, FiCheckCircle, FiXCircle, FiPercent } from 'react-icons/fi';
 
 
 const AttendanceDashboard = () => {

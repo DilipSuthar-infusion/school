@@ -1,11 +1,8 @@
 import sequelize from '../config/database.js';
-
 import Attendance from './attendence.model.js';
 import Class from './class.model.js';
 import ClassRoutine from './classroutine.model.js';
 import Event from './event.model.js';
-import ExamResult from './examResult.model.js';
-import Exam from './exam.model.js';
 import Fee from './fee.model.js';
 import FeesStructure from './feeStructure.model.js';
 import Invoice from './invoice.model.js';
@@ -21,8 +18,6 @@ const models = {
   Class,
   ClassRoutine,
   Event,
-  Exam,
-  ExamResult,
   Fee,
   FeesStructure,
   Invoice,
@@ -44,17 +39,8 @@ Class.hasMany(Attendance, { foreignKey: 'classId', as: 'attendances' });
   models.Class.belongsTo(models.User, { foreignKey: 'teacherId', as: 'classTeacher' });
   models.Class.hasMany(models.User, { foreignKey: 'classId', as: 'students' });
   models.Class.hasMany(models.ClassRoutine, { foreignKey: 'classId', as: 'routines' });
-  models.Class.hasMany(models.Exam, { foreignKey: 'classId', as: 'exams' });
-
  
-  models.Exam.belongsTo(models.Class, { foreignKey: 'classId', as: 'class' });
-  models.Exam.belongsTo(models.Subject, { foreignKey: 'subjectId', as: 'subject' });
-  models.Exam.hasMany(models.ExamResult, { foreignKey: 'examId', onDelete: 'CASCADE', hooks: true });
-
-
-  models.ExamResult.belongsTo(models.Exam, { foreignKey: 'examId', as: 'exam' });
-  models.ExamResult.belongsTo(models.User, { foreignKey: 'studentId', as: 'student' });
-  models.ExamResult.belongsTo(models.Subject, { foreignKey: 'subjectId', as: 'subject' });
+ 
 
 
   models.User.hasMany(models.Fee, { foreignKey: 'studentId', onDelete: 'CASCADE', hooks: true });

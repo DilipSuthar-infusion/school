@@ -130,19 +130,16 @@ const ManageGallery = () => {
     );
 
     return filteredImages.length > 0 ? (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 md:gap-4 gap-2">
         {filteredImages.map((img, index) => (
           <div key={index} className="border rounded overflow-hidden w-full h-full">
             <img
             onClick={() => {
               setImgId(img.id)
                   setOpenImage(true);
-                  setSelectedImg(`http://localhost:2000/${img.galleryImgPath.replace(/\\/g, "/")}`);
+                  setSelectedImg(`http://localhost:2000/${img.galleryImgPath}`);
                 }}
-              src={`http://localhost:2000/${img.galleryImgPath.replace(
-                /\\/g,
-                "/"
-              )}`}
+              src={`http://localhost:2000/${img.galleryImgPath}`}
               alt={`Gallery ${img.imgcategory}`}
               className="w-full h-full object-cover"
             />
@@ -152,7 +149,7 @@ const ManageGallery = () => {
     ) : (
       <div className="text-center py-20">
         <p className="text-gray-500 text-lg">{categoryLabel} Gallery</p>
-        <p className="text-gray-400 text-sm mt-2">No images uploaded yet.</p>
+        <p className="text-gray-400 text-sm mt-2">No images upload</p>
       </div>
     );
   };
@@ -160,10 +157,9 @@ const ManageGallery = () => {
   return (
     <>
       <div className="p-6 bg-gray-50 min-h-screen">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl md:text-4xl text-gray-800">
               Gallery Management
             </h1>
             <p className="text-gray-600 text-sm">
@@ -179,7 +175,7 @@ const ManageGallery = () => {
           </button>
         </div>
 
-        {/* Search */}
+       
         <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
           <div className="relative max-w-sm">
             <Search
@@ -235,8 +231,8 @@ const ManageGallery = () => {
               const IconComponent = activeCategory?.icon || Image;
               return (
                 <>
-                  <IconComponent size={20} className="text-gray-600" />
-                  <h3 className="text-xl font-semibold text-gray-800">
+                  <IconComponent className="text-gray-600 md:h-5 md:w-5 h-4 w-4" />
+                  <h3 className="text-sm  md:text-xl font-semibold text-gray-800 mb-0">
                     {activeBtn} Gallery
                   </h3>
                 </>
@@ -250,12 +246,11 @@ const ManageGallery = () => {
         </div>
       </div>
 
-      {/* Modal */}
+
       {open && (
         <GalleryImgModal
           setOpen={setOpen}
-          handleSubmit={handleSubmit}
-          error={error}
+          handleSubmit={handleSubmit} 
           handleFileChange={handleFileChange}
           imageView={imageView}
           handleChange={handleChange}

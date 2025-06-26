@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Award, BookOpen, Calendar, Camera, FileText, Trophy, Users, X } from "lucide-react";
+import { Award, BookOpen, Calendar, Camera, FileText, Sparkles, Trophy, Users, X } from "lucide-react";
 import Breadcrumb from "../Components/Breadcrumb";
 import useGalleryApi from "../../hooks/useGalleryApi";
 
@@ -46,9 +46,9 @@ const GalleryPage = () => {
             <img
             onClick={() => {
                   setOpenImage(true);
-                  setSelectedImg(`http://localhost:2000/${img.galleryImgPath.replace(/\\/g, "/")}`);
+                  setSelectedImg(`http://localhost:2000/${img.galleryImgPath}`);
                 }}
-              src={`http://localhost:2000/${img.galleryImgPath.replace(/\\/g, "/")}`}
+              src={`http://localhost:2000/${img.galleryImgPath}`}
               alt={`Gallery ${img.imgcategory}`}
               className=":w-full md:h-64 h-30 object-cover transform group-hover:scale-105 transition duration-300"
             />
@@ -88,9 +88,8 @@ const GalleryPage = () => {
         </div>
       )}
 
-      {/* Categories */}
-      <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Categories</h2>
+      <div className="bg-white rounded-lg shadow-sm px-3 pb-3 mt-4 md:px-18 mb-6 md:pt-20 md:pb-10">
+        <h2 className="text-xl md:text-3xl font-semibold text-gray-800 mb-4 md:mb-8"><Sparkles className="float-left md:w-6 w-4 me-1 mt-1" />Categories</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
         {filteredCategories.map((category, index) => {
   
@@ -106,7 +105,7 @@ const GalleryPage = () => {
       }`}
     >
   
-      {/* Hide text on small screens, show on sm and above */}
+      
       <span className="text-xs font-medium text-center">
         {category.label}
       </span>
@@ -117,14 +116,13 @@ const GalleryPage = () => {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="bg-white px-3 mt-3 md:px-18 md:pt-10 md:pb-10">
         <div className="flex items-center gap-2 mb-4">
           {(() => {
             const activeCategory = categories.find(
               (cat) => cat.label === activeBtn
             );
-            const IconComponent = activeCategory?.icon || Image;
+            
             return (
               <>
                 

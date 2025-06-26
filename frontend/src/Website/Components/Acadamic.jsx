@@ -49,7 +49,7 @@ const Acadamic = () => {
                 Milestones We've Reached
               </div>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2 md:mb-4">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-gray-800 mb-2 md:mb-4">
               Academic Programs
             </h2>
             <p className="text-sm sm:text-lg text-gray-600 max-w-2xl mx-auto">
@@ -63,7 +63,7 @@ const Acadamic = () => {
                 key={index}
                 className="bg-gray-50 rounded-lg p-6 lg:p-8 hover:shadow-lg transition-shadow duration-300"
               >
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4 inline-block">
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold mb-4 inline-block">
                   {program.grades}
                 </div>
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">

@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 import Routing from './Routing.jsx'
 import { BrowserRouter } from 'react-router'

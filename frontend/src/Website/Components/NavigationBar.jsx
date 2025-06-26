@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { FaBars, FaTimes, FaUser } from "react-icons/fa";
 import { NavLink, Outlet, useNavigate } from "react-router";
-import { Sparkles } from "lucide-react";
+import { Grip, Sparkles, User, X } from "lucide-react";
 import Topbar from '../Components/Topbar'
 import Marquee from "react-fast-marquee";
 import Footer from '../Components/Footer'
@@ -60,7 +59,7 @@ const NavigationBar = () => {
         scrolled ? 'shadow-xl' : 'shadow-md'
       }`}>
         <div className="mx-10 sm:mx-0 md:mx-16 lg:mx-20">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+          <div className="flex items-center justify-between  h-16 lg:h-20">
             
             {/* Logo */}
             <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
@@ -96,9 +95,9 @@ const NavigationBar = () => {
               {/* Login Button */}
               <button
                 onClick={() => navigate("/login")}
-                className="px-4 lg:px-6 py-2 lg:py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-medium text-sm lg:text-base flex items-center gap-2 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg"
+                className="px-4 lg:px-4 py-2 lg:py-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-medium text-sm lg:text-base flex items-center gap-1 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg"
               >
-                <FaUser className="text-xs lg:text-sm" />
+                <User className="text-xs lg:text-sm" />
                 <span className="hidden lg:inline">Login</span>
               </button>
             </div>
@@ -110,9 +109,9 @@ const NavigationBar = () => {
                 className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all duration-200"
               >
                 {mobileMenuOpen ? (
-                  <FaTimes className="text-lg" />
+                  <X className="text-lg" />
                 ) : (
-                  <FaBars className="text-lg" />
+                  <Grip className="text-lg" />
                 )}
               </button>
             </div>
@@ -152,7 +151,7 @@ const NavigationBar = () => {
                 }}
                 className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-medium flex items-center justify-center gap-2 transition-all duration-200 shadow-md"
               >
-                <FaUser className="text-sm" />
+                <User className="text-sm" />
                 Login to Account
               </button>
             </div>

@@ -44,7 +44,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Define menu items based on user role
+ 
   const menuItems = {
    admin: [
         {
@@ -159,27 +159,7 @@ const Sidebar = () => {
             },
           ],
         },
-        {
-          key: 'exams',
-          icon: <Award className="w-5 h-5" />,
-          label: 'Exams & Grades',
-          path: '/admin/exams',
-          badge: '5',
-          children: [
-            { 
-              key: 'manage-exams',
-              name: 'Manage Exams', 
-              path: '/admin/exam/list',
-              icon: <BookOpen className="w-4 h-4" />
-            },
-            { 
-              key: 'manage-exams-result',
-              name: 'Manage Exams Results', 
-              path: '/admin/exam/results',
-              icon: <BookOpen className="w-4 h-4" />
-            }
-          ]
-        },
+       
         {
           key: 'fees',
           icon: <HandCoins className="w-5 h-5" />,
@@ -347,33 +327,33 @@ const Sidebar = () => {
     
   };
 
-  // Set active item based on current route
+ 
   useEffect(() => {
     const currentPath = location.pathname;
     const roleMenuItems = menuItems[userInfo?.role?.toLowerCase?.()] || [];
 
 
-    // Check for direct matches first
+    
     const directMatch = roleMenuItems.find(item => item.path === currentPath);
     if (directMatch) {
       setActiveItem(directMatch.key);
       return;
     }
 
-    // Check for child matches
+   
     for (const item of roleMenuItems) {
       if (item.children) {
         const childMatch = item.children.find(child => child.path === currentPath);
         if (childMatch) {
           setActiveItem(childMatch.key);
-          setOpenDropdown(item.key); // Auto-open parent dropdown
+          setOpenDropdown(item.key); 
           return;
         }
       }
     }
   }, [location.pathname, user]);
 
-  // Check if mobile on mount and resize
+ 
   useEffect(() => {
     const checkMobile = () => {
       const mobile = window.innerWidth < 1024;
@@ -420,7 +400,7 @@ const Sidebar = () => {
 
   return (
     <div className="flex">
-      {/* Mobile Toggle Button */}
+    
       {isMobile && (
         <button
           onClick={toggleSidebar}
@@ -431,7 +411,7 @@ const Sidebar = () => {
         </button>
       )}
 
-      {/* Backdrop for mobile */}
+   
       {isOpen && isMobile && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
@@ -439,7 +419,7 @@ const Sidebar = () => {
         />
       )}
 
-      {/* Sidebar */}
+  
       <div
         className={`${
           isMobile ? 'fixed' : 'relative'
@@ -451,14 +431,14 @@ const Sidebar = () => {
               : 'w-16'
         }`}
       >
-        {/* Header */}
-        <div className="flex items-center justify-around px-3 py-4 border-b border-slate-700/50">
+ 
+        <div className="flex items-center justify-around  px-5 py-4 border-b border-slate-700/50">
           <div className={`transition-all duration-300 ${
             isOpen ? 'opacity-100' : 'opacity-0'
           } ${!isMobile && !isOpen ? 'lg:opacity-0' : ''}`}>
             {isOpen && (
-              <div className="flex items-center justify-center gap-3">
-                  <img className="w-50" src={logo} alt="logo" />
+              <div className="w-28">
+                  <img className="w-full" src={logo} alt="logo" />
               </div>
             )}
           </div>
@@ -466,7 +446,7 @@ const Sidebar = () => {
           {!isMobile && (
             <button
               onClick={toggleSidebar}
-              className=" rounded-xl hover:bg-slate-700/50 transition-all duration-200 group mx-auto"
+              className="hover:bg-slate-700/50 transition-all duration-200 group "
               aria-label="Toggle sidebar"
             >
               {isOpen ? (
@@ -478,7 +458,7 @@ const Sidebar = () => {
           )}
         </div>
 
-        {/* Menu */}
+ 
         <nav className="flex-1 overflow-y-auto py-4 px-2 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
           <ul className="space-y-1 ps-0">
           {(menuItems[userInfo?.role?.toLowerCase?.()] || []).map((item) => (
@@ -493,7 +473,7 @@ const Sidebar = () => {
                   } ${isOpen ? 'px-3 py-3' : 'px-3 py-3 justify-center'}`}
                   onClick={() => handleItemClick(item.key, !!item.children, item.path)}
                 >
-                  {/* Icon */}
+
                   <div className={`flex-shrink-0 transition-colors ${
                     activeItem === item.key && !item.children
                       ? 'text-white'
@@ -502,7 +482,7 @@ const Sidebar = () => {
                     {item.icon}
                   </div>
 
-                  {/* Label and Badge */}
+
                   {isOpen && (
                     <>
                       <span className={`ml-3 flex-1 font-medium transition-colors ${
@@ -513,7 +493,7 @@ const Sidebar = () => {
                         {item.label}
                       </span>
 
-                      {/* Dropdown Arrow */}
+
                       {item.children && (
                         <ChevronRight
                           className={`w-4 h-4 ml-2 text-slate-400 transition-transform duration-200 ${
@@ -525,7 +505,7 @@ const Sidebar = () => {
                   )}
                 </div>
 
-                {/* Dropdown children */}
+
                 {isOpen && item.children && (
                   <div
                     className={`overflow-hidden transition-all duration-300 ease-in-out ${
@@ -564,7 +544,7 @@ const Sidebar = () => {
           </ul>
         </nav>
 
-        {/* Footer */}
+  
         <div className="border-t border-slate-700/50 p-4">
           {isOpen ? (
             <div className="space-y-3">

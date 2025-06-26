@@ -1,6 +1,5 @@
-import { BookCopy, Calendar, MapPin, Pen, X } from "lucide-react";
+import { BookCopy, Calendar, GripVertical, MapPin, Pen, Search, X } from "lucide-react";
 import React, { useState } from "react";
-import { FiMoreVertical, FiPhoneCall, FiSearch } from "react-icons/fi";
 import useEventApi from "../../hooks/useEventApi";
 import ClipLoader from "react-spinners/ClipLoader";
 import Swal from "sweetalert2";
@@ -150,7 +149,7 @@ const ManageEvents = () => {
         {/* Top Bar */}
         <div className="flex justify-between items-center mb-4 px-4 py-4 bg-white rounded-lg shadow-md">
           <div className="flex items-center gap-2 border rounded px-3 py-2 w-1/3">
-            <FiSearch />
+            <Search />
             <input
               type="text"
               placeholder="Search here..."
@@ -211,7 +210,7 @@ const ManageEvents = () => {
                     </td>
                     <td>{event.creator.username}</td>
                     <td className="p-3 relative">
-                      <FiMoreVertical
+                      <GripVertical
                         className="cursor-pointer"
                         onClick={() =>
                           setOpenDropdown(

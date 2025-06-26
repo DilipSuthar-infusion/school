@@ -21,7 +21,6 @@ const useClassRoutineApi = () => {
   };
 
   const handleAddRoutine = async (formData) => {
-    console.log(JSON.stringify(formData))
     try {
       setLoading(true);
       setError(null);
@@ -36,14 +35,12 @@ const useClassRoutineApi = () => {
       
       setClassRoutine(prev => [...prev, response.data]);
       await fetchClassRoutine()
-      return response.data;
+      return {success:true, data:response?.data?.message}
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to add routine');
-      throw err;
-    } finally {
-      setLoading(false);
+      return {success:false, data:err?.response?.data?.message}
     }
-  };
+  }
+  
 
 
   const handleDeleteRoutineApi = async (routineId) => {
@@ -51,7 +48,7 @@ const useClassRoutineApi = () => {
       setLoading(true);
       setError(null);
       
-      await axios.delete(
+   const response = await axios.delete(
         `${import.meta.env.VITE_API_BASE_URL}/classroutines/${routineId}`,
         {
           headers: getHeaders(),
@@ -62,7 +59,7 @@ const useClassRoutineApi = () => {
         prev.filter(routine => routine.id !== routineId)
       );
       
-      return true;
+      return {success:true, data:response?.data?.message}
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to delete routine');
       throw err;
@@ -75,8 +72,6 @@ const useClassRoutineApi = () => {
 
   const fetchClassRoutine = async () => {
     try {
-      setLoading(true);
-      setError(null);
       
       const response = await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/classroutines`,
@@ -87,16 +82,13 @@ const useClassRoutineApi = () => {
       
      
       setClassRoutine(response.data);
-      return response.data;
+      return {success:true, data:response?.data?.message}
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch class routines');
-      console.error('Failed to fetch class routines', err);
-    } finally {
-      setLoading(false);
+      return {success:false, data:err?.response?.data?.message}
     }
   };
 
- 
+
 
  
   useEffect(() => {

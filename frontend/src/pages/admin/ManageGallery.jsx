@@ -24,9 +24,10 @@ const ManageGallery = () => {
   const [imagePath, setImagePath] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [formdata, setFromdata] = useState({
-    imgcategory: "",
+    imgcategory: ""
   });
   const [imgId, setImgId] = useState(null);
+  const [error, setError] = useState([])
   
   const [openImg, setOpenImage] = useState(false);
   const [selectedImg, setSelectedImg] = useState(null);
@@ -54,8 +55,24 @@ const ManageGallery = () => {
     setFromdata((prev) => ({ ...prev, [name]: value }));
   };
 
+
+  const handleValidate = ()=>{
+    let newErrors = {}
+    if(!formdata.imgcategory){
+      newErrors.imgcategory ="Image Category Required"
+    }
+    if(imagePath.length == 0){
+      newErrors.imageview = 'please select images'
+    }
+    setError(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+   if(!handleValidate()){
+    return
+   }
     const imageData = new FormData();
     imagePath.forEach((file) => {
       imageData.append("galleryImgPath", file);
@@ -132,7 +149,7 @@ const ManageGallery = () => {
     return filteredImages.length > 0 ? (
       <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 md:gap-4 gap-2">
         {filteredImages.map((img, index) => (
-          <div key={index} className="border rounded overflow-hidden w-full h-full">
+          <div key={index} className=" rounded overflow-hidden w-full h-full">
             <img
             onClick={() => {
               setImgId(img.id)
@@ -255,6 +272,7 @@ const ManageGallery = () => {
           imageView={imageView}
           handleChange={handleChange}
           formdata={formdata}
+          error={error}
         />
       )}
 

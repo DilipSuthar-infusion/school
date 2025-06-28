@@ -82,32 +82,33 @@ export default function StudentInvoices() {
 
   return (
     <div className="p-2">
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 mb-4 rounded-2xl">
-        <h2 className="flex items-center justify-center text-blue-600 gap-2">
+      <div className=" mb-6 sm:mb-8 bg-white rounded-lg ">
+        <h2 className="px-4 py-3 md:py-3 shadow-md text-xl md:text-3xl flex items-center gap-2 mb-1">
           <Receipt /> Fees Invoices
         </h2>
       </div>
 
       {invoice?.invoices?.length > 0 ? (
         invoice?.invoices?.map((inv) => (
+          <>
           <div key={inv.id}>
             <div>
-              <div className="bg-gradient-to-r from-slate-50 to-gray-50 p-6 rounded-xl border shadow-sm">
+              <div className="bg-gradient-to-r from-slate-50 to-gray-50 px-2 py-2 sm:p-6 rounded-xl  shadow-sm">
                 <div className="flex justify-between items-start">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">
                       Invoice
                     </h2>
-                    <p className="text-gray-600 font-mono border-1 px-2 py-1 rounded">
+                    <p className="text-gray-600 font-mono border-1 px-1 py-1 rounded text-xs lg:text-lg">
                       #{inv.id}
                     </p>
-                    <p className="text-gray-600 ">
+                    <p className="text-gray-600 mt-2 text-sm lg:text-lg">
                       Student's Name:{" "}
                       <span className="font-semibold">
                         {userInfo?.username}
                       </span>
                     </p>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 text-sm mt-2 lg:text-lg">
                       DOB:{" "}
                       <span>
                         {new Date(userInfo?.dateOfBirth).toLocaleDateString()}
@@ -124,7 +125,7 @@ export default function StudentInvoices() {
                     >
                       {inv.status}
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm lg:text-lg text-gray-600">
                       Due Date:{" "}
                       <span className="font-medium text-gray-900">
                         {new Date(inv.dueDate).toLocaleDateString()}
@@ -140,7 +141,7 @@ export default function StudentInvoices() {
                           }));
                           setInvoiceId(inv.id);
                         }}
-                        className="bg-gradient-to-r from-blue-600 to-purple-600  text-white px-4 py-1 rounded"
+                        className="bg-gradient-to-r from-blue-600 to-purple-600  text-white px-2 py-1 sm:px-4 sm:py-1 rounded lg:mt-2"
                       >
                         Pay Now
                       </button>
@@ -150,24 +151,21 @@ export default function StudentInvoices() {
               </div>
             </div>
           </div>
-        ))
-      ) : (
-        <p className="text-center text-gray-500">No invoices found.</p>
-      )}
 
-      <div className="w-full bg-white rounded-2xl shadow-lg border border-gray-100 mt-4 overflow-hidden">
-        <div className="p-6">
+
+          <div className="w-full bg-white rounded-2xl shadow-lg border border-gray-100 mt-4 overflow-hidden">
+        <div className="p-2 sm:p-6">
           <div className="space-y-4">
             {invoice?.fees?.map((fee, idx) => (
               <div
                 key={idx}
-                className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex justify-between items-center p-2 sm:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <div className="flex items-center space-x-3">
                   <span className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold">
                     {idx + 1}
                   </span>
-                  <span className="font-medium text-gray-800">
+                  <span className="font-medium text-gray-800 lg:text-lg">
                     {fee.feeType}
                   </span>
                 </div>
@@ -176,23 +174,23 @@ export default function StudentInvoices() {
             ))}
             <div className="border-t-2 border-gray-200 pt-4 mt-6">
               <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
-                <span className="text-lg font-bold text-gray-800">
+                <span className="text-md sm:text-lg font-bold text-gray-800">
                   Total Amount
                 </span>
 
                 {invoice?.invoices?.map((inv, idx) => (
-                  <span className="text-xl font-bold text-green-700" key={idx}>
+                  <span className="text-lg sm:text-xl font-bold text-green-700" key={idx}>
                     {inv.totalAmount}
                   </span>
                 ))}
               </div>
-              <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
-                <span className="text-lg font-bold text-gray-800">
+              <div className="flex justify-between items-center mt-2 p-4 bg-green-50 rounded-lg">
+                <span className="text-md sm:text-lg font-bold text-gray-800">
                   Paid Amount
                 </span>
 
                 {invoice?.invoices?.map((inv, idx) => (
-                  <span className="text-xl font-bold text-green-700" key={idx}>
+                  <span className="text-lg sm:text-xl font-bold text-green-700" key={idx}>
                     {inv.paidAmount || "0.00"}
                   </span>
                 ))}
@@ -201,6 +199,16 @@ export default function StudentInvoices() {
           </div>
         </div>
       </div>
+          </>
+          
+        ))
+      ) : (
+        <div className="text-center py-12 sm:py-16 lg:py-20 px-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-600 mb-1 sm:mb-2">No Fee Invoice available</h3>
+          </div>
+      )}
+
+      
 
       {open && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
@@ -240,6 +248,7 @@ export default function StudentInvoices() {
                     onChange={handleChange}
                     value={formData.transactionId}
                   />
+                  {error.transactionId && <p className="text-red-500">{error.transactionId}</p>}
                 </div>
 
                 <div className="mt-4">
@@ -256,6 +265,7 @@ export default function StudentInvoices() {
                     <option value="Bank Account">Bank Account</option>
                     <option value="UPI">UPI</option>
                   </select>
+                  {error.paymentMethod && <p className="text-red-500">{error.paymentMethod}</p>}
                 </div>
 
                 <div className="mt-4">
@@ -270,6 +280,7 @@ export default function StudentInvoices() {
                     onChange={handleChange}
                     value={formData.amount}
                   />
+                  {error.amount && <p className="text-red-500">{error.amount}</p>}
                 </div>
 
                 <div className="flex justify-end mt-8 pt-4 border-t border-gray-200">

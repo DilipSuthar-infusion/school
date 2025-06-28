@@ -1,51 +1,65 @@
+import React, { useEffect, useMemo } from 'react';
 import {
-    PieChart,
-    Pie,
-    Cell,
-    ResponsiveContainer,
-    Legend,
-    Tooltip
-  } from 'recharts';
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend
+} from 'chart.js';
+
+import { Doughnut } from 'react-chartjs-2';
+import useUserApi from "../../hooks/useUserApi";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+const ProjectGraph = () => {
+  const {users} = useUserApi()
+  const { students, teacher, parent } = useMemo(() => {
+    const students = users?.filter(user => user.role === "student") || [];
+    const teacher = users?.filter(user => user.role === "teacher") || [];
+    const parent = users?.filter(user => user.role === "parent") || [];
   
-  const data = [
-    { name: 'Students', value: 400 },
-    { name: 'Teachers', value: 120 },
-    { name: 'Parents', value: 200 },
-  ];
+    return { students, teacher, parent };
+  }, [users]);
   
-  const COLORS = ['#4F46E5', '#10B981', '#F59E0B'];
-  
-  const projectGraph = () => {
-    return (
-      <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md mx-auto">
-        <h2 className="text-xl font-semibold text-center mb-4 text-gray-800">
-          User Role Distribution
-        </h2>
-        <div className="h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                fill="#8884d8"
-                dataKey="value"
-                paddingAngle={5}
-                label
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend verticalAlign="bottom" height={36} />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-    );
+  const data = {
+    labels: ['Student', 'Teacher', 'Parents'],
+    datasets: [
+      {
+        label: 'Attendance Distribution',
+        data: [students.length, teacher.length, parent.length], 
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.6)', 
+          'rgba(255, 99, 132, 0.6)', 
+          'rgba(255, 205, 86, 0.6)'  
+        ],
+        borderColor: [
+          'rgba(75, 192, 192, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(255, 205, 86, 1)'
+        ],
+        borderWidth: 1,
+      }
+    ]
   };
-  
-  export default projectGraph;
-  
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+      }
+    }
+  };
+
+  return (
+    <div className="max-w-xs mx-auto mt-6">
+      <h2 className="text-lg font-semibold text-center mb-4">Totals Users Summary</h2>
+      <Doughnut data={data} options={options} />
+
+    </div>
+  );
+};
+
+export default ProjectGraph;
+
+

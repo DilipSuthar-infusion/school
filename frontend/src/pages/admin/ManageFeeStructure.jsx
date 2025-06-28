@@ -3,7 +3,9 @@ import {
   BookmarkCheck,
   BookOpenCheck,
   Calendar1Icon,
+  HandCoins,
   PenLine,
+  Trash2,
   X,
 } from "lucide-react";
 import useClassApi from "../../hooks/useClassApi";
@@ -133,15 +135,12 @@ const ManageFeeStructure = () => {
 
 
 
-  if (!Classes || !feeStructures) {
-    return <div>Loading data...</div>;
-  }
-
   return (
     <>
-      <div className="flex items-center justify-between bg-white rounded-lg shadow-md mb-4 p-4">
-        <h2 className="text-3xl font-bold flex items-center">
-          <Calendar1Icon className="w-8 h-8 me-2" />
+    <div className="p-2">
+    <div className="flex flex-col md:flex-row gap-3 items-start justify-between bg-white rounded-lg shadow-md mb-4 p-4">
+        <h2 className="text-xl md:text-3xl text-gray-800 flex items-center">
+          <HandCoins  className="w-8 h-8 me-2" />
           Manage Fee Structure
         </h2>
 
@@ -157,17 +156,19 @@ const ManageFeeStructure = () => {
                 setShowModal(true);
                 setFormData((prev) => ({ ...prev, classId: selectedClass }));
               }}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg shadow-md"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded shadow-md"
             >
               + Add Fee
             </button>
           )}
         </div>
       </div>
+    </div>
+     
 
 
       {showModal && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300">
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 transition-opacity duration-300">
           <div className="bg-white rounded-3xl shadow-lg max-w-sm w-full">
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-6 rounded-t-3xl flex justify-between items-center">
               <h3 className="text-xl font-bold text-white flex items-center gap-2">
@@ -192,7 +193,7 @@ const ManageFeeStructure = () => {
             name="feeType"
             value={formData.feeType}
             onChange={handleChange}
-            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
           >
             <option> Select FeeType</option>
             <option value="Tuition Fee">Tuition Fee</option>
@@ -210,7 +211,7 @@ const ManageFeeStructure = () => {
                     type="number"
                     name="amount"
                     placeholder="Ex. 5000"
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
                     onChange={handleChange}
                     value={formData.amount}
                   />
@@ -235,17 +236,15 @@ const ManageFeeStructure = () => {
 
 
       {!selectedClass && <>
-        <div className="overflow-x-auto bg-white rounded-lg">
-            <div className=" text-center py-5 w-full   rounded-lg shadow-lg">Please select class</div>
+        <div className="overflow-x-auto bg-white rounded-lg mx-2">
+            <div className=" text-center py-12 w-full   rounded-lg shadow-lg">Please select class</div>
           </div></>
       }
 
       {selectedClass && (
         <>
-        
-
           <div className="overflow-x-auto bg-white rounded-lg p-4">
-          <h2 className="text-xl font-bold mb-4">
+          <h2 className="text-xl font-semibold mb-4">
             Fee Structures for{" "}
             {Classes.find((c) => c.id === selectedClass)?.classname || "Selected Class"}
           </h2>
@@ -267,9 +266,9 @@ const ManageFeeStructure = () => {
                     <td className="text-center px-4 py-3">
                       <button
                         onClick={() => handleDeleteExam(fee.id)}
-                        className="text-white font-semibold px-3  py-1 rounded  text-decoration-none bg-gradient-to-r from-amber-500 to-orange-600"
+                        className="text-red-500 font-semibold "
                       >
-                        Delete
+                        <Trash2 className='w-5'/>
                       </button>
                     </td>
                   </tr>

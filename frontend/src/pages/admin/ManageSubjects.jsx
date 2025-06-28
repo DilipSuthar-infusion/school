@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import useSubjectApi from "../../hooks/useSubjectApi";
 import ClipLoader from "react-spinners/ClipLoader";
-import { BookOpenCheck, BookmarkCheck, PenLine, X } from "lucide-react";
+import { BookOpenCheck, BookmarkCheck, PenLine, Search, Trash2, X } from "lucide-react";
 import Swal from "sweetalert2";
 
 const ManageSubjects = () => {
@@ -46,6 +46,11 @@ const ManageSubjects = () => {
     }
   };
 
+
+  const handleDelete = async (id)=>{
+  const {error, data, message} =  await handleSubjectDelete(id);
+  }
+
   const handleCloseModal = () => {
     setSubjectModel(false);
     setFormData({ subjectName: "", subjectCode: "", description: "" });
@@ -55,23 +60,23 @@ const ManageSubjects = () => {
   return (
     <>
       <div className="p-2">
-        <div className="flex justify-between items-center mb-4 px-4 py-4 bg-white rounded-lg shadow-md">
-          <div className="flex items-center gap-2 border rounded px-3 py-2 w-1/3">
-            <FiSearch />
+      <div className="flex flex-col md:flex-row gap-2 justify-between items-center mb-4 md:px-4 md:py-4 py-2 px-2 bg-white rounded-lg shadow-md">
+      <div className="flex items-center gap-2 border-1 border-gray-200 bg-gray-100 rounded px-3 py-2 md:w-1/3 w-full">
+            <Search />
             <input type="text" placeholder="Search here..." className="outline-none bg-transparent w-full" />
           </div>
           <button
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors duration-200"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded hover:bg-blue-600 md:w-1/5 lg:w-1/5 xl:w-1/8  w-full"
             onClick={() => setSubjectModel(true)}
           >
             + New Subject
           </button>
         </div>
 
-        <div className="overflow-auto">
+        <div className="overflow-auto rounded-lg shadow-lg">
           <table className="w-full table-auto text-sm border-collapse">
             <thead className="bg-blue-100 text-left text-blue-600">
-              <tr>
+              <tr className='text-center'>
                 <th className="p-3">Sr. No.</th>
                 <th className="p-3">Subject Name</th>
                 <th className="p-3">Subject Code</th>
@@ -92,14 +97,14 @@ const ManageSubjects = () => {
                 </tr>
               ) : (
                 subjects.map((subject, idx) => (
-                  <tr key={subject.id || idx}>
-                    <td className="p-3">{idx + 1}</td>
+                  <tr key={idx} className="text-center">
+                    <td className="p-3 font-semibold">{idx + 1}.</td>
                     <td className="p-3">{subject.subjectName}</td>
                     <td className="p-3">{subject.subjectCode}</td>
                     <td className="p-3">{subject.description}</td>
-                    <td className="p-3">
-                      <button className="cursor-pointer text-red-500 font-semibold" onClick={() => handleSubjectDelete(subject.id)}>
-                        Delete
+                    <td className="p-3 px-5">
+                      <button className="cursor-pointer text-red-500 font-semibold" onClick={() => handleDelete(subject.id)}>
+                      <Trash2 className="w-5 h-5"  />
                       </button>
                     </td>
                   </tr>
@@ -110,9 +115,9 @@ const ManageSubjects = () => {
         </div>
       </div>
 
-      {/* Modal */}
+      
       {subjectModel && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70">
           <div className="bg-white rounded-3xl shadow-lg max-w-sm w-full">
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-6 rounded-t-3xl flex justify-between items-center">
               <h3 className="text-xl font-bold text-white flex items-center gap-2">
@@ -124,7 +129,7 @@ const ManageSubjects = () => {
               </button>
             </div>
 
-            <div className="px-6 py-6">
+            <div className="md:px-6 md:py-6 px-4 py-4">
               <form className="space-y-3" onSubmit={handleSubmit}>
                 <div className="mt-4">
                   <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
@@ -134,7 +139,7 @@ const ManageSubjects = () => {
                     type="text"
                     name="subjectName"
                     placeholder="Ex. Science"
-                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-gray-50 focus:bg-white"
+                    className="w-full px-3 py-2 md:py-2.5  border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-gray-50 focus:bg-white outline-0"
                     onChange={handleChange}
                     value={formData.subjectName}
                   />
@@ -149,7 +154,7 @@ const ManageSubjects = () => {
                     type="text"
                     name="subjectCode"
                     placeholder="Ex. Sci101"
-                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-gray-50 focus:bg-white"
+                    className="w-full px-3 py-2 md:py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-gray-50 focus:bg-white outline-0"
                     onChange={handleChange}
                     value={formData.subjectCode}
                   />
@@ -164,7 +169,7 @@ const ManageSubjects = () => {
                     type="text"
                     name="description"
                     placeholder="Ex. Research Work"
-                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-gray-50 focus:bg-white"
+                    className="w-full px-3 py-2 md:py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-gray-50 focus:bg-white outline-0"
                     onChange={handleChange}
                     value={formData.description}
                   />
@@ -174,7 +179,7 @@ const ManageSubjects = () => {
                 <div className="flex flex-col sm:flex-row gap-3 justify-end mt-8 pt-4 border-t border-gray-200">
                   <button
                     type="submit"
-                    className="w-full px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium shadow-lg"
+                    className="w-full px-6 py-2 md:py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium shadow-lg"
                   >
                     Create Subject
                   </button>

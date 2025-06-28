@@ -53,9 +53,10 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-700">
-
-      <section className="bg-gray-50 pt-10 pb-10 sm:pt-26 sm:pb-26">
+     
+      <section className="bg-gray-50 pt-10 pb-10 sm:pt-26 sm:pb-20">
         <div className="lg:max-w-[1200px] mx-auto px-2 text-center">
+          
           <h1 className="max-w-4xl mx-auto text-3xl sm:text-5xl text-gray-900 ">
             Welcome to Apollo International Dashboard
           </h1>
@@ -63,6 +64,7 @@ export default function Dashboard() {
             Monitor your school’s activities, manage students and staff
             efficiently.
           </p>
+          <ProjectGraph />
         </div>
       </section>
 
@@ -85,7 +87,7 @@ export default function Dashboard() {
         ))}
       </section>
 
-      <section className=" mx-auto mt-16 px-6 pb-16 space-y-16">
+      <section className=" mx-auto mt-16 px-6 pb-16 space-y-8 md:space-y-16">
         <FeatureCard
           title="Student Management"
           description="Easily add, update, and track student details, attendance, and academic progress."

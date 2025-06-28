@@ -180,7 +180,7 @@ const ManageParents = () => {
 
   return (
     <>
-      <div className="">
+      <div className="p-2">
       <div className="flex flex-col md:flex-row gap-2 justify-between items-center mb-4 md:px-4 md:py-4 py-2 px-2 bg-white rounded-lg shadow-md">
     <div className="flex items-center gap-2 border-1 border-gray-200 bg-gray-100 rounded px-3 py-2 md:w-1/3 w-full">
       <Search className="text-gray-500" />
@@ -198,14 +198,14 @@ const ManageParents = () => {
         setParentModel(true);
       }}
       className="
-        bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded hover:bg-blue-600 md:w-1/5 w-full
+        bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded hover:bg-blue-600 md:w-1/5 lg:w-1/9 w-full
       "
     >
       + Add Parent
     </button>
   </div>
 
-        <div className="overflow-auto rounded-lg">
+        <div className="overflow-auto rounded-lg shadow-lg">
           <table className="w-full table-auto text-sm border-collapse">
             <thead className="bg-blue-100 text-left text-blue-600">
               <tr className='text-center'>
@@ -278,7 +278,7 @@ const ManageParents = () => {
                         />
 
                         {openDropdown === parent.id && (
-                          <div className="absolute right-12 mt-2 w-42 bg-gray-100 border-2 border-gray-200 rounded shadow-md z-10">
+                          <div className="absolute right-5 mt-2 w-42 bg-gray-100 border-2 border-gray-200 rounded shadow-md z-10">
                             <button
                               className="w-full px-4 py-2 text-left hover:bg-gray-100"
                               onClick={() => handleEditParent(parent)}

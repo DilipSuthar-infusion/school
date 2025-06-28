@@ -22,7 +22,6 @@ import ManageFeeStructure from "./pages/admin/ManageFeeStructure";
 import StudentDashboard from "./pages/Student/StudentDashboard";
 import ManageAttendence from "./pages/admin/ManageAttendence";
 import ManageStudentAttendence from "./pages/Teacher/ManageStudentAttendence";
-import AttendanceDashboard from "./pages/Teacher/AttendanceDashboard";
 import Layout from "./Website/Pages/Layout";
 import AttencenceView from "./pages/Student/AttencenceView";
 import ManageStudyMeterial from "./pages/Teacher/ManageStudyMeterial";
@@ -81,7 +80,7 @@ const Routing = () => {
         >
           <Route index element={<TeacherDashboard />} />
           <Route path="attendence" element={<ManageStudentAttendence />} />
-          <Route path="dashboard" element={<AttendanceDashboard />} />
+          <Route path="dashboard" element={<ManageAttendence />} />
           <Route path="study" element={<ManageStudyMeterial />} />
           <Route path="teacherprofile" element={<ProfilePage />} />
         </Route>

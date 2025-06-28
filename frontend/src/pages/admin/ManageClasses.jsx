@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useClassApi from "../../hooks/useClassApi";
-import { BookAIcon, BookCopy, DoorClosed, House, User, X } from "lucide-react";
+import { BookAIcon, BookCopy, DoorClosed, GripVertical, House, Search, User, X } from "lucide-react";
 import Swal from "sweetalert2";
 import useUserApi from "../../hooks/useUserApi";
 const ManageClasses = () => {
@@ -128,10 +128,10 @@ const ManageClasses = () => {
 
   return (
     <>
-      <div className="p-4">
-        <div className="flex justify-between items-center mb-4 px-4 py-4 bg-white rounded-lg shadow-md">
-          <div className="flex items-center gap-2 border rounded px-3 py-2 w-1/3">
-            <FiSearch />
+      <div className="p-2">
+      <div className="flex flex-col md:flex-row gap-2 justify-between items-center mb-4 md:px-4 md:py-4 py-2 px-2 bg-white rounded-lg shadow-md">
+      <div className="flex items-center gap-2 border-1 border-gray-200 bg-gray-100 rounded px-3 py-2 md:w-1/3 w-full">
+            <Search />
             <input
               type="text"
               placeholder="Search here..."
@@ -139,20 +139,20 @@ const ManageClasses = () => {
             />
           </div>
 
-          <div className="flex gap-4 items-center">
+        
             <button
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors duration-200"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded hover:bg-blue-600 md:w-1/3 lg:w-1/5 xl:w-1/9 w-full"
               onClick={() => setClassesModel(true)}
             >
               + New Class
             </button>
-          </div>
+         
         </div>
 
         <div className="overflow-auto rounded-lg shadow">
           <table className="w-full table-auto text-sm border-collapse bg-white">
             <thead className="bg-blue-50 text-left text-blue-600 font-semibold">
-              <tr>
+              <tr className="text-center">
                 <th className="p-3">Sr. No.</th>
                 <th className="p-3">Class Name</th>
                 <th className="p-3">Section</th>
@@ -163,8 +163,8 @@ const ManageClasses = () => {
             </thead>
             <tbody>
               {Classes?.map((cls, index) => (
-                <tr key={cls.id} className="border-b">
-                  <td className="p-3">{index + 1}</td>
+                <tr key={cls.id} className="hover:bg-gray-50 even:bg-gray-100 odd:bg-white text-center">
+                  <td className="p-3 font-semibold">{index + 1}.</td>
                   <td className="p-3">{cls.classname}</td>
                   <td className="p-3">{cls.section}</td>
                   <td className="p-3">{cls.roomNumber}</td>
@@ -172,18 +172,18 @@ const ManageClasses = () => {
                     {users.find((user) => user.id === cls.teacherId)
                       ?.username || "Not Assigned"}
                   </td>
-                  <td className="p-3 relative">
-                    <FiMoreVertical
-                      className="cursor-pointer"
+                  <td className="px-5 relative">
+                    <GripVertical
+                      className="cursor-pointer w-5"
                       aria-label="More actions"
                       onClick={() =>
                         setOpenDropdown(openDropdown === cls.id ? null : cls.id)
                       }
                     />
                     {openDropdown === cls.id && (
-                      <div className="absolute right-55 top-5 mt-2 w-40 bg-white border rounded shadow z-10">
+                      <div className="absolute right-10 top-10 mt-2 w-42 bg-gray-100 border-2 border-gray-200 rounded shadow-md z-10">
                         <button
-                          className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                          className="w-full px-4 py-2 text-left hover:bg-gray-200"
                           onClick={() => {
                             setAssignTeacherModel(true);
                             setAssignTeacherData({
@@ -195,7 +195,7 @@ const ManageClasses = () => {
                           Assign Class Teacher
                         </button>
                         <button
-                          className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                          className="w-full px-4 py-2 text-left hover:bg-gray-200"
                           onClick={() => {
                             setClassesModel(true);
                             setEdit(true);

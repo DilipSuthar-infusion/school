@@ -24,13 +24,12 @@ const useAttendenceApi = () => {
                 setAttendance(prev => [...prev, attendanceRecords]);
                 return { success: true, data: response?.data?.message };
               } catch (error) {
-                return { success: false, data: error?.response?.data?.message};
+                return { success: false, error: error?.response?.data?.message};
               }
         }
 
 
         const getAttendanceData = async()=>{
-          try {
             const token = localStorage.getItem('token');
             const response = await axios.get(
                 `${import.meta.env.VITE_API_BASE_URL}/attendance`,
@@ -42,32 +41,23 @@ const useAttendenceApi = () => {
               );
               
               setAttendance(response.data)
-          
-          } catch (error) {
-            Swal.fire({
-              title: 'Error',
-              text: error.response?.data?.message || error.message,
-              icon: 'error',
-              confirmButtonText: 'OK',
-            });
-          }
         }
 
 
         const deleteAttendanceByDate = async (studentId, date) => {
           try {
             const token = localStorage.getItem('token');
-            const res = await axios.delete(`/api/attendance/${studentId}?date=${date}`,
+            const response = await axios.delete(`/api/attendance/${studentId}?date=${date}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
                 },
               }
             );
-            return res.data;
-          } catch (err) {
-            console.error("Delete error:", err);
-            throw err;
+            setAttendance((attendance)=>attendance.studentId !== studentId)
+            return { success: true, data: response?.data?.message };
+          } catch (error) {
+            return { success: false, error: error?.response?.data?.message};
           }
         };
 

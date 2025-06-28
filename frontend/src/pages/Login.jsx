@@ -55,7 +55,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       {loading && <FullScreenLoader />}
-      <div className="flex flex-col md:flex-row w-[900px] bg-white shadow-lg overflow-hidden md:rounded-lg">
+      <div className="flex flex-col md:flex-row w-[900px] mx-2  rounded bg-white shadow-lg overflow-hidden md:rounded-lg">
 
         <div className="md:w-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white flex flex-col items-center justify-center p-8">
           <img src={logo} alt="Logo" className="w-24 mb-4" />
@@ -119,7 +119,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg"
+                className="w-full px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg"
               >
                 {loading ? 'Signing in...' : 'Sign In'}
               </button>

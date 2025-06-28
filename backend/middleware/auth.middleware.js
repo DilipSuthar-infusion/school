@@ -23,7 +23,7 @@ export const authenticate = (req, res, next) => {
 export const authorizeRoles = (...roles) => {
  
   return (req, res, next) => {
-    
+   
     if (!roles.includes(req.user.role)) {
       return next(new CustomError('Access forbidden: insufficient role', 403));
     }

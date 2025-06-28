@@ -7,7 +7,8 @@ const GalleryImgModal = ({
   imageView,
   handleFileChange,
   handleChange,
-  formdata
+  formdata,
+  error
 }) => {
   const closeStudentModal = () => {
     setOpen(false);
@@ -22,7 +23,7 @@ const GalleryImgModal = ({
       >
         <div className="flex min-h-full items-center justify-center p-4 sm:p-6 lg:p-8">
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+            className="fixed inset-0 bg-black/70 transition-opacity"
             aria-hidden="true"
             onClick={closeStudentModal}
           ></div>
@@ -98,7 +99,7 @@ const GalleryImgModal = ({
                         <option value="Infrastructure">Infrastructure</option>
                         <option value="Achievements">Achievements</option>
                       </select>
-                      
+                      {error.imgcategory && <p className="text-red-500 text-sm mt-1">{error.imgcategory}</p>}
                 
                     </div>
                     <div className="space-y-2">
@@ -114,6 +115,7 @@ const GalleryImgModal = ({
                         onChange={handleFileChange}
                         className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none bg-gray-50 focus:bg-white outline-none"
                       />
+                      {error.imageview && <p className="text-red-500">{error.imageview}</p>}
                     </div>
                   </div>
                 </div>

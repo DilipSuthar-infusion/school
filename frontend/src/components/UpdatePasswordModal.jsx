@@ -40,7 +40,6 @@ const UpdatePasswordModal = ({ setOpen }) => {
     if (validate()) {
         const {confirmNewPassword, ...formData} = passData;
         const { error, data, success } = await handleUpdatePassword(formData);
-
         if (success) {
           await Swal.fire({
             icon: "success",
@@ -66,8 +65,8 @@ const UpdatePasswordModal = ({ setOpen }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-3xl w-full max-w-md relative shadow-lg">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+      <div className="bg-white rounded-3xl w-100 max-w-md relative shadow-lg mx-10 md:mx-0">
         <div className="flex items-center justify-between bg-gradient-to-r from-blue-600 to-purple-600 rounded-t-3xl px-3 py-4">
         
         <h3 className="text-2xl font-semibold text-center text-white"><KeyRound className="float-left me-2 mt-2"/>Update Password</h3>
@@ -86,14 +85,14 @@ const UpdatePasswordModal = ({ setOpen }) => {
               type="email"
               value={passData.email}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+              className="w-full px-3 md:py-2.5 py-1 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
             />
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
           </div>
 
-          {/* Old Password */}
+        
           <div>
             <label className="block text-sm font-medium text-gray-700">
               <Lock className="w-4 h-4 text-blue-600 float-left me-1"/> Old Password
@@ -103,7 +102,7 @@ const UpdatePasswordModal = ({ setOpen }) => {
               type="password"
               value={passData.oldPassword}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+              className="w-full px-3 md:py-2.5 py-1 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
             />
             {errors.oldPassword && (
               <p className="text-red-500 text-sm mt-1">{errors.oldPassword}</p>
@@ -120,7 +119,7 @@ const UpdatePasswordModal = ({ setOpen }) => {
               type="password"
               value={passData.newPassword}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+              className="w-full px-3 md:py-2.5 py-1 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
             />
             {errors.newPassword && (
               <p className="text-red-500 text-sm mt-1">{errors.newPassword}</p>
@@ -137,7 +136,7 @@ const UpdatePasswordModal = ({ setOpen }) => {
               type="password"
               value={passData.confirmNewPassword}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+              className="w-full px-3 md:py-2.5 py-1 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
             />
             {errors.confirmNewPassword && (
               <p className="text-red-500 text-sm mt-1">
@@ -147,17 +146,17 @@ const UpdatePasswordModal = ({ setOpen }) => {
           </div>
 
 
-          <div className="flex justify-end gap-3 mt-4">
+          <div className="flex flex-col sm:flex-row gap-3 justify-end mt-8 pt-4 border-t border-gray-200">
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="px-4 py-2 bg-gray-200 text-gray-800 hover:bg-gray-300"
+              className="w-full sm:w-auto px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:bg-indigo-700"
+              className="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium shadow-lg"
             >
               Update Password
             </button>

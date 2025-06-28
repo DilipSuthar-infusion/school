@@ -219,27 +219,7 @@ const Sidebar = () => {
           path: '/teacher/classes',
           badge: null
         },
-        {
-          key: 'my-students',
-          icon: <GraduationCap className="w-5 h-5" />,
-          label: 'My Students',
-          path: '/teacher/students',
-          badge: null
-        },
-        {
-          key: 'timetable',
-          icon: <Calendar className="w-5 h-5" />,
-          label: 'My Timetable',
-          path: '/teacher/timetable',
-          badge: null
-        },
-        {
-          key: 'assignments',
-          icon: <FileText className="w-5 h-5" />,
-          label: 'Assignments',
-          path: '/teacher/assignments',
-          badge: null
-        }
+        
       ],
       student: [
         {
@@ -414,7 +394,7 @@ const Sidebar = () => {
    
       {isOpen && isMobile && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/70 z-30 lg:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}

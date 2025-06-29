@@ -85,6 +85,21 @@ export const assignClassTeacher = async (req, res) => {
 };
 
 
+export const getTeacherClass = async(req,res)=>{
+  const teacherId = req.user.id;
+  const classTeacher = await Class.findOne({where:{teacherId:teacherId},
+                include:{
+                  model:User,
+                  as: "students",
+                  attributes:['id','username'],
+                 
+                }
+  })
+  res.status(200).json(classTeacher)
+  
+}
+
+
 export const deleteAssignedClassTeacher = async (req, res) => {
     const { classId } = req.body;
     const classObj = await Class.findByPk(classId);

@@ -4,8 +4,6 @@ import {
   markBulkAttendance,
   getClassAttendanceByDate,
   getAllAttendance,
-  updateAttendance,
-  getYearlyStudentAttendance,
   deleteYearlyAttendance,
   getMonthlyAttendance,
 } from '../controllers/attendanceController.js';
@@ -18,9 +16,7 @@ router.post('/', authenticate, authorizeRoles("teacher"), createAttendance);
 router.post('/bulk', authenticate, authorizeRoles("teacher"), markBulkAttendance);
 router.get('/:classId', authenticate, authorizeRoles("teacher"), getMonthlyAttendance);
 router.get('/class/:classId', getClassAttendanceByDate);
-router.get('/',authenticate, authorizeRoles("teacher","admin"), getAllAttendance);
-router.get('/:studentId/year/:year',authenticate, authorizeRoles("student", "teacher","admin"), getYearlyStudentAttendance);
-router.put('/:id', updateAttendance);
+router.get('/',authenticate, authorizeRoles("teacher","admin","student"), getAllAttendance);
 router.delete(
   '/class/:classId/year/:year',
   authenticate,

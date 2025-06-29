@@ -33,7 +33,6 @@ const ManageStudyMeterial = () => {
   const [meterial, setMeterial] = useState(null);
   const [file, setFile] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [viewMode, setViewMode] = useState("grid"); // grid or table
   const [formData, setFormData] = useState({
     title: "",
     description: "",

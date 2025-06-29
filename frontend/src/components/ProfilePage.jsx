@@ -5,8 +5,8 @@ import { useAuth } from "../Context/Authcontext";
 const ProfilePage = () => {
   const { userInfo } = useAuth();
   return (
-    <div>
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl text-white p-6 mb-6 shadow-md">
+    <div className="p-2">
+      <div className="rounded-xl bg-white p-6 mb-4 shadow-md">
         <div className="flex flex-col md:flex-row items-center justify-between px-5">
           <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden">
             <img
@@ -19,20 +19,20 @@ const ProfilePage = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          <div>
-            <h1 className="text-2xl font-bold">{userInfo?.username}</h1>
+          <div className="text-center md:text-right">
+            <h1 className="text-2xl font-bold mt-3 mb-3">{userInfo?.username}</h1>
             {userInfo?.role == "student" && (
               <>
-                <p className="text-indigo-100">{userInfo?.admissionNumber}</p>
-                <p className="text-indigo-100">
+                <p className="text-orange-500">{userInfo?.admissionNumber}</p>
+                <p className="text-center">
                   {" "}
                   <span className="me-2">DOB:</span>{" "}
                   {new Date(userInfo?.dateOfBirth).toDateString()}
                 </p>
               </>
             )}
-            <div className="flex flex-wrap mt-2">
-              <div className="mr-4 mb-2 text-indigo-100">
+            <div className="flex flex-wrap justify-center md:justify-end">
+              <div className=" mb-2">
                 <span>Role:</span>
                 <span className="ml-2 font-medium">{userInfo?.role}</span>
               </div>
@@ -44,38 +44,38 @@ const ProfilePage = () => {
       {userInfo?.role == "student" && (
         <div className="grid grid-cols-1 lg:grid-cols-1">
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white border rounded-xl p-6 shadow-lg">
+            <div className="bg-white  rounded-xl p-6 shadow-lg">
               <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center">
                 <User className="text-indigo-500 mr-2" /> Personal Information
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+                <div className="border-b-1 border-gray-200 pb-1">
                   <span className="text-gray-500 text-sm">Father's Name:</span>{" "}
                   <p className="font-medium text-xl">
                     {userInfo?.Parents[0]?.username}
                   </p>
                 </div>
-                <div>
+                <div className="border-b-1 border-gray-200 pb-1">
                   <span className="text-gray-500 text-sm">Mother's Name:</span>{" "}
                   <p className="font-medium text-xl">
                     {userInfo?.Parents[0]?.motherName}
                   </p>
                 </div>
-                <div>
+                <div className="border-b-1 border-gray-200 pb-1">
                   <span className="text-gray-500 text-sm">Phone:</span>{" "}
                   <p className="font-medium text-xl">{userInfo?.phone}</p>
                 </div>
-                <div>
+                <div className="border-b-1 border-gray-200 pb-1">
                   <span className="text-gray-500 text-sm">Email:</span>{" "}
                   <p className="font-medium text-xl">
                     {userInfo?.Parents[0]?.email}
                   </p>
                 </div>
-                <div>
+                <div className="border-b-1 border-gray-200 pb-1">
                   <span className="text-gray-500 text-sm">Address:</span>{" "}
                   <p className="font-medium text-xl">{userInfo?.address}</p>
                 </div>
-                <div>
+                <div className="border-b-1 border-gray-200 pb-1">
                   <span className="text-gray-500 text-sm">Blood Group:</span>{" "}
                   <p className="font-medium text-xl">{userInfo?.bloodGroup}</p>
                 </div>

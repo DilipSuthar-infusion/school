@@ -128,46 +128,9 @@ export const getAllAttendance = async (req, res) => {
 
 
 
-export const getYearlyStudentAttendance = async (req, res) => {
-  const { studentId, year } = req.params;
-  const loggedInUser = req.user;
-  if (loggedInUser.role === "student" && loggedInUser.id !== studentId) {
-    return res.status(403).json({ message: "Forbidden: Access denied" });
-  }
-
-  try {
-    const attendance = await Attendance.findAll({
-      where: {
-        studentId,
-        date: {
-          [Op.between]: [
-            new Date(year, 0, 1),
-            new Date(year, 11, 31),
-          ]
-        }
-      },
-      order: [['date', 'ASC']],
-    });
-
-    res.status(200).json(attendance);
-  } catch (err) {
-    console.error("Error fetching yearly attendance:", err);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
 
 
 
-export const updateAttendance = async (req, res) => {
-    const { id } = req.params;
-    const updatedData = req.body;
-    const attendance = await Attendance.findByPk(id);
-    if (!attendance) throw new CustomError('Attendance record not found', 404);
-    await attendance.update(updatedData);
-    res.status(200).json({ message: 'Attendance updated successfully', data: attendance });
-};
-
-// DELETE attendance for a class in a specific year
 export const deleteYearlyAttendance = async (req, res) => {
   const { classId, year } = req.params;
 

@@ -1,257 +1,152 @@
-import { useAuth } from '../../Context/Authcontext';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { format } from 'date-fns';
-
-const groupByMonth = (records) => {
-  const grouped = Array.from({ length: 12 }, () => []);
-  records.forEach((record) => {
-    const month = new Date(record.date).getMonth();
-    grouped[month].push(record);
-  });
-  return grouped;
-};
-
-const monthNames = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
+import React, { useState, useEffect, useMemo } from "react";
+import { SquarePen } from "lucide-react";
+import { useAuth } from "../../Context/Authcontext";
+import useAttendenceApi from "../../hooks/useAttendenceApi";
 
 const AttendanceView = () => {
-  const { user } = useAuth();
-  const [attendanceByMonth, setAttendanceByMonth] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { userInfo } = useAuth();
+  const { attendance } = useAttendenceApi();
+
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [expandedMonth, setExpandedMonth] = useState(null);
+  const [filtered, setFiltered] = useState([]);
 
+  const monthName = new Date(selectedYear, selectedMonth - 1).toLocaleString(
+    "default",
+    { month: "long" }
+  );
 
-  const yearOptions = Array.from({ length: 3 }, (_, i) => new Date().getFullYear() - i);
+  const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+  const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+  const filteredAtt = attendance?.filter(
+    (att) => att?.studentId === userInfo?.id
+  ) || [];
+
 
   useEffect(() => {
-    if (user?.id) {
-      setLoading(true);
-      setError(null);
-      const token = localStorage.getItem('token');
-      
-      axios
-        .get(`${import.meta.env.VITE_API_BASE_URL}/attendance/${user.id}/year/${selectedYear}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          const grouped = groupByMonth(res.data);
-          setAttendanceByMonth(grouped);
-        })
-        .catch((err) => {
-          console.error(err);
-          setError('Failed to load attendance data');
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  }, [user, selectedYear]);
+    if (!userInfo?.id || !attendance) return;
 
-  const calculateAttendanceRate = (records) => {
-    if (records.length === 0) return 0;
-    const presentCount = records.filter(r => r.status === "present").length;
-    return Math.round((presentCount / records.length) * 100);
-  };
-
-
-
-
-  const totalRecords = attendanceByMonth.flat().length;
-  const totalPresent = attendanceByMonth.flat().filter(r => r.status === "present").length;
-  const overallRate = totalRecords > 0 ? Math.round((totalPresent / totalRecords) * 100) : 0;
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="max-w-full mx-auto">
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-            <span className="ml-3 text-indigo-600 font-medium">Loading attendance data...</span>
-          </div>
-        </div>
-      </div>
+    const result = filteredAtt.filter(
+      (att) =>
+        new Date(att.date).getMonth() + 1 === selectedMonth &&
+        new Date(att.date).getFullYear() === selectedYear
     );
-  }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="max-w-full mx-auto">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-            <div className="text-red-600 text-lg font-medium mb-2">Error Loading Data</div>
-            <p className="text-red-500">{error}</p>
-          </div>
-        </div>
-      </div>
+    setFiltered(result);
+  }, [attendance, selectedMonth, selectedYear]);
+
+  const { percentage } = useMemo(() => {
+    const result = filtered.reduce(
+      (acc, curr) => {
+        if (curr.status === "present") acc.present++;
+        if (["present", "absent"].includes(curr.status)) acc.total++;
+        return acc;
+      },
+      { total: 0, present: 0 }
     );
-  }
+
+    const percentage =
+      result.total > 0
+        ? Math.round((result.present / result.total) * 100)
+        : 0;
+
+    return { ...result, percentage };
+  }, [filtered]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="max-w-full mx-auto">
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Attendance Overview</h1>
-              <p className="text-gray-600">Track your attendance across the year</p>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              {/* Year Selector */}
-              <select
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(Number(e.target.value))}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none outline-0"
-              >
-                {yearOptions.map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+    <div className="p-2">
+      <h2 className="text-xl md:text-3xl flex items-center gap-2 mb-5 px-2 pt-3">
+        <SquarePen className="w-6" /> Attendance Dashboard
+      </h2>
 
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-6 bg-white md:p-5 p-2 rounded-lg shadow-lg">
+        <select
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(Number(e.target.value))}
+          className="border border-gray-200 bg-gray-100 px-4 py-2 outline-0 focus:ring-1 rounded focus:ring-indigo-500"
+        >
+          {[...Array(12)].map((_, i) => (
+            <option key={i + 1} value={i + 1}>
+              {new Date(0, i).toLocaleString("default", { month: "long" })}
+            </option>
+          ))}
+        </select>
 
-          {totalRecords > 0 && (
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-4 text-white">
-                <div className="text-sm opacity-90">Total Days</div>
-                <div className="text-2xl font-bold">{totalRecords}</div>
-              </div>
-              <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg p-4 text-white">
-                <div className="text-sm opacity-90">Present Days</div>
-                <div className="text-2xl font-bold">{totalPresent}</div>
-              </div>
-              <div className="bg-gradient-to-r from-blue-500 to-cyan-600 rounded-lg p-4 text-white">
-                <div className="text-sm opacity-90">Overall Rate</div>
-                <div className="text-2xl font-bold">{overallRate}%</div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {attendanceByMonth.map((records, index) => {
-            const presentCount = records.filter((r) => r.status === "present").length;
-            const absentCount = records.filter((r) => r.status === "absent").length;
-            const attendanceRate = calculateAttendanceRate(records);
-            const isExpanded = expandedMonth === index;
-
+        <select
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+          className="border border-gray-200 bg-gray-100 px-4 py-2 rounded focus:ring-1 focus:ring-blue-500 outline-0"
+        >
+          {[...Array(3)].map((_, i) => {
+            const yr = new Date().getFullYear() - 2 + i;
             return (
-              <div
-                key={index}
-                className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
-              >
-                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-4 text-white">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">{monthNames[index]}</h3>
-                    <div className="text-right">
-                      <div className="text-sm opacity-90">Rate</div>
-                      <div className={`text-xl font-bold ${records.length > 0 ? 'text-white' : 'text-gray-300'}`}>
-                        {records.length > 0 ? `${attendanceRate}%` : 'N/A'}
-                      </div>
-                    </div>
-                  </div>
-                  
-
-                  {records.length > 0 && (
-                    <div className="mt-3">
-                      <div className="bg-white bg-opacity-30 rounded-full h-2">
-                        <div
-                          className="bg-white rounded-full h-2 transition-all duration-500"
-                          style={{ width: `${attendanceRate}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-4">
-                  {records.length === 0 ? (
-                    <div className="text-center py-8">
-                      <div className="text-gray-400 text-4xl mb-2">📅</div>
-                      <p className="text-gray-400 italic">No records for this month</p>
-                    </div>
-                  ) : (
-                    <>
- 
-                      <div className="flex justify-between items-center mb-4">
-                        <div className="flex items-center gap-4 text-sm">
-                          <div className="flex items-center gap-1">
-                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                            <span className="text-green-700 font-medium">{presentCount}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                            <span className="text-red-700 font-medium">{absentCount}</span>
-                          </div>
-                        </div>
-                        <button
-                          onClick={() => setExpandedMonth(isExpanded ? null : index)}
-                          className="text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors"
-                        >
-                          {isExpanded ? 'Hide Details' : 'View Details'}
-                        </button>
-                      </div>
-
-                      {isExpanded && (
-                        <div className="border-t pt-4">
-                          <div className="space-y-2 max-h-48 overflow-y-auto">
-                            {records
-                              .sort((a, b) => new Date(b.date) - new Date(a.date))
-                              .map((record) => (
-                              <div
-                                key={record.id}
-                                className={`flex items-center justify-between p-3 rounded-lg border-l-4 ${
-                                  record.status === "present"
-                                    ? "bg-green-50 border-green-500"
-                                    : "bg-red-50 border-red-500"
-                                }`}
-                              >
-                                <div>
-                                  <div className="font-medium text-gray-900">
-                                    {format(new Date(record.date), "dd MMM yyyy")}
-                                  </div>
-                                  <div className="text-sm text-gray-500">
-                                    {format(new Date(record.date), "EEEE")}
-                                  </div>
-                                </div>
-                                <div
-                                  className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                    record.status === "present"
-                                      ? "bg-green-100 text-green-800"
-                                      : "bg-red-100 text-red-800"
-                                  }`}
-                                >
-                                  {record.status.toUpperCase()}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
+              <option key={yr} value={yr}>
+                {yr}
+              </option>
             );
           })}
+        </select>
+      </div>
+
+      <div className="bg-white p-4 rounded-lg shadow-lg">
+        <h3 className="md:text-xl text-center md:text-left font-semibold mb-4">
+          Showing Attendance for{" "}
+          <span className="text-blue-600">
+            {monthName} {selectedYear}
+          </span>
+        </h3>
+
+        <div className="overflow-x-auto rounded-lg">
+          <table className="w-full border-collapse text-sm text-center">
+            <thead>
+              <tr className="bg-blue-100 text-blue-700">
+                <th className="px-4 py-2 text-left sticky left-0 bg-blue-100 z-10">
+                  Student Name
+                </th>
+                {days.map((day) => (
+                  <th key={day} className="px-2 py-2 border-r border-blue-100">
+                    {day}
+                  </th>
+                ))}
+                <th className="px-2 py-2 border-r border-blue-100">%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b">
+                <td className="px-4 py-2 font-semibold sticky left-0 bg-white">
+                  {userInfo?.username}
+                </td>
+                {days.map((day) => {
+                  const dateStr = `${selectedYear}-${String(selectedMonth).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+                  const record = filtered.find((r) => r.date.startsWith(dateStr));
+                  const status = record?.status || "-";
+
+                  const statusStyle =
+                    status === "present"
+                      ? "bg-green-100 text-green-700"
+                      : status === "absent"
+                      ? "bg-red-100 text-red-700"
+                      : "text-gray-400";
+
+                  return (
+                    <td
+                      key={day}
+                      className={`px-2 py-5 text-sm font-medium capitalize ${statusStyle}`}
+                    >
+                      {status === "present"
+                        ? "P"
+                        : status === "absent"
+                        ? "A"
+                        : "-"}
+                    </td>
+                  );
+                })}
+                <td className="px-2 py-1 font-bold">{percentage}%</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-
-
-        {totalRecords === 0 && (
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-            <div className="text-gray-400 text-6xl mb-4">📊</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Attendance Data</h3>
-            <p className="text-gray-600">No attendance records found for {selectedYear}</p>
-          </div>
-        )}
       </div>
     </div>
   );

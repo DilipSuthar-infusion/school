@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 
 const useClassApi = () => {
     const [Classes, setClasses] = useState([]);
-    const [loading, setLoading] = useState(false);
-  
+    const [teacherClass, setTeacherClass] =useState([])
     const handleAddClass = async (formData) => {
         try {
           const token = localStorage.getItem('token');
@@ -19,7 +18,7 @@ const useClassApi = () => {
             }
           );
           handlefetchClasses();
-          setLoading(false);
+          
   
           return { success: true, data: response?.data?.message };
         } catch (error) {
@@ -46,8 +45,6 @@ const useClassApi = () => {
 
 
       const handlefetchClasses = async () => {
-        try {
-          setLoading(true);
           const token = localStorage.getItem('token');
           const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/classes`, {
             headers: {
@@ -56,12 +53,6 @@ const useClassApi = () => {
           });
          
           setClasses(response.data);
-
-        return {success: true, data: response.data}
-        } catch (error) {
-          return { success: false, error: error.response?.data?.message };
-        
-        }
       };
 
 
@@ -79,10 +70,10 @@ const useClassApi = () => {
             }
           );
           await handlefetchClasses();
-          setLoading(false);
-          return {success: true, data: response.data}
+         
+          return { success: true, data: response?.data?.message }
         } catch (error) {
-          return { success: false, error: error.response?.data?.message };
+          return { success: false, error: error?.response?.data?.message };
         }
         
       };
@@ -108,12 +99,29 @@ const useClassApi = () => {
         }
         
       }
+      const fetchTeacherClass = async()=>{
+        try{
+          const token = localStorage.getItem('token');
+          const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/classes/teacherclass`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setTeacherClass(response.data)
+          
+        }catch(error){
+          console.log(error)
+        }
+       
+          
+      }
 
       useEffect(() => {
         handlefetchClasses();
+        
       }, []);
 
-  return  { handleAddClass, handleDelete ,handlefetchClasses,handleEditClass , handleAssignClassTeacher, Classes};
+  return  { handleAddClass, handleDelete ,handlefetchClasses,handleEditClass , handleAssignClassTeacher, Classes, fetchTeacherClass, teacherClass};
 }
 
 export default useClassApi

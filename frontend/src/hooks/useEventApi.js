@@ -54,12 +54,7 @@ const useEventApi = () => {
           setLoading(false);
           setEvents(response.data);
         } catch (error) {
-          Swal.fire({
-            title: 'Error',
-            text: error.response?.data?.message || error.message,
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
+          console.log(error)
         }
       };
 

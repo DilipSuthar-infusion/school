@@ -1,7 +1,7 @@
 import React, {  useMemo, useState } from "react";
 import useUserApi from "../../hooks/useUserApi";
 import useClassApi from "../../hooks/useClassApi";
-import { CurrencyIcon, DotSquare } from "lucide-react";
+import { GripVertical, ReceiptText } from "lucide-react";
 import useInvoiceApi from "../../hooks/useInvoiceApi";
 import Swal from "sweetalert2";
 import useFeeStructApi from "../../hooks/useFeeStructApi";
@@ -55,6 +55,7 @@ const ManageInvoiceGenerate = () => {
 
   const handleInvoiceDelete = async (id) => {
     const { error, data, success } = await handleDelete(id);
+     allInvoice.filter((inv)=>inv.id !== id)
     if (success) {
       Swal.fire({
         icon: "success",
@@ -87,9 +88,9 @@ const ManageInvoiceGenerate = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between bg-white rounded-lg shadow-md mb-4 p-4">
-        <h2 className="text-3xl font-bold flex items-center">
-          <CurrencyIcon className="w-8 h-8 me-2" />
+      <div className="flex flex-col md:flex-row gap-3 items-start justify-between bg-white rounded-lg shadow-md mb-4 p-4">
+        <h2 className="text-xl md:text-3xl text-gray-800 flex items-center ">
+          <ReceiptText className="w-8 h-8 me-2" />
           Manage Fee Structure
         </h2>
 
@@ -97,7 +98,7 @@ const ManageInvoiceGenerate = () => {
           <select
             value={selectedClass}
             onChange={(e) => setSelectedClass(e.target.value)}
-            className="outline-0 border-1 rounded px-2 py-1 appearance-none text-center focus:ring-blue-500"
+            className="outline-0 bg-gray-200 rounded px-2 py-2 appearance-none text-center focus:ring-blue-500"
           >
             <option value="">Select Class</option>
             {Classes.map((cls, idx) => (
@@ -109,14 +110,14 @@ const ManageInvoiceGenerate = () => {
         </div>
       </div>
       {!selectedClass ? (
-        <div className="bg-white shadow-sm py-5 rounded-lg flex items-center justify-content-center">
+        <div className="bg-white shadow-sm py-12 rounded-lg text-center">
           <h3>Please Select Class</h3>
         </div>
       ) : (
         <div className="w-full overflow-x-auto rounded-lg shadow">
           <table className="min-w-max w-full table-auto text-sm border-collapse bg-white">
             <thead className="bg-blue-50 text-left text-blue-600 font-semibold">
-              <tr>
+              <tr className="text-center">
                 <th className="sm:p-1 md:p-3">SR. No.</th>
                 <th className="p-3 rounded-tl-lg">Photo</th>
                 <th className="p-3">Name</th>
@@ -135,7 +136,7 @@ const ManageInvoiceGenerate = () => {
                     Loading...
                   </td>
                 </tr>
-              ) : students.length === 0 ? (
+              ) : filteredStudent.length === 0 ? (
                 <tr>
                   <td colSpan={14} className="text-center p-12 text-gray-500">
                     No students found.
@@ -145,7 +146,7 @@ const ManageInvoiceGenerate = () => {
                 filteredStudent.map((student, idx) => (
                   <tr
                     key={student.id || idx}
-                    className="border-b hover:bg-gray-50 even:bg-gray-100 odd:bg-white"
+                    className="text-center hover:bg-gray-50 even:bg-gray-100 odd:bg-white"
                   >
                     <td className="p-3 font-medium">{idx + 1}</td>
                     <td className="p-2 w-20">
@@ -201,9 +202,9 @@ const ManageInvoiceGenerate = () => {
                       })()}
                     </td>
 
-                    <td className="p-3 relative">
-                      <DotSquare
-                        className="cursor-pointer"
+                    <td className="ps-10 relative">
+                      <GripVertical
+                        className="cursor-pointer w-5"
                         aria-label="More actions"
                         onClick={() =>
                           setOpenDropdown(
@@ -213,7 +214,7 @@ const ManageInvoiceGenerate = () => {
                       />
 
                       {openDropdown === student.id && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-10">
+                        <div className="absolute right-17 mt-2 w-42 bg-gray-100 border-2 border-gray-200 rounded shadow-md z-10">
                           <button
                             className="w-full px-4 py-2 text-left hover:bg-gray-100"
                             onClick={() => {
@@ -225,13 +226,13 @@ const ManageInvoiceGenerate = () => {
                           </button>
 
                           <button
-                            className="w-full px-4 py-2 text-left hover:bg-gray-100 text-blue-600"
+                            className="w-full px-4 py-2 text-left hover:bg-gray-100 "
                             onClick={() => {
                               handlegetStudentInvoiceDetail(student.id);
                               setOpenInvoiceDetail(true);
                             }}
                           >
-                            View Invoices
+                            View Invoice
                           </button>
 
                           <button
@@ -241,7 +242,7 @@ const ManageInvoiceGenerate = () => {
                               setOpenDropdown(null);
                             }}
                           >
-                            Delete Latest Invoice
+                            Delete Invoice
                           </button>
                         </div>
                       )}

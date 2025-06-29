@@ -239,7 +239,7 @@ const ManageTeacher = () => {
               setTeacherModel(true);
               setIsEditMode(false);
             }}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded hover:bg-blue-600 md:w-1/5 w-full"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded hover:bg-blue-600 md:w-1/5 lg:w-1/9 w-full"
           >
             + Add Teacher
           </button>

@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 import useUserApi from '../../hooks/useUserApi';
 import useClassApi from '../../hooks/useClassApi';
 import { ClipLoader } from 'react-spinners';
+import { Mail, MapPin, Phone, User } from 'lucide-react';
 
 const StudentDetail = () => {
   const { studentId } = useParams();
@@ -62,7 +63,7 @@ const StudentDetail = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                    <FiMail className="text-purple-600" size={20} />
+                    <Mail className="text-purple-600" size={20} />
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Email:</p>
@@ -72,7 +73,7 @@ const StudentDetail = () => {
 
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <FiPhone className="text-blue-600" size={20} />
+                    <Phone className="text-blue-600" size={20} />
                   </div>
                   <div> 
                     <p className="text-sm text-gray-500 mb-1">Phone:</p>
@@ -82,7 +83,7 @@ const StudentDetail = () => {
                 
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                    <FiMapPin className="text-red-600" size={20} />
+                    <MapPin className="text-red-600" size={20} />
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Address:</p>
@@ -123,7 +124,7 @@ const StudentDetail = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                    <FiUser className="text-orange-600" size={20} />
+                    <User className="text-orange-600" size={20} />
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Mother Name:</p>
@@ -135,7 +136,7 @@ const StudentDetail = () => {
 
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                    <FiMapPin className="text-red-600" size={20} />
+                    <MapPin className="text-red-600" size={20} />
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Address:</p>
@@ -145,7 +146,7 @@ const StudentDetail = () => {
 
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <FiPhone className="text-blue-600" size={20} />
+                    <Phone className="text-blue-600" size={20} />
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Phone:</p>
@@ -155,7 +156,7 @@ const StudentDetail = () => {
 
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                    <FiMail className="text-purple-600" size={20} />
+                    <Mail className="text-purple-600" size={20} />
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Email:</p>

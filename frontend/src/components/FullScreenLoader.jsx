@@ -4,7 +4,7 @@ import { ClipLoader } from "react-spinners";
 
 const FullScreenLoader = () => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
       <ClipLoader color="#f7a13d" size={106} />
     </div>
   );
